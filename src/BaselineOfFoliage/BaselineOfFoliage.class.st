@@ -10,10 +10,12 @@ BaselineOfFoliage >> baseline: spec [
 
 	spec for: #'common' do: [
 		spec 
-			package: 'Foliage-Core'.
+			package: 'Foliage-Core';
+			package: 'Foliage-Core' with: [
+				spec requires: #('Foliage-Core') ].
 		spec 
 			group: 'Core' with: #('Foliage-Core' );
 			group: 'Tests' with: #('Foliage-Core-Tests' );
-			group: 'default' with: #('Core' 'Tests'). ].
+			group: 'default' with: #('Core' 'Tests') ]
 
 ]

@@ -9,10 +9,12 @@ BaselineOfFoliage >> baseline: spec [
 	<baseline>
 
 	spec for: #'common' do: [
-		self neoJson: spec.
+		self
+			mustache: spec; 
+			neoJson: spec.
 		spec 
 			package: 'Foliage-Core' with: [
-				spec requires: #('NeoJSON') ];
+				spec requires: #('NeoJSON' 'Mustache') ];
 			package: 'Foliage-Core-Tests' with: [
 				spec requires: #('Foliage-Core') ].
 		spec 
@@ -20,6 +22,14 @@ BaselineOfFoliage >> baseline: spec [
 			group: 'Tests' with: #('Foliage-Core-Tests' );
 			group: 'default' with: #('Core' 'Tests') ]
 
+]
+
+{ #category : #baselines }
+BaselineOfFoliage >> mustache: spec [
+	spec baseline: 'Mustache' with: [
+		spec 
+			repository: 'github://noha/Mustache/repository';
+			loads: #('Core')].
 ]
 
 { #category : #baselines }

@@ -20,8 +20,9 @@ FOHTMLVisitor >> initialize [
 
 { #category : #'visiting-document' }
 FOHTMLVisitor >> visitHeader: anObject [
-	writer writeHeaderLevel: anObject level with: [.
-		self visitDocumentGroup: anObject ]
+	writer 
+		writeHeaderLevel: anObject level 
+		with: [ self visitDocumentGroup: anObject ]
 ]
 
 { #category : #'visiting-document' }

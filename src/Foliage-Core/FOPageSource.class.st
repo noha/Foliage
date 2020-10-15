@@ -9,6 +9,11 @@ Class {
 	#category : #'Foliage-Core'
 }
 
+{ #category : #converting }
+FOPageSource >> asWebsiteObject [
+	^ self 
+]
+
 { #category : #accessing }
 FOPageSource >> content: aMicRootBlock [ 
 	content := aMicRootBlock 
@@ -39,6 +44,19 @@ FOPageSource >> meta: aCollection [
 ]
 
 { #category : #accessing }
+FOPageSource >> name [
+	^ path segments last
+]
+
+{ #category : #generation }
+FOPageSource >> page [
+	| page |
+	page := (FOPageReader on: (self pathFor: path) readStream) page.
+	page validate.
+	^ page 
+]
+
+{ #category : #accessing }
 FOPageSource >> path [
 	^ path
 ]
@@ -51,6 +69,19 @@ FOPageSource >> path: anObject [
 { #category : #'as yet unclassified' }
 FOPageSource >> pillar [
 	^ content asPillar 
+]
+
+{ #category : #printing }
+FOPageSource >> printOn: aStream [ 
+	aStream << 'page source: ' << path asString 
+]
+
+{ #category : #generation }
+FOPageSource >> readPageFromFile: aFileReference [ 
+	| page |
+	page := (FOPageReader on: aFileReference readStream) page.
+	page validate.
+	^ page 
 ]
 
 { #category : #accessing }

@@ -5,21 +5,27 @@ Class {
 		'targetPath',
 		'templatePath',
 		'rawModel',
-		'rawPath'
+		'rawPath',
+		'model'
 	],
 	#category : #'Foliage-Core'
 }
 
 { #category : #'as yet unclassified' }
 FOWebSite >> allRawFiles [
-	^ rawPath allFiles 
+	^ self rawPath allFiles 
 ]
 
 { #category : #building }
-FOWebSite >> build [ 
-	rawModel := FOSiteModelBuilder new 
+FOWebSite >> buildModel [
+	| sources |
+	sources := FORawModelCollector new 
 		website: self;
-		build
+		collect.
+	^ FOSiteModelBuilder new
+		website: self;
+		build: sources;
+		root.
 ]
 
 { #category : #accessing }

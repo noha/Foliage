@@ -5,7 +5,8 @@ Class {
 		'sourcePath',
 		'targetPath',
 		'templatePath',
-		'website'
+		'website',
+		'root'
 	],
 	#category : #'Foliage-Core'
 }
@@ -18,27 +19,86 @@ FOSiteModelBuilder class >> path: aString [
 
 { #category : #generation }
 FOSiteModelBuilder >> build [
-	| files site |
-	site := Dictionary new.
-	files := website allRawFiles.
-	files do: [ :file | 
-		(self modelForExtension: file extension) ifNotNil: [ :model | | path |
-			path := website relativeRawPath: file.
-			model 
-				path: path.
-			site at: path put: model ]
-		].
-	^ site
+	| files document |
+	files := website sourcePath allFiles select: [ :each | each extension = #md ].
+	files do: [ :file |
+		document := self buildDocument: file.
+		self 
+			writeDocument: document 
+			to: (self targetFor: file)].
+]
+
+{ #category : #generation }
+FOSiteModelBuilder >> build: sources [
+	| container |
+	sources do: [ :source |
+		container := self resolveContainer: source path parent.
+		container add: (self readPageFromFile: (website rawPath resolve: source path))  ].
+]
+
+{ #category : #generation }
+FOSiteModelBuilder >> buildDocument: aFileReference [ 
+	| template body page | 
+	page := self readPageFromFile: aFileReference.
+	body := self renderPage: page.
+	template := self templateFor: page layout.
+	^ template value: { #body -> body } asDictionary . 
+	
+	
+]
+
+{ #category : #generation }
+FOSiteModelBuilder >> readPageFromFile: aFileReference [ 
+	| page |
+	page := (FOPageReader on: aFileReference readStream) page.
+	page path: (website relativeRawPath: aFileReference). 
+	page validate.
+	^ page
+]
+
+{ #category : #generation }
+FOSiteModelBuilder >> renderPage: aPage [
+	^ FOHTMLVisitor new 
+		start: aPage pillar; 
+		contents
+]
+
+{ #category : #resolving }
+FOSiteModelBuilder >> resolveContainer: aRelativePath [ 
+	^ self root resolve: aRelativePath segments
 ]
 
 { #category : #accessing }
-FOSiteModelBuilder >> modelForExtension: aString [ 
-	(aString = #md) ifTrue: [ 
-		^ FOPageSource new  ].
-	Error signal.
+FOSiteModelBuilder >> root [
+	^ root ifNil: [ 
+		root := FOWebsiteRoot new ]
+]
+
+{ #category : #generation }
+FOSiteModelBuilder >> targetFor: aFileReference [
+	| relativePath |
+	relativePath := aFileReference withoutExtension 
+		relativeTo: website sourcePath asAbsolute.
+	^ website targetPath asAbsolute 
+		resolve: (relativePath , #html)
+]
+
+{ #category : #templating }
+FOSiteModelBuilder >> templateFor: aString [ 
+	^ (website templatePath / aString) asMustacheTemplate 
 ]
 
 { #category : #accessing }
 FOSiteModelBuilder >> website: aWebsite [ 
 	website := aWebsite 
+]
+
+{ #category : #generation }
+FOSiteModelBuilder >> writeDocument: aDocument to: aFileReference [
+	aFileReference writeStream 
+		truncate;
+		nextPutAll: aDocument;
+		flush;
+		close
+	
 ]

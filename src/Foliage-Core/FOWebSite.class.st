@@ -61,7 +61,7 @@ FOWebSite >> rawPath: anObject [
 
 { #category : #'as yet unclassified' }
 FOWebSite >> relativeRawPath: aFileReference [
-	^ aFileReference relativeTo: rawPath asAbsolute
+	^ aFileReference asAbsolute relativeTo: rawPath asAbsolute
 ]
 
 { #category : #accessing }

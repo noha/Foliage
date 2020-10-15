@@ -77,11 +77,11 @@ FOPageSource >> printOn: aStream [
 ]
 
 { #category : #generation }
-FOPageSource >> readPageFromFile: aFileReference [ 
-	| page |
-	page := (FOPageReader on: aFileReference readStream) page.
-	page validate.
-	^ page 
+FOPageSource >> readFrom: aFileReference [ 
+	(FOPageReader new
+		readFrom: aFileReference readStream
+		page: self).
+	self validate
 ]
 
 { #category : #accessing }

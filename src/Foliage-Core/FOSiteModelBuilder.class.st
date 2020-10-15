@@ -33,7 +33,7 @@ FOSiteModelBuilder >> build: sources [
 	| container |
 	sources do: [ :source |
 		container := self resolveContainer: source path parent.
-		container add: (self readPageFromFile: (website rawPath resolve: source path))  ].
+		container add: (source readFrom: (website rawPath resolve: source path))  ].
 ]
 
 { #category : #generation }

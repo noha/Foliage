@@ -1,35 +1,35 @@
 Class {
-	#name : #FOPages,
+	#name : #FOSiteBuilder,
 	#superclass : #Object,
 	#instVars : [
-		'page',
 		'sourcePath',
 		'targetPath',
-		'templatePath'
+		'templatePath',
+		'website'
 	],
 	#category : #'Foliage-Core'
 }
 
 { #category : #accessing }
-FOPages class >> path: aString [
+FOSiteBuilder class >> path: aString [
 	^ self new
 		path: aString asFileReference 
 ]
 
 { #category : #generation }
-FOPages >> generate [
+FOSiteBuilder >> build [
 	| files document |
-	files := sourcePath allFiles select: [ :each | each extension = #md ].
+	files := website sourcePath allFiles select: [ :each | each extension = #md ].
 	files do: [ :file |
-		document := self generateDocument: file.
+		document := self buildDocument: file.
 		self 
 			writeDocument: document 
 			to: (self targetFor: file)].
 ]
 
 { #category : #generation }
-FOPages >> generateDocument: aFileReference [ 
-	| template body |
+FOSiteBuilder >> buildDocument: aFileReference [ 
+	| template body page | 
 	page := self readPageFromFile: aFileReference.
 	body := self renderPage: page.
 	template := self templateFor: page layout.
@@ -39,51 +39,41 @@ FOPages >> generateDocument: aFileReference [
 ]
 
 { #category : #generation }
-FOPages >> readPageFromFile: aFileReference [
+FOSiteBuilder >> readPageFromFile: aFileReference [ 
+	| page |
 	page := (FOPageReader on: aFileReference readStream) page.
-	page hasDocumentType ifFalse: [ 
-		Error signal: 'document in ', aFileReference asString, ' is missing type' ].
+	page validate.
 	^ page
 ]
 
 { #category : #generation }
-FOPages >> renderPage: aPage [
+FOSiteBuilder >> renderPage: aPage [
 	^ FOHTMLVisitor new 
 		start: aPage pillar; 
 		contents
 ]
 
-{ #category : #accessing }
-FOPages >> sourcePath: aString [ 
-	sourcePath := aString asFileReference 
-]
-
 { #category : #generation }
-FOPages >> targetFor: aFileReference [
+FOSiteBuilder >> targetFor: aFileReference [
 	| relativePath |
 	relativePath := aFileReference withoutExtension 
-		relativeTo: sourcePath asAbsolute.
-	^ targetPath asAbsolute 
+		relativeTo: website sourcePath asAbsolute.
+	^ website targetPath asAbsolute 
 		resolve: (relativePath , #html)
 ]
 
-{ #category : #accessing }
-FOPages >> targetPath: aString [ 
-	targetPath := aString asFileReference 
-]
-
 { #category : #templating }
-FOPages >> templateFor: aString [ 
-	^ (templatePath / aString) asMustacheTemplate 
+FOSiteBuilder >> templateFor: aString [ 
+	^ (website templatePath / aString) asMustacheTemplate 
 ]
 
 { #category : #accessing }
-FOPages >> templatePath: aString [ 
-	templatePath := aString asFileReference 
+FOSiteBuilder >> website: aWebsite [ 
+	website := aWebsite 
 ]
 
 { #category : #generation }
-FOPages >> writeDocument: aDocument to: aFileReference [
+FOSiteBuilder >> writeDocument: aDocument to: aFileReference [
 	aFileReference writeStream 
 		truncate;
 		nextPutAll: aDocument;

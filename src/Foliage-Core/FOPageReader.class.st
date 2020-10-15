@@ -20,7 +20,7 @@ FOPageReader >> page [
 
 { #category : #reading }
 FOPageReader >> readFrom: aReadStream [ 
-	page := FOPage new.
+	page := FOPageSource new.
 	page 
 		meta: (NeoJSONReader on: aReadStream) next;
 		content: (MicroDownParser parse: aReadStream upToEnd). 

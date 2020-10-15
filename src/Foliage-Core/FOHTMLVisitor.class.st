@@ -18,6 +18,11 @@ FOHTMLVisitor >> initialize [
 	writer := HTMLWriter new
 ]
 
+{ #category : #visiting }
+FOHTMLVisitor >> visit: anObject [
+	^ anObject accept: self
+]
+
 { #category : #'visiting-document' }
 FOHTMLVisitor >> visitHeader: anObject [
 	writer 

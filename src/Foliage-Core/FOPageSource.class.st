@@ -1,20 +1,21 @@
 Class {
-	#name : #FOPage,
+	#name : #FOPageSource,
 	#superclass : #Object,
 	#instVars : [
 		'meta',
-		'content'
+		'content',
+		'path'
 	],
 	#category : #'Foliage-Core'
 }
 
 { #category : #accessing }
-FOPage >> content: aMicRootBlock [ 
+FOPageSource >> content: aMicRootBlock [ 
 	content := aMicRootBlock 
 ]
 
 { #category : #'as yet unclassified' }
-FOPage >> gtInspectorContentsIn: composite [
+FOPageSource >> gtInspectorContentsIn: composite [
 	<gtInspectorPresentationOrder: 5>
 	composite text
 		title: 'Contents';
@@ -23,21 +24,37 @@ FOPage >> gtInspectorContentsIn: composite [
 ]
 
 { #category : #testing }
-FOPage >> hasDocumentType [
+FOPageSource >> hasDocumentType [
 	^ meta includesKey: 'layout'
 ]
 
 { #category : #accessing }
-FOPage >> layout [
+FOPageSource >> layout [
 	^ meta at: 'layout'
 ]
 
 { #category : #accessing }
-FOPage >> meta: aCollection [ 
+FOPageSource >> meta: aCollection [ 
 	meta := aCollection 
 ]
 
+{ #category : #accessing }
+FOPageSource >> path [
+	^ path
+]
+
+{ #category : #accessing }
+FOPageSource >> path: anObject [
+	path := anObject
+]
+
 { #category : #'as yet unclassified' }
-FOPage >> pillar [
+FOPageSource >> pillar [
 	^ content asPillar 
+]
+
+{ #category : #accessing }
+FOPageSource >> validate [ 
+	self hasDocumentType ifFalse: [ 
+		Error signal: 'document in ', path asString, ' is missing type' ].
 ]

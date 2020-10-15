@@ -21,3 +21,13 @@ FOWebItem >> parent [
 FOWebItem >> parent: anItem [
 	parent := anItem
 ]
+
+{ #category : #accessing }
+FOWebItem >> root [ 	
+	^ parent root
+]
+
+{ #category : #'as yet unclassified' }
+FOWebItem >> website [ 
+	^ self root website
+]

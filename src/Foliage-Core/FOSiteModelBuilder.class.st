@@ -33,7 +33,7 @@ FOSiteModelBuilder >> build: sources [
 	| container |
 	sources do: [ :source |
 		container := self resolveContainer: source path parent.
-		container add: (source readFrom: (website rawPath resolve: source path))  ].
+		container add: source ].
 ]
 
 { #category : #generation }
@@ -45,15 +45,6 @@ FOSiteModelBuilder >> buildDocument: aFileReference [
 	^ template value: { #body -> body } asDictionary . 
 	
 	
-]
-
-{ #category : #generation }
-FOSiteModelBuilder >> readPageFromFile: aFileReference [ 
-	| page |
-	page := (FOPageReader on: aFileReference readStream) page.
-	page path: (website relativeRawPath: aFileReference). 
-	page validate.
-	^ page
 ]
 
 { #category : #generation }
@@ -71,7 +62,8 @@ FOSiteModelBuilder >> resolveContainer: aRelativePath [
 { #category : #accessing }
 FOSiteModelBuilder >> root [
 	^ root ifNil: [ 
-		root := FOWebsiteRoot new ]
+		root := FOWebsiteRoot new
+			parent: website ]
 ]
 
 { #category : #generation }

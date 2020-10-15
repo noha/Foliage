@@ -9,8 +9,9 @@ Class {
 }
 
 { #category : #accessing }
-FOWebBranch >> add: aFOPageSource [ 
-	children add: aFOPageSource 
+FOWebBranch >> add: aWebItem [
+	aWebItem parent: self.
+	children add: aWebItem
 ]
 
 { #category : #'as yet unclassified' }

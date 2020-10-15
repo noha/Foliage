@@ -4,7 +4,6 @@ Class {
 	#instVars : [
 		'targetPath',
 		'templatePath',
-		'rawModel',
 		'rawPath',
 		'model'
 	],
@@ -44,8 +43,9 @@ FOWebSite >> defaultTemplatePath [
 ]
 
 { #category : #accessing }
-FOWebSite >> rawModel [
-	^ rawModel
+FOWebSite >> model [
+	^ model ifNil: [ 
+		model := self buildModel ]
 ]
 
 { #category : #accessing }

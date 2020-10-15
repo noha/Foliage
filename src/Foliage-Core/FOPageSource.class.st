@@ -1,6 +1,6 @@
 Class {
 	#name : #FOPageSource,
-	#superclass : #Object,
+	#superclass : #FOWebLeaf,
 	#instVars : [
 		'meta',
 		'content',
@@ -12,6 +12,13 @@ Class {
 { #category : #converting }
 FOPageSource >> asWebsiteObject [
 	^ self 
+]
+
+{ #category : #accessing }
+FOPageSource >> content [
+	^ content ifNil: [ 
+		self readContents.
+		content ]
 ]
 
 { #category : #accessing }
@@ -48,14 +55,6 @@ FOPageSource >> name [
 	^ path segments last
 ]
 
-{ #category : #generation }
-FOPageSource >> page [
-	| page |
-	page := (FOPageReader on: (self pathFor: path) readStream) page.
-	page validate.
-	^ page 
-]
-
 { #category : #accessing }
 FOPageSource >> path [
 	^ path
@@ -68,12 +67,22 @@ FOPageSource >> path: anObject [
 
 { #category : #'as yet unclassified' }
 FOPageSource >> pillar [
-	^ content asPillar 
+	^ self content asPillar 
 ]
 
 { #category : #printing }
 FOPageSource >> printOn: aStream [ 
 	aStream << 'page source: ' << path asString 
+]
+
+{ #category : #accessing }
+FOPageSource >> rawPath [ 
+	^ self website rawPath resolve: path
+]
+
+{ #category : #accessing }
+FOPageSource >> readContents [
+	self readFrom: (self website rawPath resolve: path) 
 ]
 
 { #category : #generation }

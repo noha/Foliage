@@ -22,10 +22,9 @@ FORawModelCollector >> collect [
 	sources := OrderedCollection new.
 	files := website allRawFiles.
 	files do: [ :file | 
-		(self modelForExtension: file extension) ifNotNil: [ :model | | path |
-			path := website relativeRawPath: file.
+		(self modelForExtension: file extension) ifNotNil: [ :model | 
 			model 
-				path: path.
+				path: (website relativeRawPath: file).
 			sources add: model ]
 		].
 	^ sources

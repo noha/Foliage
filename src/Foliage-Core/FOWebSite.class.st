@@ -7,8 +7,27 @@ Class {
 		'rawPath',
 		'model'
 	],
+	#classInstVars : [
+		'instance'
+	],
 	#category : #'Foliage-Core'
 }
+
+{ #category : #'instance creation' }
+FOWebSite class >> instance [
+	^ instance ifNil: [ 
+		instance := self new ]
+]
+
+{ #category : #accessing }
+FOWebSite class >> model [
+	^ self instance model
+]
+
+{ #category : #resetting }
+FOWebSite class >> reset [
+	instance := nil
+]
 
 { #category : #'as yet unclassified' }
 FOWebSite >> allRawFiles [

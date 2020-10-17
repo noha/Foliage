@@ -8,10 +8,25 @@ Class {
 	#category : #'Foliage-Core'
 }
 
+{ #category : #visiting }
+FOWebFolder >> acceptFOVisitor: aFOVisitor [ 
+	^ aFOVisitor visitWebFolder: self 
+]
+
 { #category : #accessing }
 FOWebFolder >> add: aWebItem [
 	aWebItem parent: self.
 	children add: aWebItem
+]
+
+{ #category : #accessing }
+FOWebFolder >> children [
+	^ children
+]
+
+{ #category : #accessing }
+FOWebFolder >> children: anObject [
+	children := anObject
 ]
 
 { #category : #'as yet unclassified' }

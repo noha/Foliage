@@ -8,3 +8,8 @@ Class {
 FOMicroDownPageSource class >> supportedFileExtensions [
 	^ #( md )
 ]
+
+{ #category : #visiting }
+FOMicroDownPageSource >> acceptFOVisitor: aFOVisitor [ 
+	^ aFOVisitor visitMicrodownPageSource: self 
+]

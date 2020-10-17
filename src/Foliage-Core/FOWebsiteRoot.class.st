@@ -4,6 +4,11 @@ Class {
 	#category : #'Foliage-Core'
 }
 
+{ #category : #visiting }
+FOWebsiteRoot >> acceptFOVisitor: aFOVisitor [ 
+	^ aFOVisitor visitWebsiteRoot: self 
+]
+
 { #category : #testing }
 FOWebsiteRoot >> isRoot [
 	^ true

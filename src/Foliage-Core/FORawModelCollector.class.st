@@ -32,7 +32,7 @@ FORawModelCollector >> collect [
 
 { #category : #accessing }
 FORawModelCollector >> modelForExtension: aString [ 
-	(FOWebItem forFileExtension: aString)
+	(FOWebResource forFileExtension: aString)
 		ifNotNil: [ :cls | ^ cls new ].
 	Error signal.
 ]

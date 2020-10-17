@@ -1,6 +1,6 @@
 Class {
 	#name : #FOWebsiteRoot,
-	#superclass : #FOWebBranch,
+	#superclass : #FOWebFolder,
 	#category : #'Foliage-Core'
 }
 

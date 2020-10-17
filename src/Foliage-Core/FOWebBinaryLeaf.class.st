@@ -1,6 +1,6 @@
 Class {
 	#name : #FOWebBinaryLeaf,
-	#superclass : #FOWebLeaf,
+	#superclass : #FOWebObject,
 	#category : #'Foliage-Core'
 }
 

@@ -1,6 +1,6 @@
 Class {
-	#name : #FOWebBranch,
-	#superclass : #FOWebItem,
+	#name : #FOWebFolder,
+	#superclass : #FOWebResource,
 	#instVars : [
 		'children',
 		'name'
@@ -9,13 +9,13 @@ Class {
 }
 
 { #category : #accessing }
-FOWebBranch >> add: aWebItem [
+FOWebFolder >> add: aWebItem [
 	aWebItem parent: self.
 	children add: aWebItem
 ]
 
 { #category : #'as yet unclassified' }
-FOWebBranch >> gtInspectorItemsIn: composite [
+FOWebFolder >> gtInspectorItemsIn: composite [
 	<gtInspectorPresentationOrder: 0>
 	^ composite fastTable 
 		title: 'Items';
@@ -33,35 +33,35 @@ FOWebBranch >> gtInspectorItemsIn: composite [
 ]
 
 { #category : #initialization }
-FOWebBranch >> initialize [ 
+FOWebFolder >> initialize [ 
 	super initialize.
 	children := OrderedCollection new
 ]
 
 { #category : #testing }
-FOWebBranch >> isRoot [
+FOWebFolder >> isRoot [
 	^ false
 ]
 
 { #category : #accessing }
-FOWebBranch >> name [
+FOWebFolder >> name [
 	^ name
 ]
 
 { #category : #accessing }
-FOWebBranch >> name: aString [ 
+FOWebFolder >> name: aString [ 
 	name := aString
 ]
 
 { #category : #resolving }
-FOWebBranch >> resolve: aRelativePath [ 
+FOWebFolder >> resolve: aRelativePath [ 
 	| child |
 	aRelativePath isEmpty ifTrue: [ 
 		^ self ].
 	child := children
 		detect: [ :each | each name = aRelativePath first ]
 		ifNone: [ 
-			FOWebBranch new 
+			FOWebFolder new 
 				name: aRelativePath first;
 				parent: self ].
 	children add: child.

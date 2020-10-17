@@ -1,6 +1,6 @@
 Class {
 	#name : #FOPageSource,
-	#superclass : #FOWebLeaf,
+	#superclass : #FOWebObject,
 	#instVars : [
 		'meta',
 		'content'

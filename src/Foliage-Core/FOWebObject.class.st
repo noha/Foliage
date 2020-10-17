@@ -1,6 +1,6 @@
 Class {
-	#name : #FOWebLeaf,
-	#superclass : #FOWebItem,
+	#name : #FOWebObject,
+	#superclass : #FOWebResource,
 	#instVars : [
 		'path'
 	],
@@ -8,31 +8,31 @@ Class {
 }
 
 { #category : #testing }
-FOWebLeaf class >> isAbstract [ 
-	^ self == FOWebLeaf
+FOWebObject class >> isAbstract [ 
+	^ self == FOWebObject
 ]
 
 { #category : #accessing }
-FOWebLeaf >> name [
+FOWebObject >> name [
 	^ path segments last
 ]
 
 { #category : #accessing }
-FOWebLeaf >> path [
+FOWebObject >> path [
 	^ path
 ]
 
 { #category : #accessing }
-FOWebLeaf >> path: anObject [
+FOWebObject >> path: anObject [
 	path := anObject
 ]
 
 { #category : #printing }
-FOWebLeaf >> printOn: aStream [ 
+FOWebObject >> printOn: aStream [ 
 	aStream << 'leaf: ' << path asString 
 ]
 
 { #category : #accessing }
-FOWebLeaf >> rawPath [ 
+FOWebObject >> rawPath [ 
 	^ self website rawPath resolve: path
 ]

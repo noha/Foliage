@@ -32,8 +32,8 @@ FORawModelCollector >> collect [
 
 { #category : #accessing }
 FORawModelCollector >> modelForExtension: aString [ 
-	(aString = #md) ifTrue: [ 
-		^ FOPageSource new  ].
+	(FOWebItem forFileExtension: aString)
+		ifNotNil: [ :cls | ^ cls new ].
 	Error signal.
 ]
 

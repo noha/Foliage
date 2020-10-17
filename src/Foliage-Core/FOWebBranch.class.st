@@ -1,6 +1,6 @@
 Class {
 	#name : #FOWebBranch,
-	#superclass : #FOWebLeaf,
+	#superclass : #FOWebItem,
 	#instVars : [
 		'children',
 		'name'

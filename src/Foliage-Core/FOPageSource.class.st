@@ -3,15 +3,14 @@ Class {
 	#superclass : #FOWebLeaf,
 	#instVars : [
 		'meta',
-		'content',
-		'path'
+		'content'
 	],
 	#category : #'Foliage-Core'
 }
 
-{ #category : #converting }
-FOPageSource >> asWebsiteObject [
-	^ self 
+{ #category : #testing }
+FOPageSource class >> isAbstract [ 
+	^ self == FOPageSource  
 ]
 
 { #category : #accessing }
@@ -50,34 +49,9 @@ FOPageSource >> meta: aCollection [
 	meta := aCollection 
 ]
 
-{ #category : #accessing }
-FOPageSource >> name [
-	^ path segments last
-]
-
-{ #category : #accessing }
-FOPageSource >> path [
-	^ path
-]
-
-{ #category : #accessing }
-FOPageSource >> path: anObject [
-	path := anObject
-]
-
 { #category : #'as yet unclassified' }
 FOPageSource >> pillar [
 	^ self content asPillar 
-]
-
-{ #category : #printing }
-FOPageSource >> printOn: aStream [ 
-	aStream << 'page source: ' << path asString 
-]
-
-{ #category : #accessing }
-FOPageSource >> rawPath [ 
-	^ self website rawPath resolve: path
 ]
 
 { #category : #accessing }

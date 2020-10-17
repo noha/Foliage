@@ -15,12 +15,22 @@ HTMLWriter >> contents [
 		stream contents
 ]
 
+{ #category : #flushing }
+HTMLWriter >> flush [
+	stream flush
+]
+
 { #category : #initialize }
 HTMLWriter >> initialize [ 
 	super initialize.
 	stream := String new writeStream "ZnCharacterWriteStream 
 		on: ByteArray new writeStream 
 		encoding: 'utf-8' "
+]
+
+{ #category : #accessing }
+HTMLWriter >> stream: aStream [ 
+	stream := aStream
 ]
 
 { #category : #writing }

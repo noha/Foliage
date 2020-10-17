@@ -36,13 +36,9 @@ FOWebSite >> allRawFiles [
 
 { #category : #building }
 FOWebSite >> buildModel [
-	| sources |
-	sources := FORawModelCollector new 
-		website: self;
-		collect.
 	^ FOSiteModelBuilder new
 		website: self;
-		build: sources;
+		build;
 		root.
 ]
 
@@ -78,6 +74,11 @@ FOWebSite >> rawPath: anObject [
 	rawPath := anObject
 ]
 
+{ #category : #accessing }
+FOWebSite >> rawPathFor: aWebObject [
+	^ self rawPath resolve: aWebObject path
+]
+
 { #category : #'as yet unclassified' }
 FOWebSite >> relativeRawPath: aFileReference [
 	^ aFileReference asAbsolute relativeTo: rawPath asAbsolute
@@ -95,6 +96,11 @@ FOWebSite >> targetPath: anObject [
 ]
 
 { #category : #accessing }
+FOWebSite >> targetPathFor: aWebObject [
+	^ self targetPath resolve: aWebObject path
+]
+
+{ #category : #accessing }
 FOWebSite >> templatePath [
 	^ templatePath ifNil: [ 
 		templatePath := self defaultTemplatePath asFileReference ]
@@ -103,4 +109,9 @@ FOWebSite >> templatePath [
 { #category : #accessing }
 FOWebSite >> templatePath: anObject [
 	templatePath := anObject
+]
+
+{ #category : #accessing }
+FOWebSite >> templatePathForLayout: aString [ 
+	^ self templatePath / aString
 ]

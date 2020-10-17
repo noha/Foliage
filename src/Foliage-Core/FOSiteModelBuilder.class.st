@@ -18,40 +18,31 @@ FOSiteModelBuilder class >> path: aString [
 ]
 
 { #category : #generation }
-FOSiteModelBuilder >> build [
-	| files document |
-	files := website sourcePath allFiles select: [ :each | each extension = #md ].
-	files do: [ :file |
-		document := self buildDocument: file.
-		self 
-			writeDocument: document 
-			to: (self targetFor: file)].
-]
-
-{ #category : #generation }
-FOSiteModelBuilder >> build: sources [
+FOSiteModelBuilder >> addResource: aResource [
 	| container |
-	sources do: [ :source |
-		container := self resolveContainer: source path parent.
-		container add: source ].
+	container := self resolveContainer: aResource path parent.
+	container add: aResource
 ]
 
 { #category : #generation }
-FOSiteModelBuilder >> buildDocument: aFileReference [ 
-	| template body page | 
-	page := self readPageFromFile: aFileReference.
-	body := self renderPage: page.
-	template := self templateFor: page layout.
-	^ template value: { #body -> body } asDictionary . 
-	
-	
+FOSiteModelBuilder >> build [
+	| files sources |
+	sources := OrderedCollection new.
+	files := website allRawFiles.
+	files do: [ :file | 
+		(self modelForExtension: file extension) ifNotNil: [ :model | 
+			model 
+				path: (website relativeRawPath: file).
+			self addResource: model ]
+		].
+	^ sources
 ]
 
-{ #category : #generation }
-FOSiteModelBuilder >> renderPage: aPage [
-	^ FOHTMLVisitor new 
-		start: aPage pillar; 
-		contents
+{ #category : #accessing }
+FOSiteModelBuilder >> modelForExtension: aString [ 
+	(FOWebResource forFileExtension: aString)
+		ifNotNil: [ :cls | ^ cls new ].
+	Error signal.
 ]
 
 { #category : #resolving }
@@ -66,31 +57,7 @@ FOSiteModelBuilder >> root [
 			parent: website ]
 ]
 
-{ #category : #generation }
-FOSiteModelBuilder >> targetFor: aFileReference [
-	| relativePath |
-	relativePath := aFileReference withoutExtension 
-		relativeTo: website sourcePath asAbsolute.
-	^ website targetPath asAbsolute 
-		resolve: (relativePath , #html)
-]
-
-{ #category : #templating }
-FOSiteModelBuilder >> templateFor: aString [ 
-	^ (website templatePath / aString) asMustacheTemplate 
-]
-
 { #category : #accessing }
 FOSiteModelBuilder >> website: aWebsite [ 
 	website := aWebsite 
-]
-
-{ #category : #generation }
-FOSiteModelBuilder >> writeDocument: aDocument to: aFileReference [
-	aFileReference writeStream 
-		truncate;
-		nextPutAll: aDocument;
-		flush;
-		close
-	
 ]

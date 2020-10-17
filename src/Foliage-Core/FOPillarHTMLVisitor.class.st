@@ -1,5 +1,5 @@
 Class {
-	#name : #FOHTMLVisitor,
+	#name : #FOPillarHTMLVisitor,
 	#superclass : #PRVisitor,
 	#instVars : [
 		'writer'
@@ -8,29 +8,42 @@ Class {
 }
 
 { #category : #accessing }
-FOHTMLVisitor >> contents [
+FOPillarHTMLVisitor >> contents [
 	^ writer contents
 ]
 
 { #category : #initialization }
-FOHTMLVisitor >> initialize [ 
+FOPillarHTMLVisitor >> initialize [ 
 	super initialize.
 	writer := HTMLWriter new
 ]
 
 { #category : #visiting }
-FOHTMLVisitor >> visit: anObject [
+FOPillarHTMLVisitor >> start: anObject [
+	| result |
+	result := self visit: anObject.
+	writer flush.
+	^ result
+]
+
+{ #category : #accessing }
+FOPillarHTMLVisitor >> stream: aStream [ 
+	writer stream: aStream
+]
+
+{ #category : #visiting }
+FOPillarHTMLVisitor >> visit: anObject [
 	^ anObject accept: self
 ]
 
 { #category : #'visiting-document' }
-FOHTMLVisitor >> visitHeader: anObject [
+FOPillarHTMLVisitor >> visitHeader: anObject [
 	writer 
 		writeHeaderLevel: anObject level 
 		with: [ self visitDocumentGroup: anObject ]
 ]
 
 { #category : #'visiting-document' }
-FOHTMLVisitor >> visitText: anObject [
+FOPillarHTMLVisitor >> visitText: anObject [
 	writer writeText: anObject
 ]

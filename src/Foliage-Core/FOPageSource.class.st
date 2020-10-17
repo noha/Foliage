@@ -21,17 +21,8 @@ FOPageSource >> content [
 ]
 
 { #category : #accessing }
-FOPageSource >> content: aMicRootBlock [ 
-	content := aMicRootBlock 
-]
-
-{ #category : #'as yet unclassified' }
-FOPageSource >> gtInspectorContentsIn: composite [
-	<gtInspectorPresentationOrder: 5>
-	composite text
-		title: 'Contents';
-		format: #asText;
-		display: [ PRRichTextComposer new start: self pillar ]
+FOPageSource >> content: anObject [ 
+	content := anObject 
 ]
 
 { #category : #testing }
@@ -49,22 +40,32 @@ FOPageSource >> meta: aCollection [
 	meta := aCollection 
 ]
 
-{ #category : #'as yet unclassified' }
-FOPageSource >> pillar [
-	^ self content asPillar 
+{ #category : #'instance creation' }
+FOPageSource >> readContentFrom: aStream [
+	self subclassResponsibility 
 ]
 
 { #category : #accessing }
 FOPageSource >> readContents [
-	self readFrom: (self website rawPath resolve: path) 
+	self readFrom: (self website rawPath resolve: path) readStream
+]
+
+{ #category : #'instance creation' }
+FOPageSource >> readFrom: aStream [
+	meta := self readMetaFrom: aStream.
+	content := self readContentFrom: aStream.
+	self validate
 ]
 
 { #category : #generation }
-FOPageSource >> readFrom: aFileReference [ 
-	(FOPageReader new
-		readFrom: aFileReference readStream
-		page: self).
-	self validate
+FOPageSource >> readJsonFrom: aStream [
+	^ (NeoJSONReader on: aStream) next
+	
+]
+
+{ #category : #generation }
+FOPageSource >> readMetaFrom: aStream [
+	^ self readJsonFrom: aStream
 ]
 
 { #category : #accessing }

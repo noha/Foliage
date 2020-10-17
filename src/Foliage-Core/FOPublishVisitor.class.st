@@ -4,9 +4,24 @@ Class {
 	#category : #'Foliage-Core'
 }
 
+{ #category : #visiting }
+FOPublishVisitor >> copyResource: aResource [ 
+	| rawPath targetPath |
+	rawPath := aResource website rawPathFor: aResource. 
+	targetPath := aResource website targetPathFor: aResource.
+	targetPath parent ensureCreateDirectory.
+	targetPath exists ifFalse: [  
+		rawPath copyTo: targetPath ]
+]
+
 { #category : #accessing }
 FOPublishVisitor >> templateForLayout: aString [ 
 	self shouldBeImplemented.
+]
+
+{ #category : #visiting }
+FOPublishVisitor >> visitCSSObject: aFOCSSObject [ 
+	self copyResource: aFOCSSObject 
 ]
 
 { #category : #visiting }
@@ -19,8 +34,6 @@ FOPublishVisitor >> visitPageSource: aFOPageSource [
 	page := template value: { #body -> html } asDictionary.
 	targetPath := (website targetPathFor: aFOPageSource) withoutExtension, #html.
 	targetPath parent ensureCreateDirectory.
-	Transcript show: 'html: ', html asString; cr.
-	Transcript show: 'page: ', page asString; cr.
 	stream := targetPath writeStream
 		truncate;
 		nextPutAll: page;
@@ -31,10 +44,5 @@ FOPublishVisitor >> visitPageSource: aFOPageSource [
 
 { #category : #visiting }
 FOPublishVisitor >> visitWebImage: aWebImage [ 
-	| rawPath targetPath |
-	rawPath := aWebImage website rawPathFor: aWebImage. 
-	targetPath := aWebImage website targetPathFor: aWebImage.
-	targetPath parent ensureCreateDirectory.
-	targetPath exists ifFalse: [  
-		rawPath copyTo: targetPath ]
+	self copyResource: aWebImage 
 ]

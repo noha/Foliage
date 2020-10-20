@@ -41,6 +41,20 @@ HTMLWriter >> writeHeaderLevel: anInteger with: aBlock [
 ]
 
 { #category : #writing }
+HTMLWriter >> writeTag: aString attributes: aDictionary with: aBlock [ 
+	stream << '<' << aString.
+	aDictionary 
+		ifNotNil: [ 
+			aDictionary asDictionary keysAndValuesDo: [ :key :value |
+				stream << ' ' << key asString << '="' << value asString << '"' ] ].
+	stream << '>'.
+	aBlock value.
+	stream << '</' << aString << '>'.
+	
+		
+]
+
+{ #category : #writing }
 HTMLWriter >> writeTag: aString with: aBlock [ 
 	stream << '<' << aString << '>'.
 	aBlock value.

@@ -31,7 +31,9 @@ FOPublishVisitor >> visitPageSource: aFOPageSource [
 	html := String streamContents: [ :s| 
 		aFOPageSource renderOn: s ].
 	template := (aFOPageSource website templatePathForLayout: aFOPageSource layout) asMustacheTemplate.
-	page := template value: { #body -> html } asDictionary.
+	page := template 
+		value: { #body -> html } asDictionary
+		partials: (FOPartialProvider new layout: aFOPageSource layout; website: aFOPageSource website).
 	targetPath := (website targetPathFor: aFOPageSource) withoutExtension, #html.
 	targetPath parent ensureCreateDirectory.
 	stream := targetPath writeStream

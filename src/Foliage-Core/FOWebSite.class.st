@@ -115,3 +115,8 @@ FOWebSite >> templatePath: anObject [
 FOWebSite >> templatePathForLayout: aString [ 
 	^ self templatePath / aString
 ]
+
+{ #category : #accessing }
+FOWebSite >> templatePathForLayout: aString  partial: partialName [
+	^ self templatePath / (aString, '_' , partialName)
+]

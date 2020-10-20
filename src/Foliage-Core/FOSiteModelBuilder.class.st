@@ -39,7 +39,14 @@ FOSiteModelBuilder >> build [
 ]
 
 { #category : #accessing }
+FOSiteModelBuilder >> extensionsToIgnore [
+	^ #( swp DS_Store)
+]
+
+{ #category : #accessing }
 FOSiteModelBuilder >> modelForExtension: aString [ 
+	(self extensionsToIgnore includes: aString) ifTrue: [ 
+		^ nil ].
 	(FOWebResource forFileExtension: aString)
 		ifNotNil: [ :cls | ^ cls new ].
 	Error signal.

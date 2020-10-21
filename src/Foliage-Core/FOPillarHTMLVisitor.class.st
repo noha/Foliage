@@ -105,7 +105,7 @@ FOPillarHTMLVisitor >> visitExternalLink: anObject [
 FOPillarHTMLVisitor >> visitFigure: anObject [
 	^ writer 
 		writeTag: 'img'
-		attributes: { #src -> (anObject reference isRelative ifTrue: [ $/ join: anObject reference segments ]) }, anObject parameters asDictionary associations 
+		attributes: { #src -> (anObject reference isRelative ifTrue: [ '/',($/ join: anObject reference segments) ]) }, anObject parameters asDictionary associations 
 		with: [ ]
 ]
 

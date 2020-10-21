@@ -49,7 +49,7 @@ FOSiteModelBuilder >> modelForExtension: aString [
 		^ nil ].
 	(FOWebResource forFileExtension: aString)
 		ifNotNil: [ :cls | ^ cls new ].
-	Error signal.
+	Error signal. 
 ]
 
 { #category : #resolving }

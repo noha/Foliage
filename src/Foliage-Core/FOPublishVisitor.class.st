@@ -25,7 +25,17 @@ FOPublishVisitor >> visitCSSObject: aFOCSSObject [
 ]
 
 { #category : #visiting }
-FOPublishVisitor >> visitPageSource: aFOPageSource [ 
+FOPublishVisitor >> visitHTMLPageSource: aFOHTMLPageSource [ 
+	| targetPath rawPath |
+	rawPath := aFOHTMLPageSource website rawPathFor: aFOHTMLPageSource.
+ 	targetPath := aFOHTMLPageSource website targetPathFor: aFOHTMLPageSource.
+	targetPath parent ensureCreateDirectory.
+	targetPath delete.
+	rawPath copyTo: targetPath 
+]
+
+{ #category : #visiting }
+FOPublishVisitor >> visitMicrodownPageSource: aFOPageSource [ 
 	| website targetPath stream html template page |
 	website := aFOPageSource website.
 	html := String streamContents: [ :s| 
@@ -42,6 +52,11 @@ FOPublishVisitor >> visitPageSource: aFOPageSource [
 		flush; 
 		close.
 	^ FOPageSource 
+]
+
+{ #category : #visiting }
+FOPublishVisitor >> visitPageSource: aFOPageSource [ 
+	self halt.
 ]
 
 { #category : #visiting }

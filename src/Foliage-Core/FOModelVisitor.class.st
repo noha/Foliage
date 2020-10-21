@@ -21,6 +21,11 @@ FOModelVisitor >> visitAll: aCollection [
 ]
 
 { #category : #visiting }
+FOModelVisitor >> visitHTMLPageSource: aFOHTMLPageSource [ 
+	^ self visitPageSource: aFOHTMLPageSource 
+]
+
+{ #category : #visiting }
 FOModelVisitor >> visitMicrodownPageSource: aFOMicroDownPageSource [ 
 	^ self visitPageSource: aFOMicroDownPageSource 
 ]

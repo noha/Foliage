@@ -37,30 +37,18 @@ FOWebSite >> acceptFOVisitor: aFOVisitor [
 
 { #category : #adding }
 FOWebSite >> addResource: aResource [
-	| container |
-	container := self root resolve: aResource path parent.
-	container add: aResource
-]
-
-{ #category : #'as yet unclassified' }
-FOWebSite >> allRawFiles [
-	^ self rawPath allFiles 
+	root addResource: aResource 
 ]
 
 { #category : #building }
 FOWebSite >> build [ 
-	FOSiteModelBuilder new 
-		website: self;
-		path: self rawPath;
-		build.
-]
+	| blog |
+	self importDirectory: self rawPath.
+	blog := FOBlogOverviewBuilder new 
+		folder: self root / #blog.
+	self addResource: (blog overviewPage path: (RelativePath from: 'index.md')).
+	self publish.
 
-{ #category : #building }
-FOWebSite >> buildModel [
-	^ FOSiteModelBuilder new
-		website: self;
-		build;
-		root.
 ]
 
 { #category : #accessing }
@@ -82,6 +70,27 @@ FOWebSite >> defaultTargetPath [
 { #category : #accessing }
 FOWebSite >> defaultTemplatePath [ 
 	self subclassResponsibility 
+]
+
+{ #category : #building }
+FOWebSite >> importDirectory: path [ 
+	FOSiteModelBuilder new 
+		website: self;
+		path: path;
+		build.
+]
+
+{ #category : #initialization }
+FOWebSite >> initialize [ 
+	super initialize.
+	root := self buildRoot 
+]
+
+{ #category : #building }
+FOWebSite >> publish [
+	FOPublishVisitor new
+		start: self
+
 ]
 
 { #category : #accessing }
@@ -106,9 +115,8 @@ FOWebSite >> relativeRawPath: aFileReference [
 ]
 
 { #category : #accessing }
-FOWebSite >> root [ 
-	^ root ifNil: [ 
-		 root := self buildRoot ]
+FOWebSite >> root [
+	^ root
 ]
 
 { #category : #accessing }

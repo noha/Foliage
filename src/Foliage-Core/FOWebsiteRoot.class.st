@@ -9,6 +9,13 @@ FOWebsiteRoot >> acceptFOVisitor: aFOVisitor [
 	^ aFOVisitor visitWebsiteRoot: self 
 ]
 
+{ #category : #adding }
+FOWebsiteRoot >> addResource: aResource [
+	| container |
+	container := self resolve: aResource path parent.
+	container add: aResource
+]
+
 { #category : #testing }
 FOWebsiteRoot >> isRoot [
 	^ true

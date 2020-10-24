@@ -34,6 +34,11 @@ FOWebResource >> isChildOf: anObject [
 	^ self parent = anObject 
 ]
 
+{ #category : #testing }
+FOWebResource >> isPage [
+	^ false
+]
+
 { #category : #accessing }
 FOWebResource >> parent [
 	^ parent

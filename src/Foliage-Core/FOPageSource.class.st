@@ -15,9 +15,7 @@ FOPageSource class >> isAbstract [
 
 { #category : #accessing }
 FOPageSource >> content [
-	^ content ifNil: [ 
-		self readContents.
-		content ]
+	^ content
 ]
 
 { #category : #accessing }
@@ -30,9 +28,25 @@ FOPageSource >> hasDocumentType [
 	^ meta includesKey: 'layout'
 ]
 
+{ #category : #testing }
+FOPageSource >> isPage [
+	^ true
+]
+
+{ #category : #testing }
+FOPageSource >> isPublished [
+	^ self publishDate notNil
+]
+
 { #category : #accessing }
 FOPageSource >> layout [
-	^ meta at: 'layout'
+	^ self meta at: 'layout'
+]
+
+{ #category : #accessing }
+FOPageSource >> meta [
+	^ meta ifNil: [ 
+		meta := Dictionary new ]
 ]
 
 { #category : #accessing }
@@ -40,32 +54,27 @@ FOPageSource >> meta: aCollection [
 	meta := aCollection 
 ]
 
-{ #category : #'instance creation' }
-FOPageSource >> readContentFrom: aStream [
-	self subclassResponsibility 
+{ #category : #accessing }
+FOPageSource >> metaAt: key put: value [
+	self meta 
+		at: key
+		put: value
 ]
 
 { #category : #accessing }
-FOPageSource >> readContents [
-	self readFrom: (self website rawPath resolve: path) readStream
+FOPageSource >> publishDate [
+	^ self meta 
+		at: #publishDate 
+		ifPresent: [ :string | (DateAndTime fromString: string) asDate   ]
+		ifAbsent: [ nil ]
 ]
 
-{ #category : #'instance creation' }
-FOPageSource >> readFrom: aStream [
-	meta := self readMetaFrom: aStream.
-	content := self readContentFrom: aStream.
-	self validate
-]
+{ #category : #'as yet unclassified' }
+FOPageSource >> publishPath [
+	self flag: #todo.
+	"path is not properly defined. When there is raw path and when publich path?"
+	^ (path parent / path base), #html  
 
-{ #category : #generation }
-FOPageSource >> readJsonFrom: aStream [
-	^ (NeoJSONReader on: aStream) next
-	
-]
-
-{ #category : #generation }
-FOPageSource >> readMetaFrom: aStream [
-	^ self readJsonFrom: aStream
 ]
 
 { #category : #accessing }

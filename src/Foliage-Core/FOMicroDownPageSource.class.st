@@ -1,6 +1,6 @@
 Class {
 	#name : #FOMicroDownPageSource,
-	#superclass : #FOPageSource,
+	#superclass : #FOFilePageSource,
 	#category : #'Foliage-Core-Model'
 }
 

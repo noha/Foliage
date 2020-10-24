@@ -61,6 +61,26 @@ FOPublishVisitor >> visitPageSource: aFOPageSource [
 ]
 
 { #category : #visiting }
+FOPublishVisitor >> visitPillarPage: aFOPillarPage [ 
+	| website targetPath stream html template page |
+	website := aFOPillarPage website.
+	html := String streamContents: [ :s| 
+		aFOPillarPage renderOn: s ].
+	template := (aFOPillarPage website templatePathForLayout: aFOPillarPage layout) asMustacheTemplate.
+	page := template 
+		value: { #body -> html } asDictionary
+		partials: (FOPartialProvider new layout: aFOPillarPage layout; website: aFOPillarPage website).
+	targetPath := (website targetPathFor: aFOPillarPage) withoutExtension, #html.
+	targetPath parent ensureCreateDirectory.
+	stream := targetPath writeStream
+		truncate;
+		nextPutAll: page;
+		flush; 
+		close.
+	^ FOPageSource 
+]
+
+{ #category : #visiting }
 FOPublishVisitor >> visitWebImage: aWebImage [ 
 	self copyResource: aWebImage 
 ]

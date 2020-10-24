@@ -1,6 +1,6 @@
 Class {
 	#name : #FOPillarHTMLVisitor,
-	#superclass : #PRVisitor,
+	#superclass : #FOPillarVisitor,
 	#instVars : [
 		'writer'
 	],
@@ -10,6 +10,11 @@ Class {
 { #category : #accessing }
 FOPillarHTMLVisitor >> contents [
 	^ writer contents
+]
+
+{ #category : #flushing }
+FOPillarHTMLVisitor >> flush [
+	writer flush
 ]
 
 { #category : #initialization }
@@ -29,11 +34,6 @@ FOPillarHTMLVisitor >> start: anObject [
 { #category : #accessing }
 FOPillarHTMLVisitor >> stream: aStream [ 
 	writer stream: aStream
-]
-
-{ #category : #visiting }
-FOPillarHTMLVisitor >> visit: anObject [
-	^ anObject accept: self
 ]
 
 { #category : #'visiting-document' }

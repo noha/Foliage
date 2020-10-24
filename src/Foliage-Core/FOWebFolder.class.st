@@ -8,6 +8,12 @@ Class {
 	#category : #'Foliage-Core-Model'
 }
 
+{ #category : #accessing }
+FOWebFolder >> / aString [ 
+	^ children 
+		detect: [ :each | each name = aString ]
+]
+
 { #category : #visiting }
 FOWebFolder >> acceptFOVisitor: aFOVisitor [ 
 	^ aFOVisitor visitWebFolder: self 
@@ -17,6 +23,11 @@ FOWebFolder >> acceptFOVisitor: aFOVisitor [
 FOWebFolder >> add: aWebItem [
 	aWebItem parent: self.
 	children add: aWebItem
+]
+
+{ #category : #accessing }
+FOWebFolder >> allPages [
+	^ children select: #isPage
 ]
 
 { #category : #accessing }

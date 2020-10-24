@@ -1,7 +1,7 @@
 Class {
 	#name : #FOWebsiteRoot,
 	#superclass : #FOWebFolder,
-	#category : #'Foliage-Core'
+	#category : #'Foliage-Core-Model'
 }
 
 { #category : #visiting }

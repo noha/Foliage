@@ -1,11 +1,11 @@
 Class {
 	#name : #FOPageSource,
-	#superclass : #FOWebObject,
+	#superclass : #FOTextEntity,
 	#instVars : [
 		'meta',
 		'content'
 	],
-	#category : #'Foliage-Core'
+	#category : #'Foliage-Core-Model'
 }
 
 { #category : #testing }

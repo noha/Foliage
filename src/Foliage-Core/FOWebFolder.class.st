@@ -5,7 +5,7 @@ Class {
 		'children',
 		'name'
 	],
-	#category : #'Foliage-Core'
+	#category : #'Foliage-Core-Model'
 }
 
 { #category : #visiting }
@@ -74,11 +74,11 @@ FOWebFolder >> resolve: aRelativePath [
 	aRelativePath isEmpty ifTrue: [ 
 		^ self ].
 	child := children
-		detect: [ :each | each name = aRelativePath first ]
+		detect: [ :each | each name = aRelativePath segments first ]
 		ifNone: [ 
 			FOWebFolder new 
-				name: aRelativePath first;
+				name: aRelativePath segments first;
 				parent: self ].
 	children add: child.
-	^ child resolve: aRelativePath allButFirst 
+	^ child resolve: aRelativePath segments allButFirst 
 ]

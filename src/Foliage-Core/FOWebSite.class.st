@@ -5,13 +5,19 @@ Class {
 		'targetPath',
 		'templatePath',
 		'rawPath',
-		'model'
+		'model',
+		'root'
 	],
 	#classInstVars : [
 		'instance'
 	],
-	#category : #'Foliage-Core'
+	#category : #'Foliage-Core-Model'
 }
+
+{ #category : #'instance creation' }
+FOWebSite class >> build [
+	^ self instance build
+]
 
 { #category : #'instance creation' }
 FOWebSite class >> instance [
@@ -19,14 +25,21 @@ FOWebSite class >> instance [
 		instance := self new ]
 ]
 
-{ #category : #accessing }
-FOWebSite class >> model [
-	^ self instance model
-]
-
 { #category : #resetting }
 FOWebSite class >> reset [
 	instance := nil
+]
+
+{ #category : #visiting }
+FOWebSite >> acceptFOVisitor: aFOVisitor [ 
+	^ aFOVisitor visitWebsite: self 
+]
+
+{ #category : #adding }
+FOWebSite >> addResource: aResource [
+	| container |
+	container := self root resolve: aResource path parent.
+	container add: aResource
 ]
 
 { #category : #'as yet unclassified' }
@@ -35,11 +48,25 @@ FOWebSite >> allRawFiles [
 ]
 
 { #category : #building }
+FOWebSite >> build [ 
+	FOSiteModelBuilder new 
+		website: self;
+		path: self rawPath;
+		build.
+]
+
+{ #category : #building }
 FOWebSite >> buildModel [
 	^ FOSiteModelBuilder new
 		website: self;
 		build;
 		root.
+]
+
+{ #category : #accessing }
+FOWebSite >> buildRoot [
+	^ FOWebsiteRoot new
+		parent: self 
 ]
 
 { #category : #accessing }
@@ -55,12 +82,6 @@ FOWebSite >> defaultTargetPath [
 { #category : #accessing }
 FOWebSite >> defaultTemplatePath [ 
 	self subclassResponsibility 
-]
-
-{ #category : #accessing }
-FOWebSite >> model [
-	^ model ifNil: [ 
-		model := self buildModel ]
 ]
 
 { #category : #accessing }
@@ -82,6 +103,12 @@ FOWebSite >> rawPathFor: aWebObject [
 { #category : #'as yet unclassified' }
 FOWebSite >> relativeRawPath: aFileReference [
 	^ aFileReference asAbsolute relativeTo: rawPath asAbsolute
+]
+
+{ #category : #accessing }
+FOWebSite >> root [ 
+	^ root ifNil: [ 
+		 root := self buildRoot ]
 ]
 
 { #category : #accessing }

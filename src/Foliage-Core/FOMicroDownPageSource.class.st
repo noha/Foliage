@@ -1,7 +1,7 @@
 Class {
 	#name : #FOMicroDownPageSource,
 	#superclass : #FOPageSource,
-	#category : #'Foliage-Core'
+	#category : #'Foliage-Core-Model'
 }
 
 { #category : #testing }

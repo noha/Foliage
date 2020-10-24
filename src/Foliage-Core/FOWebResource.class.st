@@ -4,12 +4,12 @@ Class {
 	#instVars : [
 		'parent'
 	],
-	#category : #'Foliage-Core'
+	#category : #'Foliage-Core-Model'
 }
 
 { #category : #accessing }
 FOWebResource class >> forFileExtension: aString [ 
-	^ (FOWebObject allSubclasses reject: #isAbstract)
+	^ (FOWebEntity allSubclasses reject: #isAbstract)
 		detect: [ :each | each matchesFileExtension: aString ]
 		ifNone: [  nil ]
 ]

@@ -1,16 +1,16 @@
 Class {
-	#name : #FOWebBinaryObject,
-	#superclass : #FOWebObject,
-	#category : #'Foliage-Core'
+	#name : #FOBinaryEntity,
+	#superclass : #FOWebEntity,
+	#category : #'Foliage-Core-Model'
 }
 
 { #category : #testing }
-FOWebBinaryObject class >> isAbstract [ 
-	^ self == FOWebBinaryObject  
+FOBinaryEntity class >> isAbstract [ 
+	^ self == FOBinaryEntity  
 ]
 
 { #category : #printing }
-FOWebBinaryObject >> printOn: aStream [
+FOBinaryEntity >> printOn: aStream [
 	"Append to the argument, aStream, a sequence of characters that  
 	identifies the receiver."
 

@@ -1,7 +1,7 @@
 Class {
 	#name : #FOWebImage,
-	#superclass : #FOWebBinaryObject,
-	#category : #'Foliage-Core'
+	#superclass : #FOBinaryEntity,
+	#category : #'Foliage-Core-Model'
 }
 
 { #category : #testing }

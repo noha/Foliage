@@ -2,11 +2,8 @@ Class {
 	#name : #FOSiteModelBuilder,
 	#superclass : #Object,
 	#instVars : [
-		'sourcePath',
-		'targetPath',
-		'templatePath',
 		'website',
-		'root'
+		'path'
 	],
 	#category : #'Foliage-Core'
 }
@@ -18,22 +15,15 @@ FOSiteModelBuilder class >> path: aString [
 ]
 
 { #category : #generation }
-FOSiteModelBuilder >> addResource: aResource [
-	| container |
-	container := self resolveContainer: aResource path parent.
-	container add: aResource
-]
-
-{ #category : #generation }
 FOSiteModelBuilder >> build [
 	| files sources |
 	sources := OrderedCollection new.
-	files := website allRawFiles.
+	files := path allFiles.
 	files do: [ :file | 
 		(self modelForExtension: file extension) ifNotNil: [ :model | 
 			model 
 				path: (website relativeRawPath: file).
-			self addResource: model ]
+			website addResource: model ]
 		].
 	^ sources
 ]
@@ -52,16 +42,9 @@ FOSiteModelBuilder >> modelForExtension: aString [
 	Error signal. 
 ]
 
-{ #category : #resolving }
-FOSiteModelBuilder >> resolveContainer: aRelativePath [ 
-	^ self root resolve: aRelativePath segments
-]
-
 { #category : #accessing }
-FOSiteModelBuilder >> root [
-	^ root ifNil: [ 
-		root := FOWebsiteRoot new
-			parent: website ]
+FOSiteModelBuilder >> path: aFileReference [ 
+	path := aFileReference 
 ]
 
 { #category : #accessing }

@@ -1,7 +1,7 @@
 Class {
 	#name : #FOPublishVisitor,
 	#superclass : #FOModelVisitor,
-	#category : #'Foliage-Core'
+	#category : #'Foliage-Core-Visitor'
 }
 
 { #category : #visiting }
@@ -30,7 +30,8 @@ FOPublishVisitor >> visitHTMLPageSource: aFOHTMLPageSource [
 	rawPath := aFOHTMLPageSource website rawPathFor: aFOHTMLPageSource.
  	targetPath := aFOHTMLPageSource website targetPathFor: aFOHTMLPageSource.
 	targetPath parent ensureCreateDirectory.
-	targetPath delete.
+	targetPath exists ifTrue: [
+		targetPath delete ].
 	rawPath copyTo: targetPath 
 ]
 

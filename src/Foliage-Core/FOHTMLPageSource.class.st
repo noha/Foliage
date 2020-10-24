@@ -1,7 +1,7 @@
 Class {
 	#name : #FOHTMLPageSource,
 	#superclass : #FOPageSource,
-	#category : #'Foliage-Core'
+	#category : #'Foliage-Core-Model'
 }
 
 { #category : #accessing }

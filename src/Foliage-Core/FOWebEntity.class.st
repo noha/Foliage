@@ -1,38 +1,38 @@
 Class {
-	#name : #FOWebObject,
+	#name : #FOWebEntity,
 	#superclass : #FOWebResource,
 	#instVars : [
 		'path'
 	],
-	#category : #'Foliage-Core'
+	#category : #'Foliage-Core-Model'
 }
 
 { #category : #testing }
-FOWebObject class >> isAbstract [ 
-	^ self == FOWebObject
+FOWebEntity class >> isAbstract [ 
+	^ self == FOWebEntity
 ]
 
 { #category : #accessing }
-FOWebObject >> name [
+FOWebEntity >> name [
 	^ path segments last
 ]
 
 { #category : #accessing }
-FOWebObject >> path [
+FOWebEntity >> path [
 	^ path
 ]
 
 { #category : #accessing }
-FOWebObject >> path: anObject [
+FOWebEntity >> path: anObject [
 	path := anObject
 ]
 
 { #category : #printing }
-FOWebObject >> printOn: aStream [ 
+FOWebEntity >> printOn: aStream [ 
 	aStream << 'leaf: ' << path asString 
 ]
 
 { #category : #accessing }
-FOWebObject >> rawPath [ 
+FOWebEntity >> rawPath [ 
 	^ self website rawPath resolve: path
 ]

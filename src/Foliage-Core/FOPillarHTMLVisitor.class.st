@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'writer'
 	],
-	#category : #'Foliage-Core'
+	#category : #'Foliage-Core-Visitor'
 }
 
 { #category : #accessing }

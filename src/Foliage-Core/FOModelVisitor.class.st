@@ -1,7 +1,7 @@
 Class {
 	#name : #FOModelVisitor,
 	#superclass : #Object,
-	#category : #'Foliage-Core'
+	#category : #'Foliage-Core-Visitor'
 }
 
 { #category : #visiting }
@@ -60,6 +60,11 @@ FOModelVisitor >> visitWebObject: aFOWebObject [
 { #category : #visiting }
 FOModelVisitor >> visitWebResource: aFOWebObject [
 	^ aFOWebObject copy
+]
+
+{ #category : #visiting }
+FOModelVisitor >> visitWebsite: aFOWebsite [ 
+	^ self visit: aFOWebsite root
 ]
 
 { #category : #visiting }

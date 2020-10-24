@@ -79,6 +79,11 @@ FOWebFolder >> name: aString [
 	name := aString
 ]
 
+{ #category : #printing }
+FOWebFolder >> printOn: aStream [
+	aStream << name << '/'
+]
+
 { #category : #resolving }
 FOWebFolder >> resolve: aRelativePath [ 
 	| child |

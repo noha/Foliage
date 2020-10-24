@@ -42,11 +42,13 @@ FOWebSite >> addResource: aResource [
 
 { #category : #building }
 FOWebSite >> build [ 
-	| blog |
+	| blogOverview |
 	self importDirectory: self rawPath.
-	blog := FOBlogOverviewBuilder new 
-		folder: self root / #blog.
-	self addResource: (blog overviewPage path: (RelativePath from: 'index.md')).
+	blogOverview := FOBlogOverviewBuilder new 
+		folder: self root / #blog;
+		overviewPage.
+	self addResource: (blogOverview 
+		path: (RelativePath from: 'index.md')).
 	self publish.
 
 ]

@@ -1,6 +1,6 @@
 Class {
 	#name : #FOPillarTruncateVisitor,
-	#superclass : #FOPillarVisitor,
+	#superclass : #FOPillarRewriteVisitor,
 	#instVars : [
 		'post',
 		'textSize',

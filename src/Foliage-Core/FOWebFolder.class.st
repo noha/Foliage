@@ -81,7 +81,7 @@ FOWebFolder >> name: aString [
 
 { #category : #printing }
 FOWebFolder >> printOn: aStream [
-	aStream << name << '/'
+	aStream << name asString << '/'
 ]
 
 { #category : #resolving }

@@ -71,7 +71,8 @@ FOPublishVisitor >> visitPillarPage: aFOPillarPage [
 		value: { #body -> html } asDictionary
 		partials: (FOPartialProvider new layout: aFOPillarPage layout; website: aFOPillarPage website).
 	targetPath := (website targetPathFor: aFOPillarPage) withoutExtension, #html.
-	targetPath parent ensureCreateDirectory.
+	targetPath parent exists ifFalse: [  
+		targetPath parent ensureCreateDirectory ].
 	stream := targetPath writeStream
 		truncate;
 		nextPutAll: page;

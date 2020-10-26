@@ -61,10 +61,21 @@ FOPageSource >> metaAt: key put: value [
 		put: value
 ]
 
+{ #category : #'instance creation' }
+FOPageSource >> newRenderContext [
+	^ self website newRenderContext 
+		page: self
+]
+
 { #category : #accessing }
 FOPageSource >> publishDate [
 	^ self meta 
 		at: #publishDate 
 		ifPresent: [ :string | (DateAndTime fromString: string) asDate   ]
 		ifAbsent: [ nil ]
+]
+
+{ #category : #accessing }
+FOPageSource >> title [
+	^ self meta at: 'title'
 ]

@@ -92,6 +92,12 @@ FOWebSite >> initialize [
 	root := self buildRoot 
 ]
 
+{ #category : #'instance creation' }
+FOWebSite >> newRenderContext [
+	^ FORenderContext new 
+		website: self
+]
+
 { #category : #building }
 FOWebSite >> publish [
 	FOPublishVisitor new
@@ -159,5 +165,5 @@ FOWebSite >> templatePathForLayout: aString [
 
 { #category : #accessing }
 FOWebSite >> templatePathForLayout: aString  partial: partialName [
-	^ self templatePath / (aString, '_' , partialName)
+	^ self templatePath / partialName
 ]

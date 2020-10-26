@@ -24,6 +24,7 @@ FOBlogOverviewBuilder >> overviewPage [
 	"how to organite layouts for in-memory pages??"
 	^ FOPillarPage new 
 		metaAt: 'layout' put: 'page';
+		metaAt: 'title' put: 'blog overview';
 		pillar: (PRDocument new
 			setChildren: (abstracts flatCollect: #children);
 			yourself)

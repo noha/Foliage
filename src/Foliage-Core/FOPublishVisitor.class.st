@@ -32,14 +32,11 @@ FOPublishVisitor >> visitHTMLPageSource: aFOHTMLPageSource [
 
 { #category : #visiting }
 FOPublishVisitor >> visitPillarPage: aFOPillarPage [ 
-	| website targetPath stream html template page |
+	| website targetPath stream template page renderContext |
 	website := aFOPillarPage website.
-	html := String streamContents: [ :s| 
-		aFOPillarPage renderOn: s ].
 	template := (aFOPillarPage website templatePathForLayout: aFOPillarPage layout) asMustacheTemplate.
-	page := template 
-		value: { #body -> html } asDictionary
-		partials: (FOPartialProvider new layout: aFOPillarPage layout; website: aFOPillarPage website).
+	renderContext := aFOPillarPage newRenderContext.
+	page := renderContext renderTemplate: template.
 	targetPath := aFOPillarPage publishPath asFileReference withoutExtension , #html.
 	targetPath parent exists ifFalse: [  
 		targetPath parent ensureCreateDirectory ].

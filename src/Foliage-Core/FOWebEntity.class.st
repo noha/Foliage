@@ -2,7 +2,7 @@ Class {
 	#name : #FOWebEntity,
 	#superclass : #FOWebResource,
 	#instVars : [
-		'path'
+		'raw'
 	],
 	#category : #'Foliage-Core-Model'
 }
@@ -12,27 +12,36 @@ FOWebEntity class >> isAbstract [
 	^ self == FOWebEntity
 ]
 
+{ #category : #copying }
+FOWebEntity >> duplicate [ 
+	^ self copy resetParent
+]
+
 { #category : #accessing }
 FOWebEntity >> name [
-	^ path segments last
-]
-
-{ #category : #accessing }
-FOWebEntity >> path [
-	^ path
-]
-
-{ #category : #accessing }
-FOWebEntity >> path: anObject [
-	path := anObject
+	^ parent nameOf: self
 ]
 
 { #category : #printing }
 FOWebEntity >> printOn: aStream [ 
-	aStream << 'leaf: ' << path asString 
+	aStream << 'leaf: ' << self path asString 
+]
+
+{ #category : #'as yet unclassified' }
+FOWebEntity >> publishPath [
+	self flag: #todo.
+	"path is not properly defined. When there is raw path and when publich path?"
+	^ self relativePath  
 ]
 
 { #category : #accessing }
-FOWebEntity >> rawPath [ 
-	^ self website rawPath resolve: path
+FOWebEntity >> raw: aFileReference [ 
+	raw := aFileReference 
+]
+
+{ #category : #'as yet unclassified' }
+FOWebEntity >> realPublishPath [
+	self flag: #todo.
+	"path is not properly defined. When there is raw path and when publich path?"
+	^ self website targetPath resolve: self relativePath  
 ]

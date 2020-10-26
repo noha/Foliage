@@ -94,7 +94,7 @@ FOPillarHTMLVisitor >> visitEmptyParagraph: anObject [
 ]
 
 { #category : #'visiting-document' }
-FOPillarHTMLVisitor >> visitExternalLink: anObject [
+FOPillarHTMLVisitor >> visitExternalLink: anObject [ 
 	^ writer 
 		writeTag: 'a'
 		attributes: { #href -> (anObject reference asString) } 

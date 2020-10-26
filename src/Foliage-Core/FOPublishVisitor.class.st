@@ -8,10 +8,11 @@ Class {
 FOPublishVisitor >> copyResource: aResource [ 
 	| rawPath targetPath |
 	rawPath := aResource website rawPathFor: aResource. 
-	targetPath := aResource website targetPathFor: aResource.
-	targetPath parent ensureCreateDirectory.
-	targetPath exists ifFalse: [  
-		rawPath copyTo: targetPath ]
+	targetPath := aResource realPublishPath.
+	targetPath parent asFileReference exists ifFalse: [  
+		targetPath parent asFileReference ensureCreateDirectory ].
+	targetPath asFileReference exists ifFalse: [  
+		rawPath copyTo: targetPath asFileReference ]
 ]
 
 { #category : #accessing }
@@ -36,31 +37,6 @@ FOPublishVisitor >> visitHTMLPageSource: aFOHTMLPageSource [
 ]
 
 { #category : #visiting }
-FOPublishVisitor >> visitMicrodownPageSource: aFOPageSource [ 
-	| website targetPath stream html template page |
-	website := aFOPageSource website.
-	html := String streamContents: [ :s| 
-		aFOPageSource renderOn: s ].
-	template := (aFOPageSource website templatePathForLayout: aFOPageSource layout) asMustacheTemplate.
-	page := template 
-		value: { #body -> html } asDictionary
-		partials: (FOPartialProvider new layout: aFOPageSource layout; website: aFOPageSource website).
-	targetPath := (website targetPathFor: aFOPageSource) withoutExtension, #html.
-	targetPath parent ensureCreateDirectory.
-	stream := targetPath writeStream
-		truncate;
-		nextPutAll: page;
-		flush; 
-		close.
-	^ FOPageSource 
-]
-
-{ #category : #visiting }
-FOPublishVisitor >> visitPageSource: aFOPageSource [ 
-	self halt.
-]
-
-{ #category : #visiting }
 FOPublishVisitor >> visitPillarPage: aFOPillarPage [ 
 	| website targetPath stream html template page |
 	website := aFOPillarPage website.
@@ -70,7 +46,7 @@ FOPublishVisitor >> visitPillarPage: aFOPillarPage [
 	page := template 
 		value: { #body -> html } asDictionary
 		partials: (FOPartialProvider new layout: aFOPillarPage layout; website: aFOPillarPage website).
-	targetPath := (website targetPathFor: aFOPillarPage) withoutExtension, #html.
+	targetPath := aFOPillarPage realPublishPath asFileReference withoutExtension , #html.
 	targetPath parent exists ifFalse: [  
 		targetPath parent ensureCreateDirectory ].
 	stream := targetPath writeStream

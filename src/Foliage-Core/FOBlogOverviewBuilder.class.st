@@ -19,7 +19,7 @@ FOBlogOverviewBuilder >> overviewPage [
 	abstracts := posts collect: [ :post |
 		FOPillarTruncateVisitor new 
 			size: (300 to: 600);
-			post: post ].
+			post: post  ].
 	self flag: #todo.
 	"how to organite layouts for in-memory pages??"
 	^ FOPillarPage new 

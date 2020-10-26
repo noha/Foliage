@@ -26,11 +26,6 @@ FOModelVisitor >> visitHTMLPageSource: aFOHTMLPageSource [
 ]
 
 { #category : #visiting }
-FOModelVisitor >> visitMicrodownPageSource: aFOMicroDownPageSource [ 
-	^ self visitPageSource: aFOMicroDownPageSource 
-]
-
-{ #category : #visiting }
 FOModelVisitor >> visitPageSource: aFOPageSource [ 
 	^ self visitWebObject: aFOPageSource 
 ]
@@ -43,7 +38,7 @@ FOModelVisitor >> visitWebBinaryObject: aFOWebBinaryObject [
 { #category : #visiting }
 FOModelVisitor >> visitWebFolder: aFOWebsiteFolder [
 	^ (self visitWebResource: aFOWebsiteFolder)
-		children: (self visitAll: aFOWebsiteFolder children );
+		setChildren: (self visitAll: aFOWebsiteFolder children );
 		yourself 
 ]
 

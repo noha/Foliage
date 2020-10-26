@@ -12,7 +12,7 @@ Class {
 { #category : #accessing }
 FOPillarTruncateVisitor >> post: anObject [ 
 	post := anObject.
-	^ self start: anObject pillar
+	^ self start: anObject document copy
 ]
 
 { #category : #accessing }
@@ -42,7 +42,7 @@ FOPillarTruncateVisitor >> visitHeader: aPRHeader [
 			aPRHeader 
 				setChildren: (
 					Array with: (PRExternalLink new 
-						reference: ($/ join: post publishPath segments) asZnUrl;
+						reference: (post path withExtension: #html) pathString asZnUrl ;
 						setChildren: (self visitAll: aPRHeader children)));
 				yourself ]
 		ifFalse: [ aPRHeader ]

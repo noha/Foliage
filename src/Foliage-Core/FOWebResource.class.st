@@ -46,7 +46,23 @@ FOWebResource >> parent [
 
 { #category : #accessing }
 FOWebResource >> parent: anItem [
+	parent ifNotNil: [ Error signal: anItem asString, ' is already added to the tree' ].
 	parent := anItem
+]
+
+{ #category : #accessing }
+FOWebResource >> path [
+	^ parent path / (parent nameOf: self)
+]
+
+{ #category : #accessing }
+FOWebResource >> relativePath [
+	^ self path relativeTo: '/' asPath
+]
+
+{ #category : #accessing }
+FOWebResource >> resetParent [
+	parent := nil
 ]
 
 { #category : #accessing }

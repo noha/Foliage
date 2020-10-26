@@ -22,6 +22,11 @@ FOWebsiteRoot >> isRoot [
 ]
 
 { #category : #accessing }
+FOWebsiteRoot >> path [ 
+	^ Path root
+]
+
+{ #category : #accessing }
 FOWebsiteRoot >> root [ 	
 	^ self 
 ]

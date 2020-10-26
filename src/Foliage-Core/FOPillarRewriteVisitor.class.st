@@ -12,3 +12,8 @@ FOPillarRewriteVisitor >> visitDocumentGroup: anObject [
 	
 
 ]
+
+{ #category : #'visiting-document' }
+FOPillarRewriteVisitor >> visitDocumentItem: aDocumentItem [ 
+	^ aDocumentItem copy
+]

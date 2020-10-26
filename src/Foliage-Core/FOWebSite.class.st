@@ -36,13 +36,8 @@ FOWebSite >> acceptFOVisitor: aFOVisitor [
 ]
 
 { #category : #adding }
-FOWebSite >> addResource: aResource [
-	root addResource: aResource 
-]
-
-{ #category : #adding }
-FOWebSite >> atPath: aRelativePath add: aWebEntity [ 
-	root atPath: aRelativePath asPath add: aWebEntity 
+FOWebSite >> atPath: path add: aWebEntity [ 
+	root atPath: path asPath add: aWebEntity 
 ]
 
 { #category : #building }
@@ -52,8 +47,12 @@ FOWebSite >> build [
 	blogOverview := FOBlogOverviewBuilder new 
 		folder: self root / #blog;
 		overviewPage.
-	self addResource: (blogOverview 
-		path: (RelativePath from: 'index.md')).
+	self 
+		atPath: '/index.html' 
+		add: blogOverview.  
+	self  
+		atPath: '/blog/index.html' 
+		add: blogOverview duplicate.
 	self publish.
 
 ]
@@ -118,7 +117,7 @@ FOWebSite >> rawPathFor: aWebObject [
 
 { #category : #'as yet unclassified' }
 FOWebSite >> relativeRawPath: aFileReference [
-	^ aFileReference asAbsolute relativeTo: rawPath asAbsolute
+	^ aFileReference asAbsolute relativeTo: rawPath asAbsolute 
 ]
 
 { #category : #accessing }

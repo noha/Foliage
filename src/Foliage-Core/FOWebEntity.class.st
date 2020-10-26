@@ -27,21 +27,7 @@ FOWebEntity >> printOn: aStream [
 	aStream << 'leaf: ' << self path asString 
 ]
 
-{ #category : #'as yet unclassified' }
-FOWebEntity >> publishPath [
-	self flag: #todo.
-	"path is not properly defined. When there is raw path and when publich path?"
-	^ self relativePath  
-]
-
 { #category : #accessing }
 FOWebEntity >> raw: aFileReference [ 
 	raw := aFileReference 
-]
-
-{ #category : #'as yet unclassified' }
-FOWebEntity >> realPublishPath [
-	self flag: #todo.
-	"path is not properly defined. When there is raw path and when publich path?"
-	^ self website targetPath resolve: self relativePath  
 ]

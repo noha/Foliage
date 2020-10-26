@@ -20,10 +20,11 @@ FOSiteModelBuilder >> build [
 	sources := OrderedCollection new.
 	files := path allFiles.
 	files do: [ :file | 
-		(self readerForExtension: file extension) ifNotNil: [ :reader | | relativePath |
+		(self readerForExtension: file extension) ifNotNil: [ :reader | 
 			model := (reader file: file) model.
-			relativePath := website relativeRawPath: file. 
-			website atPath: relativePath add: model ]
+			website 
+				atPath: (website relativeRawPath: file)
+				add: model ]
 		].
 	^ sources
 ]

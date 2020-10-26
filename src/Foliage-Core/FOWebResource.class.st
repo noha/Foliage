@@ -55,6 +55,13 @@ FOWebResource >> path [
 	^ parent path / (parent nameOf: self)
 ]
 
+{ #category : #'as yet unclassified' }
+FOWebResource >> publishPath [
+	self flag: #todo.
+	"path is not properly defined. When there is raw path and when publich path?"
+	^ self website targetPath resolve: self relativePath  
+]
+
 { #category : #accessing }
 FOWebResource >> relativePath [
 	^ self path relativeTo: '/' asPath

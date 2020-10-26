@@ -14,8 +14,3 @@ FOHTMLReader >> model [
 	^ FOHTMLPage new
 		raw: file
 ]
-
-{ #category : #'instance creation' }
-FOHTMLReader >> readFrom: aZnCharacterReadStream [ 
-	^ FOHTMLPage new
-]

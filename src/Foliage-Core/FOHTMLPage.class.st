@@ -1,6 +1,6 @@
 Class {
 	#name : #FOHTMLPage,
-	#superclass : #FOWebEntity,
+	#superclass : #FOTextEntity,
 	#category : #'Foliage-Core-Model'
 }
 

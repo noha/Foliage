@@ -27,12 +27,17 @@ FOModelVisitor >> visitHTMLPageSource: aFOHTMLPageSource [
 
 { #category : #visiting }
 FOModelVisitor >> visitPageSource: aFOPageSource [ 
-	^ self visitWebObject: aFOPageSource 
+	^ self visitWebEntity: aFOPageSource 
 ]
 
 { #category : #visiting }
-FOModelVisitor >> visitWebBinaryObject: aFOWebBinaryObject [
-	^ self visitWebObject: aFOWebBinaryObject 
+FOModelVisitor >> visitWebBinaryEntity: aFOWebBinaryObject [
+	^ self visitWebEntity: aFOWebBinaryObject 
+]
+
+{ #category : #visiting }
+FOModelVisitor >> visitWebEntity: aFOWebObject [
+	^ self visitWebResource: aFOWebObject 
 ]
 
 { #category : #visiting }
@@ -44,12 +49,7 @@ FOModelVisitor >> visitWebFolder: aFOWebsiteFolder [
 
 { #category : #visiting }
 FOModelVisitor >> visitWebImage: aWebImage [ 
-	^ self visitWebBinaryObject: aWebImage 
-]
-
-{ #category : #visiting }
-FOModelVisitor >> visitWebObject: aFOWebObject [
-	^ self visitWebResource: aFOWebObject 
+	^ self visitWebBinaryEntity: aWebImage 
 ]
 
 { #category : #visiting }

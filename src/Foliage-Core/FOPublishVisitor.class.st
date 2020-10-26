@@ -8,7 +8,7 @@ Class {
 FOPublishVisitor >> copyResource: aResource [ 
 	| rawPath targetPath |
 	rawPath := aResource website rawPathFor: aResource. 
-	targetPath := aResource realPublishPath.
+	targetPath := aResource publishPath.
 	targetPath parent asFileReference exists ifFalse: [  
 		targetPath parent asFileReference ensureCreateDirectory ].
 	targetPath asFileReference exists ifFalse: [  
@@ -27,13 +27,7 @@ FOPublishVisitor >> visitCSSObject: aFOCSSObject [
 
 { #category : #visiting }
 FOPublishVisitor >> visitHTMLPageSource: aFOHTMLPageSource [ 
-	| targetPath rawPath |
-	rawPath := aFOHTMLPageSource website rawPathFor: aFOHTMLPageSource.
- 	targetPath := aFOHTMLPageSource website targetPathFor: aFOHTMLPageSource.
-	targetPath parent ensureCreateDirectory.
-	targetPath exists ifTrue: [
-		targetPath delete ].
-	rawPath copyTo: targetPath 
+	self copyResource: aFOHTMLPageSource 
 ]
 
 { #category : #visiting }
@@ -46,7 +40,7 @@ FOPublishVisitor >> visitPillarPage: aFOPillarPage [
 	page := template 
 		value: { #body -> html } asDictionary
 		partials: (FOPartialProvider new layout: aFOPillarPage layout; website: aFOPillarPage website).
-	targetPath := aFOPillarPage realPublishPath asFileReference withoutExtension , #html.
+	targetPath := aFOPillarPage publishPath asFileReference withoutExtension , #html.
 	targetPath parent exists ifFalse: [  
 		targetPath parent ensureCreateDirectory ].
 	stream := targetPath writeStream

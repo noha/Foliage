@@ -1,6 +1,6 @@
 Class {
 	#name : #FOHTMLPage,
-	#superclass : #AnObsoleteFOFilePageSource,
+	#superclass : #FOWebEntity,
 	#category : #'Foliage-Core-Model'
 }
 

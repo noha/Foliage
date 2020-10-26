@@ -40,6 +40,11 @@ FOWebSite >> addResource: aResource [
 	root addResource: aResource 
 ]
 
+{ #category : #adding }
+FOWebSite >> atPath: aRelativePath add: aWebEntity [ 
+	root atPath: aRelativePath asPath add: aWebEntity 
+]
+
 { #category : #building }
 FOWebSite >> build [ 
 	| blogOverview |
@@ -108,7 +113,7 @@ FOWebSite >> rawPath: anObject [
 
 { #category : #accessing }
 FOWebSite >> rawPathFor: aWebObject [
-	^ self rawPath resolve: aWebObject path
+	^ self rawPath resolve: aWebObject relativePath
 ]
 
 { #category : #'as yet unclassified' }

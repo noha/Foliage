@@ -18,6 +18,16 @@ FOPillarPage >> acceptFOVisitor: aFOVisitor [
 ]
 
 { #category : #accessing }
+FOPillarPage >> document [
+	^ document
+]
+
+{ #category : #accessing }
+FOPillarPage >> document: aMicRootBlock [ 
+	document := aMicRootBlock
+]
+
+{ #category : #accessing }
 FOPillarPage >> pillar: aPRDocument [ 
 	document := aPRDocument 
 ]

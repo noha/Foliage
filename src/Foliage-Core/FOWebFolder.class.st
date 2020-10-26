@@ -10,8 +10,7 @@ Class {
 
 { #category : #accessing }
 FOWebFolder >> / aString [ 
-	^ children 
-		detect: [ :each | each name = aString ]
+	^ children at: aString
 ]
 
 { #category : #visiting }
@@ -20,24 +19,30 @@ FOWebFolder >> acceptFOVisitor: aFOVisitor [
 ]
 
 { #category : #accessing }
-FOWebFolder >> add: aWebItem [
-	aWebItem parent: self.
-	children add: aWebItem
-]
-
-{ #category : #accessing }
 FOWebFolder >> allPages [
 	^ children select: #isPage
 ]
 
 { #category : #accessing }
-FOWebFolder >> children [
-	^ children
+FOWebFolder >> atName: key put: value [
+	(children includesKey: key)
+		ifTrue: [ Error signal: 'child ', key asString, ' already exists' ].
+	value parent: self.
+	children
+		at: key 
+		put: value
+]
+
+{ #category : #'as yet unclassified' }
+FOWebFolder >> atPath: aRelativePath add: aWebEntity [
+	| container |
+	container := self resolve: aRelativePath parent.
+	container atName: aRelativePath basename put: aWebEntity  
 ]
 
 { #category : #accessing }
-FOWebFolder >> children: anObject [
-	children := anObject
+FOWebFolder >> children [
+	^ children
 ]
 
 { #category : #'as yet unclassified' }
@@ -61,7 +66,7 @@ FOWebFolder >> gtInspectorItemsIn: composite [
 { #category : #initialization }
 FOWebFolder >> initialize [ 
 	super initialize.
-	children := OrderedCollection new
+	children := SmallDictionary  new
 ]
 
 { #category : #testing }
@@ -79,9 +84,14 @@ FOWebFolder >> name: aString [
 	name := aString
 ]
 
+{ #category : #accessing }
+FOWebFolder >> nameOf: aWebEntity [
+	^ children keyAtValue: aWebEntity 
+]
+
 { #category : #printing }
 FOWebFolder >> printOn: aStream [
-	aStream << name << '/'
+	aStream << self path asString << '/'
 ]
 
 { #category : #resolving }
@@ -89,12 +99,13 @@ FOWebFolder >> resolve: aRelativePath [
 	| child |
 	aRelativePath isEmpty ifTrue: [ 
 		^ self ].
-	child := children
-		detect: [ :each | each name = aRelativePath segments first ]
-		ifNone: [ 
-			FOWebFolder new 
-				name: aRelativePath segments first;
-				parent: self ].
-	children add: child.
+	child := children 
+		at: aRelativePath segments first
+		ifAbsentPut: [ FOWebFolder new parent: self ].
 	^ child resolve: aRelativePath segments allButFirst 
+]
+
+{ #category : #accessing }
+FOWebFolder >> setChildren: aCollection [ 
+	children := aCollection 
 ]

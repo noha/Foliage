@@ -16,14 +16,14 @@ FOSiteModelBuilder class >> path: aString [
 
 { #category : #generation }
 FOSiteModelBuilder >> build [
-	| files sources |
+	| files sources model |
 	sources := OrderedCollection new.
 	files := path allFiles.
 	files do: [ :file | 
-		(self modelForExtension: file extension) ifNotNil: [ :model | 
-			model 
-				path: (website relativeRawPath: file).
-			website addResource: model ]
+		(self readerForExtension: file extension) ifNotNil: [ :reader | | relativePath |
+			model := (reader file: file) model.
+			relativePath := website relativeRawPath: file. 
+			website atPath: relativePath add: model ]
 		].
 	^ sources
 ]
@@ -34,17 +34,17 @@ FOSiteModelBuilder >> extensionsToIgnore [
 ]
 
 { #category : #accessing }
-FOSiteModelBuilder >> modelForExtension: aString [ 
-	(self extensionsToIgnore includes: aString) ifTrue: [ 
-		^ nil ].
-	(FOWebResource forFileExtension: aString)
-		ifNotNil: [ :cls | ^ cls new ].
-	Error signal. 
+FOSiteModelBuilder >> path: aFileReference [ 
+	path := aFileReference 
 ]
 
 { #category : #accessing }
-FOSiteModelBuilder >> path: aFileReference [ 
-	path := aFileReference 
+FOSiteModelBuilder >> readerForExtension: aString [ 
+	(self extensionsToIgnore includes: aString) ifTrue: [ 
+		^ nil ].
+	(FORawReader forFileExtension: aString)
+		ifNotNil: [ :cls | ^ cls ].
+	Error signal. 
 ]
 
 { #category : #accessing }

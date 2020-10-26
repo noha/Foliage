@@ -68,17 +68,3 @@ FOPageSource >> publishDate [
 		ifPresent: [ :string | (DateAndTime fromString: string) asDate   ]
 		ifAbsent: [ nil ]
 ]
-
-{ #category : #'as yet unclassified' }
-FOPageSource >> publishPath [
-	self flag: #todo.
-	"path is not properly defined. When there is raw path and when publich path?"
-	^ (path parent / path base), #html  
-
-]
-
-{ #category : #accessing }
-FOPageSource >> validate [ 
-	self hasDocumentType ifFalse: [ 
-		Error signal: 'document in ', path asString, ' is missing type' ].
-]

@@ -11,7 +11,8 @@ BaselineOfFoliage >> baseline: spec [
 	spec for: #'common' do: [
 		self
 			mustache: spec; 
-			neoJson: spec.
+			neoJson: spec;
+			zinc: spec.
 		spec 
 			package: 'Foliage-Core' with: [
 				spec requires: #('NeoJSON' 'Mustache') ];
@@ -20,7 +21,8 @@ BaselineOfFoliage >> baseline: spec [
 		spec 
 			group: 'Core' with: #('Foliage-Core' );
 			group: 'Tests' with: #('Foliage-Core-Tests' );
-			group: 'default' with: #('Core' 'Tests') ]
+			group: 'default' with: #('Core' 'Tests');
+			group: 'development' with: #('Core' 'Tests' 'ZincHTTPComponents') ]
 
 ]
 
@@ -36,4 +38,12 @@ BaselineOfFoliage >> mustache: spec [
 BaselineOfFoliage >> neoJson: spec [
 	spec baseline: 'NeoJSON' with: [
 		spec repository: 'github://svenvc/NeoJSON/repository'].
+]
+
+{ #category : #baselines }
+BaselineOfFoliage >> zinc: spec [
+	spec baseline: 'ZincHTTPComponents' with: [
+		spec 
+			repository: 'github://svenvc/zinc/repository';
+			loads: #('Zinc-HTTP-Examples')].
 ]

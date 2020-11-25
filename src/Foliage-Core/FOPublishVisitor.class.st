@@ -21,6 +21,20 @@ FOPublishVisitor >> templateForLayout: aString [
 ]
 
 { #category : #visiting }
+FOPublishVisitor >> visitBlog: aFORSSFeed [ 
+	| template targetPath stream |
+	template := (aFORSSFeed website templatePath / #'rss.xml') asMustacheTemplate.
+	targetPath := aFORSSFeed publishPath asFileReference.
+	targetPath parent exists ifFalse: [  
+		targetPath parent ensureCreateDirectory ].
+	stream := targetPath writeStream
+		truncate;
+		nextPutAll: (template value: aFORSSFeed);
+		flush; 
+		close.
+]
+
+{ #category : #visiting }
 FOPublishVisitor >> visitCSSObject: aFOCSSObject [ 
 	self copyResource: aFOCSSObject 
 ]

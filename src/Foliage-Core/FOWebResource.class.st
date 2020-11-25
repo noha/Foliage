@@ -24,6 +24,20 @@ FOWebResource class >> matchesFileExtension: aString [
 	^ self supportedFileExtensions includes: aString
 ]
 
+{ #category : #accessing }
+FOWebResource >> absoluteLink [
+	^ self website absoluteLinkFor: self 
+]
+
+{ #category : #converting }
+FOWebResource >> asHeaderLink [
+	^ FOHeaderLink new 
+		rel: self rel;
+		type: self linkType;
+		title: self title;
+		href: self href
+]
+
 { #category : #testing }
 FOWebResource >> isAbstract [ 
 	^ self == FOWebResource 

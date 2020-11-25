@@ -37,7 +37,8 @@ FOWebFolder >> atName: key put: value [
 FOWebFolder >> atPath: aRelativePath add: aWebEntity [
 	| container |
 	container := self resolve: aRelativePath parent.
-	container atName: aRelativePath basename put: aWebEntity  
+	container atName: aRelativePath basename put: aWebEntity.
+	^ aWebEntity  
 ]
 
 { #category : #accessing }

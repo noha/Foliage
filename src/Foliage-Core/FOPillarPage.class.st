@@ -2,7 +2,8 @@ Class {
 	#name : #FOPillarPage,
 	#superclass : #FOPageSource,
 	#instVars : [
-		'document'
+		'document',
+		'links'
 	],
 	#category : #'Foliage-Core-Model'
 }
@@ -10,6 +11,11 @@ Class {
 { #category : #testing }
 FOPillarPage class >> supportedFileExtensions [
 	^ { } 
+]
+
+{ #category : #'as yet unclassified' }
+FOPillarPage >> abstract [
+	^ (Character space join: (document children allButFirst collect: #text)) first: 400
 ]
 
 { #category : #visiting }
@@ -25,6 +31,12 @@ FOPillarPage >> document [
 { #category : #accessing }
 FOPillarPage >> document: aMicRootBlock [ 
 	document := aMicRootBlock
+]
+
+{ #category : #accessing }
+FOPillarPage >> links [ 
+	^ links ifNil: [ 
+		links := OrderedCollection new ]
 ]
 
 { #category : #accessing }

@@ -14,6 +14,11 @@ FOPageSource class >> isAbstract [
 ]
 
 { #category : #accessing }
+FOPageSource >> addHeaderLink: aFORSSFeed [ 
+	self links add: aFORSSFeed 
+]
+
+{ #category : #accessing }
 FOPageSource >> content [
 	^ content
 ]

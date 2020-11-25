@@ -20,12 +20,13 @@ FOSiteModelBuilder >> build [
 	sources := OrderedCollection new.
 	files := path allFiles.
 	files do: [ :file | 
-		(self readerForExtension: file extension) ifNotNil: [ :reader | 
+		[ (self readerForExtension: file extension) ifNotNil: [ :reader | 
 			model := (reader file: file) model.
 			website 
 				atPath: (website relativeRawPath: file)
-				add: model ]
-		].
+				add: model ] ]
+				on: NeoJSONParseError 
+				do: [ :error | Transcript show: 'could not read in ', file asString; cr ] ].
 	^ sources
 ]
 

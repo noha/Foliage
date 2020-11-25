@@ -13,6 +13,11 @@ FOBlog class >> posts: aCollection [
 		posts: aCollection 
 ]
 
+{ #category : #visiting }
+FOBlog >> acceptFOVisitor: aFOVisitor [ 
+	^ aFOVisitor visitBlog: self 
+]
+
 { #category : #summary }
 FOBlog >> overviewPage [
 	^ FOBlogOverviewBuilder new 

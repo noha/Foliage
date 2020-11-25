@@ -38,7 +38,7 @@ FOWebSite >> acceptFOVisitor: aFOVisitor [
 
 { #category : #adding }
 FOWebSite >> atPath: path add: aWebEntity [ 
-	root atPath: path asPath add: aWebEntity 
+	^ root atPath: path asPath add: aWebEntity 
 ]
 
 { #category : #'as yet unclassified' }

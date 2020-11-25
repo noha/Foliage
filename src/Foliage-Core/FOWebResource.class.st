@@ -55,6 +55,11 @@ FOWebResource >> path [
 	^ parent path / (parent nameOf: self)
 ]
 
+{ #category : #accessing }
+FOWebResource >> pathString [
+	^ (self path withExtension: #html) pathString
+]
+
 { #category : #'as yet unclassified' }
 FOWebResource >> publishPath [
 	self flag: #todo.

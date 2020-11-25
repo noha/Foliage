@@ -2,24 +2,30 @@ Class {
 	#name : #FOBlogOverviewBuilder,
 	#superclass : #Object,
 	#instVars : [
-		'folder'
+		'posts',
+		'numberOfCharacters'
 	],
 	#category : #'Foliage-Core'
 }
 
 { #category : #accessing }
-FOBlogOverviewBuilder >> folder: aFOWebFolder [ 
-	folder := aFOWebFolder 
+FOBlogOverviewBuilder >> amountOfCharacters [
+	^ numberOfCharacters ifNil: [ 
+		numberOfCharacters := self defaultNumberOfCharacters ]
 ]
 
-{ #category : #'page creation' }
-FOBlogOverviewBuilder >> overviewPage [
-	| posts abstracts |
-	posts := self publishedPosts.
-	abstracts := posts collect: [ :post |
-		FOPillarTruncateVisitor new 
-			size: (300 to: 600);
-			post: post  ].
+{ #category : #building }
+FOBlogOverviewBuilder >> buildAbstract: aPage [
+	^ FOPillarTruncateVisitor new 
+		amountOfCharacters: self amountOfCharacters;
+		post: aPage 
+]
+
+{ #category : #building }
+FOBlogOverviewBuilder >> buildSummary [
+	|  abstracts |
+	abstracts := self publishedPosts collect: [ :post |
+		self buildAbstract: post ].
 	self flag: #todo.
 	"how to organite layouts for in-memory pages??"
 	^ FOPillarPage new 
@@ -30,9 +36,23 @@ FOBlogOverviewBuilder >> overviewPage [
 			yourself)
 ]
 
+{ #category : #accessing }
+FOBlogOverviewBuilder >> defaultNumberOfCharacters [
+	^ 500
+]
+
+{ #category : #accessing }
+FOBlogOverviewBuilder >> numberOfCharacters: anObject [
+	numberOfCharacters := anObject
+]
+
+{ #category : #accessing }
+FOBlogOverviewBuilder >> posts: aCollection [ 
+	posts := aCollection
+]
+
 { #category : #'page creation' }
 FOBlogOverviewBuilder >> publishedPosts [
-	^ (folder allPages 
-		select: #isPublished)
+	^ (posts select: #isPublished)
 			sorted: [ :a :b | a publishDate > b publishDate ]
 ]

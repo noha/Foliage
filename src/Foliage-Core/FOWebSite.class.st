@@ -6,7 +6,8 @@ Class {
 		'templatePath',
 		'rawPath',
 		'model',
-		'root'
+		'root',
+		'properties'
 	],
 	#classInstVars : [
 		'instance'
@@ -38,6 +39,18 @@ FOWebSite >> acceptFOVisitor: aFOVisitor [
 { #category : #adding }
 FOWebSite >> atPath: path add: aWebEntity [ 
 	root atPath: path asPath add: aWebEntity 
+]
+
+{ #category : #'as yet unclassified' }
+FOWebSite >> blog [
+	^ self propertyAt: #blog
+]
+
+{ #category : #accessing }
+FOWebSite >> blog: aFOBlog [ 
+	self 
+		propertyAt: #blog 
+		put: aFOBlog 
 ]
 
 { #category : #building }
@@ -89,6 +102,7 @@ FOWebSite >> importDirectory: path [
 { #category : #initialization }
 FOWebSite >> initialize [ 
 	super initialize.
+	properties := Dictionary new.
 	root := self buildRoot 
 ]
 
@@ -96,6 +110,23 @@ FOWebSite >> initialize [
 FOWebSite >> newRenderContext [
 	^ FORenderContext new 
 		website: self
+]
+
+{ #category : #accessing }
+FOWebSite >> properties [
+	^ properties
+]
+
+{ #category : #accessing }
+FOWebSite >> propertyAt: aString [ 
+	^ properties at: aString
+]
+
+{ #category : #accessing }
+FOWebSite >> propertyAt: aString put: anObject [
+	^ properties 
+		at: aString
+		put: anObject 
 ]
 
 { #category : #building }

@@ -24,6 +24,11 @@ FORenderContext >> html [
 		page renderOn: s ].
 ]
 
+{ #category : #'as yet unclassified' }
+FORenderContext >> nextPost [ 
+	^ website blog postAfter: self page
+]
+
 { #category : #accessing }
 FORenderContext >> page [
 	^ page
@@ -39,6 +44,11 @@ FORenderContext >> partials [
 	^ FOPartialProvider new 
 		layout: page layout; 
 		website: website
+]
+
+{ #category : #'as yet unclassified' }
+FORenderContext >> previousPost [ 
+	^ website blog postBefore: self page
 ]
 
 { #category : #rendering }

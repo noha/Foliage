@@ -3,11 +3,17 @@ Class {
 	#superclass : #FOPillarRewriteVisitor,
 	#instVars : [
 		'post',
-		'textSize',
-		'sizeRange'
+		'upperLimit',
+		'amountOfCharacters'
 	],
 	#category : #'Foliage-Core-Visitor'
 }
+
+{ #category : #accessing }
+FOPillarTruncateVisitor >> amountOfCharacters: aNumber [ 
+	upperLimit := aNumber.
+	amountOfCharacters := 0.
+]
 
 { #category : #accessing }
 FOPillarTruncateVisitor >> post: anObject [ 
@@ -15,15 +21,9 @@ FOPillarTruncateVisitor >> post: anObject [
 	^ self start: anObject document copy
 ]
 
-{ #category : #accessing }
-FOPillarTruncateVisitor >> size: anInterval [ 
-	sizeRange := anInterval.
-	textSize := 0.
-]
-
 { #category : #visiting }
 FOPillarTruncateVisitor >> visit: anObject [
-	(textSize >= sizeRange last) ifTrue: [ 
+	(amountOfCharacters >= upperLimit) ifTrue: [ 
 		^ nil ].
 	^ anObject accept: self
 ]
@@ -50,10 +50,10 @@ FOPillarTruncateVisitor >> visitHeader: aPRHeader [
 
 { #category : #'visiting-document' }
 FOPillarTruncateVisitor >> visitText: aPRText [
-	| s | 
-	s := aPRText text size.
-	(textSize + s > sizeRange last) ifTrue: [  
-		aPRText text: (aPRText text truncateWithElipsisTo: (sizeRange last - textSize)) ].
-	textSize := textSize + aPRText text size.
+	| textSize | 
+	textSize := aPRText text size.
+	(amountOfCharacters + textSize >= upperLimit) ifTrue: [  
+		aPRText text: (aPRText text truncateWithElipsisTo: (10 max:(upperLimit - amountOfCharacters))) ].
+	amountOfCharacters := amountOfCharacters + aPRText text size.
 	^ aPRText 
 ]

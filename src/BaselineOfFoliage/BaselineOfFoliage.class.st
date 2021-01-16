@@ -12,10 +12,11 @@ BaselineOfFoliage >> baseline: spec [
 		self
 			mustache: spec; 
 			neoJson: spec;
+			soup: spec;
 			zinc: spec.
 		spec 
 			package: 'Foliage-Core' with: [
-				spec requires: #('NeoJSON' 'Mustache') ];
+				spec requires: #('NeoJSON' 'Mustache' 'Soup') ];
 			package: 'Foliage-Core-Tests' with: [
 				spec requires: #('Foliage-Core') ].
 		spec 
@@ -38,6 +39,14 @@ BaselineOfFoliage >> mustache: spec [
 BaselineOfFoliage >> neoJson: spec [
 	spec baseline: 'NeoJSON' with: [
 		spec repository: 'github://svenvc/NeoJSON/repository'].
+]
+
+{ #category : #baselines }
+BaselineOfFoliage >> soup: spec [
+	spec baseline: 'Soup' with: [
+		spec 
+			repository: 'github://pharo-contributions/Soup';
+			loads: #('Core')].
 ]
 
 { #category : #baselines }

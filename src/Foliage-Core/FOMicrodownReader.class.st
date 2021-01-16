@@ -12,6 +12,7 @@ FOMicrodownReader class >> supportedFileExtensions [
 { #category : #reading }
 FOMicrodownReader >> model [
 	^ FOPillarPage new
+		sourcePath: file asPath;
 		meta: (self readMetaFrom: self stream);
 		document: (self readDocumentFrom: self stream). 
 

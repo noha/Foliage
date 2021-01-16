@@ -2,6 +2,7 @@ Class {
 	#name : #FOWebSite,
 	#superclass : #Object,
 	#instVars : [
+		'baseUri',
 		'targetPath',
 		'templatePath',
 		'rawPath',
@@ -31,14 +32,40 @@ FOWebSite class >> reset [
 	instance := nil
 ]
 
+{ #category : #accessing }
+FOWebSite >> absoluteLinkFor: aFOWebResourece [
+	^ baseUri asZnUrl / (aFOWebResourece pathString)  
+]
+
 { #category : #visiting }
 FOWebSite >> acceptFOVisitor: aFOVisitor [ 
 	^ aFOVisitor visitWebsite: self 
 ]
 
 { #category : #adding }
+FOWebSite >> addBlogAt: aFolder [
+	"shortcut for the default case having blog posts in one folder"
+	| blog |
+	blog := FOBlog posts: aFolder allPages.
+	self blog: blog.
+	self 
+		atPath: (aFolder path / 'index.html') 
+		add: blog overviewPage  
+]
+
+{ #category : #adding }
 FOWebSite >> atPath: path add: aWebEntity [ 
 	^ root atPath: path asPath add: aWebEntity 
+]
+
+{ #category : #accessing }
+FOWebSite >> baseUri [
+	^ baseUri
+]
+
+{ #category : #accessing }
+FOWebSite >> baseUri: anObject [
+	baseUri := anObject
 ]
 
 { #category : #'as yet unclassified' }
@@ -78,17 +105,22 @@ FOWebSite >> buildRoot [
 
 { #category : #accessing }
 FOWebSite >> defaultRawPath [
-	self subclassResponsibility 
+	^ 'raw'
 ]
 
 { #category : #accessing }
 FOWebSite >> defaultTargetPath [
-	self subclassResponsibility 
+	^ 'docs'
 ]
 
 { #category : #accessing }
 FOWebSite >> defaultTemplatePath [ 
-	self subclassResponsibility 
+	^ 'templates'
+]
+
+{ #category : #building }
+FOWebSite >> import [
+	self importDirectory: self rawPath 
 ]
 
 { #category : #building }

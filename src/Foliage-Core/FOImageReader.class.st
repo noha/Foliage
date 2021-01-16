@@ -12,5 +12,5 @@ FOImageReader class >> supportedFileExtensions [
 { #category : #accessing }
 FOImageReader >> model [ 
 	^ FOWebImage new 
-		raw: file
+		sourcePath: file asPath
 ]

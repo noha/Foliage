@@ -11,6 +11,6 @@ FOHTMLReader class >> supportedFileExtensions [
 
 { #category : #'instance creation' }
 FOHTMLReader >> model [
-	^ FOHTMLPage new
-		raw: file
+	^ FOHTMLEntity new
+		sourcePath: file asPath
 ]

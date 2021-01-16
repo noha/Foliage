@@ -29,15 +29,6 @@ FOWebResource >> absoluteLink [
 	^ self website absoluteLinkFor: self 
 ]
 
-{ #category : #converting }
-FOWebResource >> asHeaderLink [
-	^ FOHeaderLink new 
-		rel: self rel;
-		type: self linkType;
-		title: self title;
-		href: self href
-]
-
 { #category : #testing }
 FOWebResource >> isAbstract [ 
 	^ self == FOWebResource 
@@ -79,6 +70,11 @@ FOWebResource >> publishPath [
 	self flag: #todo.
 	"path is not properly defined. When there is raw path and when publich path?"
 	^ self website targetPath resolve: self relativePath  
+]
+
+{ #category : #'as yet unclassified' }
+FOWebResource >> publishPathFor: aString [ 
+	^ aString
 ]
 
 { #category : #accessing }

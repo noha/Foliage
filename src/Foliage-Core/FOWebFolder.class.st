@@ -2,8 +2,7 @@ Class {
 	#name : #FOWebFolder,
 	#superclass : #FOWebResource,
 	#instVars : [
-		'children',
-		'name'
+		'children'
 	],
 	#category : #'Foliage-Core-Model'
 }
@@ -37,7 +36,9 @@ FOWebFolder >> atName: key put: value [
 FOWebFolder >> atPath: aRelativePath add: aWebEntity [
 	| container |
 	container := self resolve: aRelativePath parent.
-	container atName: aRelativePath basename put: aWebEntity.
+	container 
+		atName: (aWebEntity publishPathFor: aRelativePath basename) 
+		put: aWebEntity.
 	^ aWebEntity  
 ]
 
@@ -47,15 +48,20 @@ FOWebFolder >> children [
 ]
 
 { #category : #'as yet unclassified' }
+FOWebFolder >> createOnTarget [
+	self publishPath ensureCreateDirectory 
+]
+
+{ #category : #'as yet unclassified' }
 FOWebFolder >> gtInspectorItemsIn: composite [
 	<gtInspectorPresentationOrder: 0>
 	^ composite fastTable 
 		title: 'Items';
 		display: [ 
 			self isRoot 
-				ifTrue: [ children ]
+				ifTrue: [ children values ]
 				ifFalse: [ 
-					children asOrderedCollection 
+					children values asOrderedCollection 
 						addFirst: self parent;
 						yourself ] ];
 		column: 'Name' evaluated: [:each | (self isChildOf: each) 
@@ -77,12 +83,7 @@ FOWebFolder >> isRoot [
 
 { #category : #accessing }
 FOWebFolder >> name [
-	^ name
-]
-
-{ #category : #accessing }
-FOWebFolder >> name: aString [ 
-	name := aString
+	^ parent nameOf: self
 ]
 
 { #category : #accessing }
@@ -102,7 +103,9 @@ FOWebFolder >> resolve: aRelativePath [
 		^ self ].
 	child := children 
 		at: aRelativePath segments first
-		ifAbsentPut: [ FOWebFolder new parent: self ].
+		ifAbsentPut: [ 
+			FOWebFolder new 
+				parent: self ].
 	^ child resolve: aRelativePath segments allButFirst 
 ]
 

@@ -1,9 +1,8 @@
 Class {
 	#name : #FOPageSource,
-	#superclass : #FOTextEntity,
+	#superclass : #FOHTMLEntity,
 	#instVars : [
-		'meta',
-		'content'
+		'meta'
 	],
 	#category : #'Foliage-Core-Model'
 }
@@ -11,21 +10,6 @@ Class {
 { #category : #testing }
 FOPageSource class >> isAbstract [ 
 	^ self == FOPageSource  
-]
-
-{ #category : #accessing }
-FOPageSource >> addHeaderLink: aFORSSFeed [ 
-	self links add: aFORSSFeed 
-]
-
-{ #category : #accessing }
-FOPageSource >> content [
-	^ content
-]
-
-{ #category : #accessing }
-FOPageSource >> content: anObject [ 
-	content := anObject 
 ]
 
 { #category : #testing }

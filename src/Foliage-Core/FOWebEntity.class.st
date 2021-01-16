@@ -2,7 +2,7 @@ Class {
 	#name : #FOWebEntity,
 	#superclass : #FOWebResource,
 	#instVars : [
-		'raw'
+		'sourcePath'
 	],
 	#category : #'Foliage-Core-Model'
 }
@@ -28,6 +28,11 @@ FOWebEntity >> printOn: aStream [
 ]
 
 { #category : #accessing }
-FOWebEntity >> raw: aFileReference [ 
-	raw := aFileReference 
+FOWebEntity >> sourcePath [
+	^ sourcePath
+]
+
+{ #category : #accessing }
+FOWebEntity >> sourcePath: anObject [
+	sourcePath := anObject
 ]

@@ -6,13 +6,10 @@ Class {
 
 { #category : #visiting }
 FOPublishVisitor >> copyResource: aResource [ 
-	| rawPath targetPath |
-	rawPath := aResource website rawPathFor: aResource. 
-	targetPath := aResource publishPath.
-	targetPath parent asFileReference exists ifFalse: [  
-		targetPath parent asFileReference ensureCreateDirectory ].
-	targetPath asFileReference exists ifFalse: [  
-		rawPath copyTo: targetPath asFileReference ]
+	| target |
+	target := aResource publishPath asFileReference.
+	target exists ifTrue: [  target delete ].
+	aResource sourcePath asFileReference copyTo: target
 ]
 
 { #category : #accessing }
@@ -25,8 +22,8 @@ FOPublishVisitor >> visitBlog: aFORSSFeed [
 	| template targetPath stream |
 	template := (aFORSSFeed website templatePath / #'rss.xml') asMustacheTemplate.
 	targetPath := aFORSSFeed publishPath asFileReference.
-	targetPath parent exists ifFalse: [  
-		targetPath parent ensureCreateDirectory ].
+	"targetPath parent exists ifFalse: [  
+		targetPath parent ensureCreateDirectory ]."
 	stream := targetPath writeStream
 		truncate;
 		nextPutAll: (template value: aFORSSFeed);
@@ -46,20 +43,13 @@ FOPublishVisitor >> visitHTMLPageSource: aFOHTMLPageSource [
 
 { #category : #visiting }
 FOPublishVisitor >> visitPillarPage: aFOPillarPage [ 
-	| website targetPath stream template page renderContext |
-	website := aFOPillarPage website.
-	template := (aFOPillarPage website templatePathForLayout: aFOPillarPage layout) asMustacheTemplate.
-	renderContext := aFOPillarPage newRenderContext.
-	page := renderContext renderTemplate: template.
-	targetPath := aFOPillarPage publishPath asFileReference withoutExtension , #html.
-	targetPath parent exists ifFalse: [  
-		targetPath parent ensureCreateDirectory ].
-	stream := targetPath writeStream
-		truncate;
-		nextPutAll: page;
-		flush; 
-		close.
-	^ FOPageSource 
+	aFOPillarPage publish
+]
+
+{ #category : #visiting }
+FOPublishVisitor >> visitWebFolder: aFOWebsiteFolder [
+	aFOWebsiteFolder createOnTarget.
+	^ super visitWebFolder: aFOWebsiteFolder 
 ]
 
 { #category : #visiting }

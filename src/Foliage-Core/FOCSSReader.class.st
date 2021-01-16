@@ -12,5 +12,5 @@ FOCSSReader class >> supportedFileExtensions [
 { #category : #accessing }
 FOCSSReader >> model [ 
 	^ FOCSSObject new 
-		raw: file
+		sourcePath: file asPath
 ]

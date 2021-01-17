@@ -1,7 +1,7 @@
 Class {
 	#name : #FOHTMLReader,
 	#superclass : #FORawReader,
-	#category : #'Foliage-Core'
+	#category : #'Foliage-Core-Reader'
 }
 
 { #category : #testing }
@@ -11,6 +11,6 @@ FOHTMLReader class >> supportedFileExtensions [
 
 { #category : #'instance creation' }
 FOHTMLReader >> model [
-	^ FOHTMLEntity new
+	^ FOHTMLPage new
 		sourcePath: file asPath
 ]

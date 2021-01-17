@@ -5,7 +5,7 @@ Class {
 		'website',
 		'page'
 	],
-	#category : #'Foliage-Core'
+	#category : #'Foliage-Core-Base'
 }
 
 { #category : #accessing }

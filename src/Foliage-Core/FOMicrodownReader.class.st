@@ -1,7 +1,7 @@
 Class {
 	#name : #FOMicrodownReader,
 	#superclass : #FORawReader,
-	#category : #'Foliage-Core'
+	#category : #'Foliage-Core-Reader'
 }
 
 { #category : #testing }
@@ -32,5 +32,10 @@ FOMicrodownReader >> readJsonFrom: aStream [
 
 { #category : #generation }
 FOMicrodownReader >> readMetaFrom: aStream [
-	^ self readJsonFrom: aStream
+	^ self readSimpleMetaFrom: aStream
+]
+
+{ #category : #generation }
+FOMicrodownReader >> readSimpleMetaFrom: aStream [
+	^ (FOMetaReader on: aStream) next
 ]

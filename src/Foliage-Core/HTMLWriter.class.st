@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'stream'
 	],
-	#category : #'Foliage-Core'
+	#category : #'Foliage-Core-Base'
 }
 
 { #category : #accessing }

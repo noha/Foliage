@@ -1,7 +1,7 @@
 Class {
 	#name : #FOCSSObject,
 	#superclass : #FOTextEntity,
-	#category : #'Foliage-Core'
+	#category : #'Foliage-Core-Model'
 }
 
 { #category : #testing }

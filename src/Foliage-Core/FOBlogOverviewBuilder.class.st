@@ -5,7 +5,7 @@ Class {
 		'posts',
 		'numberOfCharacters'
 	],
-	#category : #'Foliage-Core'
+	#category : #'Foliage-Core-Blog'
 }
 
 { #category : #accessing }

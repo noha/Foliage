@@ -1,7 +1,7 @@
 Class {
 	#name : #FOImageReader,
 	#superclass : #FORawReader,
-	#category : #'Foliage-Core'
+	#category : #'Foliage-Core-Reader'
 }
 
 { #category : #testing }

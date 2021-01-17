@@ -1,5 +1,5 @@
 Class {
-	#name : #FOHTMLEntity,
+	#name : #FOHTMLPage,
 	#superclass : #FOTextEntity,
 	#instVars : [
 		'htmlDocument',
@@ -9,17 +9,17 @@ Class {
 }
 
 { #category : #accessing }
-FOHTMLEntity class >> supportedFileExtensions [
+FOHTMLPage class >> supportedFileExtensions [
 	^ #( html )
 ]
 
 { #category : #visiting }
-FOHTMLEntity >> acceptFOVisitor: aFOVisitor [ 
+FOHTMLPage >> acceptFOVisitor: aFOVisitor [ 
 	^ aFOVisitor visitHTMLPageSource: self 
 ]
 
 { #category : #accessing }
-FOHTMLEntity >> buildHtmlDocument [
+FOHTMLPage >> buildHtmlDocument [
 	| document |
 	document := Soup fromString: self htmlString.
 	htmlString := nil.
@@ -27,20 +27,20 @@ FOHTMLEntity >> buildHtmlDocument [
 ]
 
 { #category : #'as yet unclassified' }
-FOHTMLEntity >> buildHtmlString [
+FOHTMLPage >> buildHtmlString [
 	htmlDocument ifNotNil: [ 
 		^ htmlDocument printString ].
 	^ self render
 ]
 
 { #category : #accessing }
-FOHTMLEntity >> htmlDocument [
+FOHTMLPage >> htmlDocument [
 	^ htmlDocument ifNil: [ 
 		htmlDocument := self buildHtmlDocument ]
 ]
 
 { #category : #'as yet unclassified' }
-FOHTMLEntity >> htmlString [
+FOHTMLPage >> htmlString [
 	^ htmlString ifNil: [ 
 		htmlString := self buildHtmlString ]
 ]

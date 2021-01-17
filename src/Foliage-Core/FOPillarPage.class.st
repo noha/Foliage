@@ -1,6 +1,6 @@
 Class {
 	#name : #FOPillarPage,
-	#superclass : #FOPageSource,
+	#superclass : #FOPageWithMetadata,
 	#instVars : [
 		'document'
 	],
@@ -14,7 +14,9 @@ FOPillarPage class >> supportedFileExtensions [
 
 { #category : #'as yet unclassified' }
 FOPillarPage >> abstract [
-	^ (Character space join: (document children allButFirst collect: #text)) first: 400
+	| abstract |
+	abstract := (Character space join: (document children allButFirst collect: #text)).
+	^ abstract first: (abstract size min: 400)
 ]
 
 { #category : #visiting }
@@ -39,11 +41,7 @@ FOPillarPage >> pillar: aPRDocument [
 
 { #category : #actions }
 FOPillarPage >> publish [
-	| targetPath |
-	targetPath := self publishPath.
-	"targetPath parent exists ifFalse: [  
-		targetPath parent ensureCreateDirectory ]."
-	targetPath writeStream
+	self publishPath writeStream
 		truncate;
 		nextPutAll: self htmlString;
 		flush; 

@@ -1,6 +1,6 @@
 Class {
-	#name : #FOPageSource,
-	#superclass : #FOHTMLEntity,
+	#name : #FOPageWithMetadata,
+	#superclass : #FOHTMLPage,
 	#instVars : [
 		'meta'
 	],
@@ -8,56 +8,56 @@ Class {
 }
 
 { #category : #testing }
-FOPageSource class >> isAbstract [ 
-	^ self == FOPageSource  
+FOPageWithMetadata class >> isAbstract [ 
+	^ self == FOPageWithMetadata  
 ]
 
 { #category : #testing }
-FOPageSource >> hasDocumentType [
+FOPageWithMetadata >> hasDocumentType [
 	^ meta includesKey: 'layout'
 ]
 
 { #category : #testing }
-FOPageSource >> isPage [
+FOPageWithMetadata >> isPage [
 	^ true
 ]
 
 { #category : #testing }
-FOPageSource >> isPublished [
+FOPageWithMetadata >> isPublished [
 	^ self publishDate notNil
 ]
 
 { #category : #accessing }
-FOPageSource >> layout [
+FOPageWithMetadata >> layout [
 	^ self meta at: 'layout'
 ]
 
 { #category : #accessing }
-FOPageSource >> meta [
+FOPageWithMetadata >> meta [
 	^ meta ifNil: [ 
 		meta := Dictionary new ]
 ]
 
 { #category : #accessing }
-FOPageSource >> meta: aCollection [ 
+FOPageWithMetadata >> meta: aCollection [ 
 	meta := aCollection 
 ]
 
 { #category : #accessing }
-FOPageSource >> metaAt: key put: value [
+FOPageWithMetadata >> metaAt: key put: value [
 	self meta 
 		at: key
 		put: value
 ]
 
 { #category : #'instance creation' }
-FOPageSource >> newRenderContext [
+FOPageWithMetadata >> newRenderContext [
 	^ self website newRenderContext 
 		page: self
 ]
 
 { #category : #accessing }
-FOPageSource >> publishDate [
+FOPageWithMetadata >> publishDate [
 	^ self meta 
 		at: #publishDate 
 		ifPresent: [ :string | (DateAndTime fromString: string) asDate   ]
@@ -65,6 +65,6 @@ FOPageSource >> publishDate [
 ]
 
 { #category : #accessing }
-FOPageSource >> title [
+FOPageWithMetadata >> title [
 	^ self meta at: 'title'
 ]

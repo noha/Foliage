@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'posts'
 	],
-	#category : #'Foliage-Core'
+	#category : #'Foliage-Core-Blog'
 }
 
 { #category : #'instance creation' }

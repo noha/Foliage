@@ -5,7 +5,7 @@ Class {
 		'file',
 		'stream'
 	],
-	#category : #'Foliage-Core'
+	#category : #'Foliage-Core-Reader'
 }
 
 { #category : #accessing }

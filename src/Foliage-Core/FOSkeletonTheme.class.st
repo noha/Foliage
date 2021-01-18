@@ -31,8 +31,8 @@ FOSkeletonTheme >> copyResources [
 
 { #category : #'as yet unclassified' }
 FOSkeletonTheme >> createPageTemplate [
-	'template' asFileReference ensureCreateDirectory.
-	'template/page' asFileReference binaryWriteStream 
+	'templates' asFileReference ensureCreateDirectory.
+	'templates/page' asFileReference binaryWriteStream 
 		nextPutAll: (self pageTemplate copyReplaceAll: String cr with: String crlf);
 		close
 ]

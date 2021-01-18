@@ -168,7 +168,6 @@ FOPillarHTMLVisitor >> visitListItem: anObject [
 
 { #category : #'visiting-document' }
 FOPillarHTMLVisitor >> visitMonospaceFormat: anObject [
-	self halt.
 	^ self visitFormat: anObject
 ]
 
@@ -206,7 +205,6 @@ FOPillarHTMLVisitor >> visitParameterValue: anObject [
 
 { #category : #'visiting-parameters' }
 FOPillarHTMLVisitor >> visitParameters: anObject [
-	self halt.
 	^ self visitDocumentGroup: anObject 
 ]
 

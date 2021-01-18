@@ -29,7 +29,9 @@ FOPageWithMetadata >> isPublished [
 
 { #category : #accessing }
 FOPageWithMetadata >> layout [
-	^ self meta at: 'layout'
+	^ self meta 
+		at: 'layout'
+		ifAbsent: [ 'page' ]
 ]
 
 { #category : #accessing }

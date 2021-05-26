@@ -42,8 +42,9 @@ FOModelVisitor >> visitWebEntity: aFOWebObject [
 
 { #category : #visiting }
 FOModelVisitor >> visitWebFolder: aFOWebsiteFolder [
+	aFOWebsiteFolder createOnTarget.
 	^ (self visitWebResource: aFOWebsiteFolder)
-		setChildren: (self visitAll: aFOWebsiteFolder children );
+		setItems: (self visitAll: aFOWebsiteFolder items );
 		yourself 
 ]
 

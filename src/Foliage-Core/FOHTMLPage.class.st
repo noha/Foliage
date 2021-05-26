@@ -18,6 +18,11 @@ FOHTMLPage >> acceptFOVisitor: aFOVisitor [
 	^ aFOVisitor visitHTMLPageSource: self 
 ]
 
+{ #category : #'as yet unclassified' }
+FOHTMLPage >> asFOBlogPost [
+	^ self as: FOBlogPost
+]
+
 { #category : #accessing }
 FOHTMLPage >> buildHtmlDocument [
 	| document |
@@ -43,4 +48,15 @@ FOHTMLPage >> htmlDocument [
 FOHTMLPage >> htmlString [
 	^ htmlString ifNil: [ 
 		htmlString := self buildHtmlString ]
+]
+
+{ #category : #'instance creation' }
+FOHTMLPage >> newRenderContext [ 
+	^ super newRenderContext 
+		page: self 
+]
+
+{ #category : #'instance creation' }
+FOHTMLPage >> renderContextClass [
+	^ FOPageRenderContext
 ]

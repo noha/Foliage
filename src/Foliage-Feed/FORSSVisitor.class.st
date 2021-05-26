@@ -18,6 +18,11 @@ FORSSVisitor >> visitBlog: aFOBlog [
 	^ feed
 ]
 
+{ #category : #'as yet unclassified' }
+FORSSVisitor >> visitBlogPost: aFOBlogPost [ 
+	self visitPillarPage: aFOBlogPost
+]
+
 { #category : #visiting }
 FORSSVisitor >> visitPillarPage: aFOPillarPage [ 
 	^ FORSSItem new 

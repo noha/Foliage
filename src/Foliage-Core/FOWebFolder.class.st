@@ -1,35 +1,12 @@
 Class {
 	#name : #FOWebFolder,
-	#superclass : #FOWebResource,
-	#instVars : [
-		'children'
-	],
+	#superclass : #FOWebContainer,
 	#category : #'Foliage-Core-Model'
 }
-
-{ #category : #accessing }
-FOWebFolder >> / aString [ 
-	^ children at: aString
-]
 
 { #category : #visiting }
 FOWebFolder >> acceptFOVisitor: aFOVisitor [ 
 	^ aFOVisitor visitWebFolder: self 
-]
-
-{ #category : #accessing }
-FOWebFolder >> allPages [
-	^ children select: #isPage
-]
-
-{ #category : #accessing }
-FOWebFolder >> atName: key put: value [
-	(children includesKey: key)
-		ifTrue: [ Error signal: 'child ', key asString, ' already exists' ].
-	value parent: self.
-	children
-		at: key 
-		put: value
 ]
 
 { #category : #'as yet unclassified' }
@@ -37,14 +14,25 @@ FOWebFolder >> atPath: aRelativePath add: aWebEntity [
 	| container |
 	container := self resolve: aRelativePath parent.
 	container 
-		atName: (aWebEntity publishPathFor: aRelativePath basename) 
+		at: (aWebEntity publishPathFor: aRelativePath basename) 
 		put: aWebEntity.
 	^ aWebEntity  
 ]
 
-{ #category : #accessing }
-FOWebFolder >> children [
-	^ children
+{ #category : #'as yet unclassified' }
+FOWebFolder >> convertToBlog [ 
+	| blog |
+	blog := FOWebBlog new
+		parent: parent;
+		setItems: (items collect: [ :item |
+			item isPage 
+				ifTrue: [ item asFOBlogPost ]
+				ifFalse: [ item ] ] ).
+	parent 
+		replace: self 
+		with: blog.
+	^ blog
+		
 ]
 
 { #category : #'as yet unclassified' }
@@ -59,21 +47,15 @@ FOWebFolder >> gtInspectorItemsIn: composite [
 		title: 'Items';
 		display: [ 
 			self isRoot 
-				ifTrue: [ children values ]
+				ifTrue: [ items values ]
 				ifFalse: [ 
-					children values asOrderedCollection 
+					items values asOrderedCollection 
 						addFirst: self parent;
 						yourself ] ];
 		column: 'Name' evaluated: [:each | (self isChildOf: each) 
 			ifTrue: [ '..' ] 
-			ifFalse: [ each name ]] width: 400
+			ifFalse: [ each displayString ]] width: 400
 		
-]
-
-{ #category : #initialization }
-FOWebFolder >> initialize [ 
-	super initialize.
-	children := SmallDictionary  new
 ]
 
 { #category : #testing }
@@ -86,14 +68,16 @@ FOWebFolder >> name [
 	^ parent nameOf: self
 ]
 
-{ #category : #accessing }
-FOWebFolder >> nameOf: aWebEntity [
-	^ children keyAtValue: aWebEntity 
-]
-
 { #category : #printing }
 FOWebFolder >> printOn: aStream [
 	aStream << self path asString << '/'
+]
+
+{ #category : #'as yet unclassified' }
+FOWebFolder >> replace: oldResource with: newResource [ 
+	items 
+		at: oldResource name 
+		put: newResource 
 ]
 
 { #category : #resolving }
@@ -101,7 +85,7 @@ FOWebFolder >> resolve: aRelativePath [
 	| child |
 	aRelativePath isEmpty ifTrue: [ 
 		^ self ].
-	child := children 
+	child := items 
 		at: aRelativePath segments first
 		ifAbsentPut: [ 
 			FOWebFolder new 
@@ -109,7 +93,8 @@ FOWebFolder >> resolve: aRelativePath [
 	^ child resolve: aRelativePath segments allButFirst 
 ]
 
-{ #category : #accessing }
-FOWebFolder >> setChildren: aCollection [ 
-	children := aCollection 
+{ #category : #'as yet unclassified' }
+FOWebFolder >> rssFeed [
+	^ FORSSVisitor new
+		visit: self
 ]

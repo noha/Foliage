@@ -32,6 +32,11 @@ FOWebSite class >> reset [
 	instance := nil
 ]
 
+{ #category : #arithmetic }
+FOWebSite >> / anObject [
+	^ root / anObject
+]
+
 { #category : #accessing }
 FOWebSite >> absoluteLinkFor: aFOWebResourece [
 	^ baseUri asZnUrl / (aFOWebResourece pathString)  
@@ -40,17 +45,6 @@ FOWebSite >> absoluteLinkFor: aFOWebResourece [
 { #category : #visiting }
 FOWebSite >> acceptFOVisitor: aFOVisitor [ 
 	^ aFOVisitor visitWebsite: self 
-]
-
-{ #category : #adding }
-FOWebSite >> addBlogAt: aFolder [
-	"shortcut for the default case having blog posts in one folder"
-	| blog |
-	blog := FOBlog posts: aFolder allPages.
-	self blog: blog.
-	self 
-		atPath: (aFolder path / 'index.html') 
-		add: blog overviewPage  
 ]
 
 { #category : #adding }
@@ -68,21 +62,10 @@ FOWebSite >> baseUri: anObject [
 	baseUri := anObject
 ]
 
-{ #category : #'as yet unclassified' }
-FOWebSite >> blog [
-	^ self propertyAt: #blog
-]
-
-{ #category : #accessing }
-FOWebSite >> blog: aFOBlog [ 
-	self 
-		propertyAt: #blog 
-		put: aFOBlog 
-]
-
 { #category : #building }
 FOWebSite >> build [ 
 	| blogOverview |
+	self root at: #blog put: FOWebBlog new.
 	self importDirectory: self rawPath.
 	blogOverview := FOBlogOverviewBuilder new 
 		folder: self root / #blog;
@@ -136,12 +119,6 @@ FOWebSite >> initialize [
 	super initialize.
 	properties := Dictionary new.
 	root := self buildRoot 
-]
-
-{ #category : #'instance creation' }
-FOWebSite >> newRenderContext [
-	^ FORenderContext new 
-		website: self
 ]
 
 { #category : #accessing }

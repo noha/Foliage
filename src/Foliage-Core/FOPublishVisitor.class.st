@@ -18,17 +18,13 @@ FOPublishVisitor >> templateForLayout: aString [
 ]
 
 { #category : #visiting }
-FOPublishVisitor >> visitBlog: aFORSSFeed [ 
-	| template targetPath stream |
-	template := (aFORSSFeed website templatePath / #'rss.xml') asMustacheTemplate.
-	targetPath := aFORSSFeed publishPath asFileReference.
-	"targetPath parent exists ifFalse: [  
-		targetPath parent ensureCreateDirectory ]."
-	stream := targetPath writeStream
-		truncate;
-		nextPutAll: (template value: aFORSSFeed);
-		flush; 
-		close.
+FOPublishVisitor >> visitBlog: aFOBlog [ 
+	super visitWebFolder: aFOBlog.
+]
+
+{ #category : #'as yet unclassified' }
+FOPublishVisitor >> visitBlogPost: aFOBlogPost [ 
+	self visitPillarPage: aFOBlogPost 
 ]
 
 { #category : #visiting }
@@ -44,6 +40,18 @@ FOPublishVisitor >> visitHTMLPageSource: aFOHTMLPageSource [
 { #category : #visiting }
 FOPublishVisitor >> visitPillarPage: aFOPillarPage [ 
 	aFOPillarPage publish
+]
+
+{ #category : #'as yet unclassified' }
+FOPublishVisitor >> visitRSSFeed: aFORSSFeed [ 
+	| template targetPath stream |
+	template := (aFORSSFeed website templatePath / #'rss.xml') asMustacheTemplate.
+	targetPath := aFORSSFeed publishPath asFileReference.
+	stream := targetPath writeStream
+		truncate;
+		nextPutAll: (template value: aFORSSFeed);
+		flush; 
+		close.
 ]
 
 { #category : #visiting }

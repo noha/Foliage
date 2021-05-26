@@ -29,6 +29,16 @@ FOWebResource >> absoluteLink [
 	^ self website absoluteLinkFor: self 
 ]
 
+{ #category : #'as yet unclassified' }
+FOWebResource >> adaptPage: aFOPage [ 
+	^ aFOPage 
+]
+
+{ #category : #'as yet unclassified' }
+FOWebResource >> adaptResource: aFOResource [
+	^ aFOResource 
+]
+
 { #category : #testing }
 FOWebResource >> isAbstract [ 
 	^ self == FOWebResource 
@@ -42,6 +52,17 @@ FOWebResource >> isChildOf: anObject [
 { #category : #testing }
 FOWebResource >> isPage [
 	^ false
+]
+
+{ #category : #testing }
+FOWebResource >> isPost [
+	^ false
+]
+
+{ #category : #'instance creation' }
+FOWebResource >> newRenderContext [ 
+	^ self renderContextClass new 
+		website: self website
 ]
 
 { #category : #accessing }
@@ -80,6 +101,11 @@ FOWebResource >> publishPathFor: aString [
 { #category : #accessing }
 FOWebResource >> relativePath [
 	^ self path relativeTo: '/' asPath
+]
+
+{ #category : #'instance creation' }
+FOWebResource >> renderContextClass [
+	^ FORenderContext
 ]
 
 { #category : #accessing }

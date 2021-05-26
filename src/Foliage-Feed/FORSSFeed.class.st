@@ -9,7 +9,7 @@ Class {
 
 { #category : #visiting }
 FORSSFeed >> acceptFOVisitor: aFOVisitor [ 
-	^ aFOVisitor visitBlog: self 
+	^ aFOVisitor visitRSSFeed: self 
 ]
 
 { #category : #adding }
@@ -18,10 +18,9 @@ FORSSFeed >> addChannel: aFORSSChannel [
 ]
 
 { #category : #'as yet unclassified' }
-FORSSFeed >> addHeaders [
-	| indexPage htmlDocument head |
-	indexPage := self website root / 'index.html'.
-	htmlDocument := indexPage htmlDocument.
+FORSSFeed >> addHeadersTo: aPage [
+	|  htmlDocument head |
+	htmlDocument := aPage htmlDocument.
 	head := (htmlDocument / #html / #head) first.
 	head addChild: ((SoupTag named: #link)
 		attributeAt: #rel put: self rel;

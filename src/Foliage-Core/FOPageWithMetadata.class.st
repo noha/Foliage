@@ -52,12 +52,6 @@ FOPageWithMetadata >> metaAt: key put: value [
 		put: value
 ]
 
-{ #category : #'instance creation' }
-FOPageWithMetadata >> newRenderContext [
-	^ self website newRenderContext 
-		page: self
-]
-
 { #category : #accessing }
 FOPageWithMetadata >> publishDate [
 	^ self meta 

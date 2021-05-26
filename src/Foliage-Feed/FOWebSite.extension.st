@@ -5,7 +5,7 @@ FOWebSite >> rssFeed [
 	| template visitor feed |
 	template := (self templatePath / #'rss.xml') asMustacheTemplate. 
 	visitor := FORSSVisitor new.
-	feed := visitor visit: self blog.
+	feed := visitor visit: self root / #blog.
 	^ feed
 	
 ]

@@ -171,16 +171,6 @@ FOWebSite >> root [
 	^ root
 ]
 
-{ #category : #'as yet unclassified' }
-FOWebSite >> rssFeed [
-	| template visitor feed |
-	template := (self templatePath / #'rss.xml') asMustacheTemplate. 
-	visitor := FORSSVisitor new.
-	feed := visitor visit: self root / #blog.
-	^ feed
-	
-]
-
 { #category : #accessing }
 FOWebSite >> targetPath [
 	^ targetPath ifNil: [ 

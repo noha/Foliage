@@ -19,27 +19,30 @@ FOPublishVisitor >> templateForLayout: aString [
 
 { #category : #visiting }
 FOPublishVisitor >> visitBlog: aFOBlog [ 
-	super visitWebFolder: aFOBlog.
+	^ super visitWebFolder: aFOBlog.
 ]
 
 { #category : #'as yet unclassified' }
 FOPublishVisitor >> visitBlogPost: aFOBlogPost [ 
-	self visitPillarPage: aFOBlogPost 
+	^ self visitPillarPage: aFOBlogPost 
 ]
 
 { #category : #visiting }
 FOPublishVisitor >> visitCSSObject: aFOCSSObject [ 
-	self copyResource: aFOCSSObject 
+	self copyResource: aFOCSSObject.
+	^ aFOCSSObject 
 ]
 
 { #category : #visiting }
 FOPublishVisitor >> visitHTMLPageSource: aFOHTMLPageSource [ 
-	self copyResource: aFOHTMLPageSource 
+	self copyResource: aFOHTMLPageSource.
+	^ aFOHTMLPageSource 
 ]
 
 { #category : #visiting }
 FOPublishVisitor >> visitPillarPage: aFOPillarPage [ 
-	aFOPillarPage publish
+	aFOPillarPage publish.
+	^ aFOPillarPage 
 ]
 
 { #category : #'as yet unclassified' }
@@ -52,6 +55,7 @@ FOPublishVisitor >> visitRSSFeed: aFORSSFeed [
 		nextPutAll: (template value: aFORSSFeed);
 		flush; 
 		close.
+	^ aFORSSFeed 
 ]
 
 { #category : #visiting }
@@ -62,5 +66,6 @@ FOPublishVisitor >> visitWebFolder: aFOWebsiteFolder [
 
 { #category : #visiting }
 FOPublishVisitor >> visitWebImage: aWebImage [ 
-	self copyResource: aWebImage 
+	self copyResource: aWebImage.
+	^ aWebImage 
 ]

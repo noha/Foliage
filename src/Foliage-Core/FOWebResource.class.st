@@ -96,7 +96,7 @@ FOWebResource >> propertyAt: key ifAbsent: aBlock [
 
 { #category : #accessing }
 FOWebResource >> propertyAt: key ifAbsentPut: aBlock [
-	self properties 
+	^ self properties 
 		at: key
 		ifAbsentPut: aBlock
 ]

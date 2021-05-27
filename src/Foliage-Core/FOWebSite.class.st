@@ -108,10 +108,16 @@ FOWebSite >> import [
 
 { #category : #building }
 FOWebSite >> importDirectory: path [ 
-	FOSiteModelBuilder new 
+	FOImporter new 
 		website: self;
-		path: path;
-		build.
+		readAll: path allFiles
+]
+
+{ #category : #'as yet unclassified' }
+FOWebSite >> importer [ 
+	^ FOImporter new 
+		website: self;
+		yourself
 ]
 
 { #category : #initialization }
@@ -153,7 +159,7 @@ FOWebSite >> rawPath [
 
 { #category : #accessing }
 FOWebSite >> rawPath: anObject [
-	rawPath := anObject
+	rawPath := anObject asFileReference 
 ]
 
 { #category : #accessing }
@@ -163,7 +169,12 @@ FOWebSite >> rawPathFor: aWebObject [
 
 { #category : #'as yet unclassified' }
 FOWebSite >> relativeRawPath: aFileReference [
-	^ aFileReference asAbsolute relativeTo: rawPath asAbsolute 
+	^ aFileReference asAbsolute relativeTo: self rawPath asAbsolute 
+]
+
+{ #category : #navigating }
+FOWebSite >> resolvePath: aPath [ 
+	^ root resolve: aPath
 ]
 
 { #category : #accessing }

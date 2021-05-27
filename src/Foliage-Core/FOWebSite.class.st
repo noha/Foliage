@@ -13,7 +13,7 @@ Class {
 	#classInstVars : [
 		'instance'
 	],
-	#category : #'Foliage-Core-Model'
+	#category : #'Foliage-Core'
 }
 
 { #category : #'instance creation' }
@@ -169,6 +169,16 @@ FOWebSite >> relativeRawPath: aFileReference [
 { #category : #accessing }
 FOWebSite >> root [
 	^ root
+]
+
+{ #category : #'as yet unclassified' }
+FOWebSite >> rssFeed [
+	| template visitor feed |
+	template := (self templatePath / #'rss.xml') asMustacheTemplate. 
+	visitor := FORSSVisitor new.
+	feed := visitor visit: self root / #blog.
+	^ feed
+	
 ]
 
 { #category : #accessing }

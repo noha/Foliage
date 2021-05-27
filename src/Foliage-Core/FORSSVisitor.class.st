@@ -1,7 +1,7 @@
 Class {
 	#name : #FORSSVisitor,
 	#superclass : #FOModelVisitor,
-	#category : #'Foliage-Feed'
+	#category : #'Foliage-Core'
 }
 
 { #category : #visiting }

@@ -24,10 +24,10 @@ FOWebFolder >> convertToBlog [
 	| blog |
 	blog := FOWebBlog new
 		parent: parent;
-		setItems: (items collect: [ :item |
-			item isPage 
-				ifTrue: [ item asFOBlogPost ]
-				ifFalse: [ item ] ] ).
+		setItems: (items associations collect: [ :assoc |
+			assoc value isPage 
+				ifTrue: [ assoc key -> (assoc value asFOBlogPost) ]
+				ifFalse: [ assoc ] ] ) asDictionary.
 	parent 
 		replace: self 
 		with: blog.

@@ -22,11 +22,6 @@ FOWebEntity >> name [
 	^ parent nameOf: self
 ]
 
-{ #category : #printing }
-FOWebEntity >> printOn: aStream [ 
-	aStream << 'leaf: ' << self path asString 
-]
-
 { #category : #accessing }
 FOWebEntity >> sourcePath [
 	^ sourcePath

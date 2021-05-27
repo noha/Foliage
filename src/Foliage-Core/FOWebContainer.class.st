@@ -13,13 +13,6 @@ FOWebContainer >> / aString [
 ]
 
 { #category : #accessing }
-FOWebContainer >> adaptValue: anObject [
-	^ anObject isPage 
-		ifTrue: [ self adaptPage: anObject ]
-		ifFalse: [ self adaptResource: anObject ]
-]
-
-{ #category : #accessing }
 FOWebContainer >> allPages [
 	^ items select: #isPage
 ]
@@ -31,7 +24,7 @@ FOWebContainer >> at: key put: value [
 	value parent: self.
 	items
 		at: key 
-		put: (self adaptValue: value)
+		put: value
 ]
 
 { #category : #initialization }
@@ -47,10 +40,13 @@ FOWebContainer >> items [
 
 { #category : #accessing }
 FOWebContainer >> nameOf: aWebEntity [
-	^ items keyAtValue: aWebEntity 
+	^ items 
+		keyAtValue: aWebEntity 
+		ifAbsent: [ Error signal: 'value not found' ]
 ]
 
 { #category : #'as yet unclassified' }
-FOWebContainer >> setItems: aCollection [ 
-	items := aCollection 
+FOWebContainer >> setItems: aDictionary [ 
+	aDictionary values do: [ :each | each parent: self ].
+	items := aDictionary 
 ]

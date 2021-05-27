@@ -29,16 +29,6 @@ FOWebResource >> absoluteLink [
 	^ self website absoluteLinkFor: self 
 ]
 
-{ #category : #'as yet unclassified' }
-FOWebResource >> adaptPage: aFOPage [ 
-	^ aFOPage 
-]
-
-{ #category : #'as yet unclassified' }
-FOWebResource >> adaptResource: aFOResource [
-	^ aFOResource 
-]
-
 { #category : #testing }
 FOWebResource >> isAbstract [ 
 	^ self == FOWebResource 
@@ -72,7 +62,6 @@ FOWebResource >> parent [
 
 { #category : #accessing }
 FOWebResource >> parent: anItem [
-	parent ifNotNil: [ Error signal: anItem asString, ' is already added to the tree' ].
 	parent := anItem
 ]
 

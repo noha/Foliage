@@ -10,16 +10,6 @@ FOWebFolder >> acceptFOVisitor: aFOVisitor [
 ]
 
 { #category : #'as yet unclassified' }
-FOWebFolder >> atPath: aRelativePath add: aWebEntity [
-	| container |
-	container := self resolve: aRelativePath parent.
-	container 
-		at: (aWebEntity publishPathFor: aRelativePath basename) 
-		put: aWebEntity.
-	^ aWebEntity  
-]
-
-{ #category : #'as yet unclassified' }
 FOWebFolder >> buildRssFeed [
 	^ (FORSSVisitor new
 		visit: self)
@@ -29,7 +19,7 @@ FOWebFolder >> buildRssFeed [
 { #category : #'as yet unclassified' }
 FOWebFolder >> convertToBlog [ 
 	| blog |
-	blog := FOWebBlog new
+	blog := FOBlog new
 		parent: parent;
 		setItems: (items associations collect: [ :assoc |
 			assoc value isPage 
@@ -88,16 +78,15 @@ FOWebFolder >> replace: oldResource with: newResource [
 ]
 
 { #category : #resolving }
-FOWebFolder >> resolve: aRelativePath [ 
+FOWebFolder >> resolvePath: aRelativePath [ 
 	| child |
-	aRelativePath isEmpty ifTrue: [ 
-		^ self ].
+	aRelativePath isEmpty ifTrue: [ ^ self ].
 	child := items 
 		at: aRelativePath segments first
 		ifAbsentPut: [ 
 			FOWebFolder new 
 				parent: self ].
-	^ child resolve: aRelativePath segments allButFirst 
+	^ child resolvePath: aRelativePath segments allButFirst 
 ]
 
 { #category : #'as yet unclassified' }

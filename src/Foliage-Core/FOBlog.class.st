@@ -1,27 +1,30 @@
 Class {
 	#name : #FOBlog,
-	#superclass : #Object,
-	#instVars : [
-		'posts'
-	],
+	#superclass : #FOWebFolder,
 	#category : #'Foliage-Core-Blog'
 }
 
-{ #category : #'instance creation' }
-FOBlog class >> posts: aCollection [ 
-	^ self new 
-		posts: aCollection 
-]
-
-{ #category : #visiting }
+{ #category : #'as yet unclassified' }
 FOBlog >> acceptFOVisitor: aFOVisitor [ 
 	^ aFOVisitor visitBlog: self 
 ]
 
-{ #category : #summary }
+{ #category : #'as yet unclassified' }
+FOBlog >> adaptPage: aPage [
+	^ aPage asFOBlogPost 
+]
+
+{ #category : #accessing }
+FOBlog >> at: key put: value [
+	super 
+		at: key 
+		put: value 
+]
+
+{ #category : #'as yet unclassified' }
 FOBlog >> overviewPage [
 	^ FOBlogOverviewBuilder new 
-		posts: posts;
+		posts: self posts;
 		numberOfCharacters: 600; 
 		buildSummary
 ]
@@ -46,19 +49,25 @@ FOBlog >> postBefore: aFOPillarPage [
 		ifFalse: [ nil ]
 ]
 
-{ #category : #accessing }
+{ #category : #'as yet unclassified' }
 FOBlog >> posts [
-	^ posts
-]
-
-{ #category : #accessing }
-FOBlog >> posts: anObject [
-	posts := anObject
+	^ items values select: #isPost
 ]
 
 { #category : #sorting }
 FOBlog >> publishedPosts [
-	^ posts select: #isPublished
+	^ self posts select: #isPublished
+]
+
+{ #category : #resolving }
+FOBlog >> resolvePath: aRelativePath [ 
+	aRelativePath isEmpty ifTrue: [ 
+		^ self ].
+	^ items 
+		at: aRelativePath segments first
+		ifAbsent: [ 
+			Error signal: 'no child with name ', aRelativePath segments first ].
+
 ]
 
 { #category : #sorting }

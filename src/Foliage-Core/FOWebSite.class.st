@@ -13,7 +13,7 @@ Class {
 	#classInstVars : [
 		'instance'
 	],
-	#category : #'Foliage-Core'
+	#category : #'Foliage-Core-RSS'
 }
 
 { #category : #'instance creation' }
@@ -47,11 +47,6 @@ FOWebSite >> acceptFOVisitor: aFOVisitor [
 	^ aFOVisitor visitWebsite: self 
 ]
 
-{ #category : #adding }
-FOWebSite >> atPath: path add: aWebEntity [ 
-	^ root atPath: path asPath add: aWebEntity 
-]
-
 { #category : #accessing }
 FOWebSite >> baseUri [
 	^ baseUri
@@ -60,24 +55,6 @@ FOWebSite >> baseUri [
 { #category : #accessing }
 FOWebSite >> baseUri: anObject [
 	baseUri := anObject
-]
-
-{ #category : #building }
-FOWebSite >> build [ 
-	| blogOverview |
-	self root at: #blog put: FOWebBlog new.
-	self importDirectory: self rawPath.
-	blogOverview := FOBlogOverviewBuilder new 
-		folder: self root / #blog;
-		overviewPage.
-	self 
-		atPath: '/index.html' 
-		add: blogOverview.  
-	self  
-		atPath: '/blog/index.html' 
-		add: blogOverview duplicate.
-	self publish.
-
 ]
 
 { #category : #accessing }
@@ -108,8 +85,7 @@ FOWebSite >> import [
 
 { #category : #building }
 FOWebSite >> importDirectory: path [ 
-	FOImporter new 
-		website: self;
+	self importer
 		readAll: path allFiles
 ]
 
@@ -162,11 +138,6 @@ FOWebSite >> rawPath: anObject [
 	rawPath := anObject asFileReference 
 ]
 
-{ #category : #accessing }
-FOWebSite >> rawPathFor: aWebObject [
-	^ self rawPath resolve: aWebObject relativePath
-]
-
 { #category : #'as yet unclassified' }
 FOWebSite >> relativeRawPath: aFileReference [
 	^ aFileReference asAbsolute relativeTo: self rawPath asAbsolute 
@@ -174,7 +145,7 @@ FOWebSite >> relativeRawPath: aFileReference [
 
 { #category : #navigating }
 FOWebSite >> resolvePath: aPath [ 
-	^ root resolve: aPath
+	^ root resolvePath: aPath
 ]
 
 { #category : #accessing }
@@ -195,7 +166,7 @@ FOWebSite >> targetPath: anObject [
 
 { #category : #accessing }
 FOWebSite >> targetPathFor: aWebObject [
-	^ self targetPath resolve: aWebObject path
+	^ self targetPath resolvePath: aWebObject path
 ]
 
 { #category : #accessing }

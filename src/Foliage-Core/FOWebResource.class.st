@@ -10,7 +10,7 @@ Class {
 
 { #category : #accessing }
 FOWebResource class >> forFileExtension: aString [ 
-	^ (FOWebEntity allSubclasses reject: #isAbstract)
+	^ (FOFileBasedWebEntity allSubclasses reject: #isAbstract)
 		detect: [ :each | each matchesFileExtension: aString ]
 		ifNone: [  nil ]
 ]
@@ -30,9 +30,9 @@ FOWebResource >> absoluteLink [
 	^ self website absoluteLinkFor: self 
 ]
 
-{ #category : #testing }
-FOWebResource >> isAbstract [ 
-	^ self == FOWebResource 
+{ #category : #copying }
+FOWebResource >> duplicate [ 
+	^ self copy resetParent
 ]
 
 { #category : #testing }
@@ -105,7 +105,7 @@ FOWebResource >> propertyAt: key ifAbsentPut: aBlock [
 FOWebResource >> publishPath [
 	self flag: #todo.
 	"path is not properly defined. When there is raw path and when publich path?"
-	^ self website targetPath resolve: self relativePath  
+	^ self website targetPath resolvePath: self relativePath  
 ]
 
 { #category : #'as yet unclassified' }

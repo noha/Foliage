@@ -1,5 +1,5 @@
 Class {
-	#name : #FOWebEntity,
+	#name : #FOFileBasedWebEntity,
 	#superclass : #FOWebResource,
 	#instVars : [
 		'sourcePath'
@@ -8,26 +8,21 @@ Class {
 }
 
 { #category : #testing }
-FOWebEntity class >> isAbstract [ 
-	^ self == FOWebEntity
-]
-
-{ #category : #copying }
-FOWebEntity >> duplicate [ 
-	^ self copy resetParent
+FOFileBasedWebEntity class >> isAbstract [ 
+	^ self == FOFileBasedWebEntity
 ]
 
 { #category : #accessing }
-FOWebEntity >> name [
+FOFileBasedWebEntity >> name [
 	^ parent nameOf: self
 ]
 
 { #category : #accessing }
-FOWebEntity >> sourcePath [
+FOFileBasedWebEntity >> sourcePath [
 	^ sourcePath
 ]
 
 { #category : #accessing }
-FOWebEntity >> sourcePath: anObject [
+FOFileBasedWebEntity >> sourcePath: anObject [
 	sourcePath := anObject
 ]

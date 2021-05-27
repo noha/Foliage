@@ -1,6 +1,6 @@
 Class {
 	#name : #FOHTMLPage,
-	#superclass : #FOTextEntity,
+	#superclass : #FOFileBasedWebEntity,
 	#instVars : [
 		'htmlDocument',
 		'htmlString'

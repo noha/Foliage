@@ -1,6 +1,6 @@
 Class {
 	#name : #FOWebImage,
-	#superclass : #FOBinaryEntity,
+	#superclass : #FOFileBasedWebEntity,
 	#category : #'Foliage-Core-Model'
 }
 

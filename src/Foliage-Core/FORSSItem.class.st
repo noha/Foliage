@@ -6,7 +6,7 @@ Class {
 		'link',
 		'description'
 	],
-	#category : #'Foliage-Core'
+	#category : #'Foliage-Core-RSS'
 }
 
 { #category : #accessing }

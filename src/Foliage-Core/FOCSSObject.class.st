@@ -1,6 +1,6 @@
 Class {
 	#name : #FOCSSObject,
-	#superclass : #FOTextEntity,
+	#superclass : #FOFileBasedWebEntity,
 	#category : #'Foliage-Core-Model'
 }
 

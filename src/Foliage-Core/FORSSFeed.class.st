@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'channels'
 	],
-	#category : #'Foliage-Core'
+	#category : #'Foliage-Core-RSS'
 }
 
 { #category : #visiting }

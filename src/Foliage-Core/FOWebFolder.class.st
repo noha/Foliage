@@ -20,6 +20,13 @@ FOWebFolder >> atPath: aRelativePath add: aWebEntity [
 ]
 
 { #category : #'as yet unclassified' }
+FOWebFolder >> buildRssFeed [
+	^ (FORSSVisitor new
+		visit: self)
+			parent: self
+]
+
+{ #category : #'as yet unclassified' }
 FOWebFolder >> convertToBlog [ 
 	| blog |
 	blog := FOWebBlog new
@@ -95,6 +102,7 @@ FOWebFolder >> resolve: aRelativePath [
 
 { #category : #'as yet unclassified' }
 FOWebFolder >> rssFeed [
-	^ FORSSVisitor new
-		visit: self
+	^ self 
+		propertyAt: #rssFeed
+		ifAbsentPut: [ self buildRssFeed ]
 ]

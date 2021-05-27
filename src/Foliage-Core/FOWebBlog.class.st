@@ -51,7 +51,7 @@ FOWebBlog >> postBefore: aFOPillarPage [
 
 { #category : #'as yet unclassified' }
 FOWebBlog >> posts [
-	^ items select: #isPost
+	^ items values select: #isPost
 ]
 
 { #category : #sorting }

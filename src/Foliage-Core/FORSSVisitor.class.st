@@ -20,7 +20,7 @@ FORSSVisitor >> visitBlog: aFOBlog [
 
 { #category : #'as yet unclassified' }
 FORSSVisitor >> visitBlogPost: aFOBlogPost [ 
-	self visitPillarPage: aFOBlogPost
+	^ self visitPillarPage: aFOBlogPost
 ]
 
 { #category : #visiting }

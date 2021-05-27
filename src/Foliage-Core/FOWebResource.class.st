@@ -2,7 +2,8 @@ Class {
 	#name : #FOWebResource,
 	#superclass : #Object,
 	#instVars : [
-		'parent'
+		'parent',
+		'properties'
 	],
 	#category : #'Foliage-Core-Model'
 }
@@ -73,6 +74,31 @@ FOWebResource >> path [
 { #category : #accessing }
 FOWebResource >> pathString [
 	^ (self path withExtension: #html) pathString
+]
+
+{ #category : #accessing }
+FOWebResource >> properties [ 
+	^ properties ifNil: [ 
+		properties := Dictionary new ]
+]
+
+{ #category : #accessing }
+FOWebResource >> propertyAt: key [ 
+	self properties at: key
+]
+
+{ #category : #accessing }
+FOWebResource >> propertyAt: key ifAbsent: aBlock [
+	self properties 
+		at: key
+		ifAbsent: aBlock
+]
+
+{ #category : #accessing }
+FOWebResource >> propertyAt: key ifAbsentPut: aBlock [
+	self properties 
+		at: key
+		ifAbsentPut: aBlock
 ]
 
 { #category : #'as yet unclassified' }

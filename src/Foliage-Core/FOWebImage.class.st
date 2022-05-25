@@ -6,7 +6,7 @@ Class {
 
 { #category : #testing }
 FOWebImage class >> supportedFileExtensions [ 
-	^ #( gif jpg jpeg png ) 
+	^ #( gif jpg jpeg png ico  ) 
 ]
 
 { #category : #visiting }

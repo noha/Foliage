@@ -9,6 +9,12 @@ FOWebsiteRoot >> acceptFOVisitor: aFOVisitor [
 	^ aFOVisitor visitWebsiteRoot: self 
 ]
 
+{ #category : #accessing }
+FOWebsiteRoot >> defaultLayout [
+
+	^ 'page'
+]
+
 { #category : #testing }
 FOWebsiteRoot >> isRoot [
 	^ true
@@ -29,7 +35,7 @@ FOWebsiteRoot >> root [
 	^ self 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 FOWebsiteRoot >> website [ 
 	^ parent 
 ]

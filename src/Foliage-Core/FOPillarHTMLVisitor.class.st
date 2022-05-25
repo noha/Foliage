@@ -38,13 +38,15 @@ FOPillarHTMLVisitor >> stream: aStream [
 
 { #category : #'visiting-document' }
 FOPillarHTMLVisitor >> visitAnchor: anObject [
-	self halt.
+
 	^ self visitDocumentItem: anObject
 ]
 
 { #category : #'visiting-document' }
 FOPillarHTMLVisitor >> visitAnnotatedParagraph: aDocument [
-	self halt.
+	self flag: #todo. "What happens with the annotations?"
+	aDocument annotation isEmptyOrNil 
+		ifFalse: [ self halt ].
 	^ self visitParagraph: aDocument
 ]
 
@@ -103,9 +105,17 @@ FOPillarHTMLVisitor >> visitExternalLink: anObject [
 
 { #category : #'visiting-document' }
 FOPillarHTMLVisitor >> visitFigure: anObject [
+	| ref uri |
+	
+	ref := anObject reference asZnUrl.
+	uri := ref isRelative 
+		ifTrue: [ '/',($/ join: ref segments) ]
+		ifFalse: [ ref asString ].
 	^ writer 
 		writeTag: 'img'
-		attributes: { #src -> (anObject reference isRelative ifTrue: [ '/',($/ join: anObject reference segments) ]) }, anObject parameters asDictionary associations 
+		attributes: 
+			{ #src -> uri }, 
+			anObject parameters asDictionary associations 
 		with: [ ]
 ]
 
@@ -123,8 +133,8 @@ FOPillarHTMLVisitor >> visitHeader: anObject [
 
 { #category : #'visiting-document' }
 FOPillarHTMLVisitor >> visitHorizontalRule: anObject [
-	self halt.
-	^ self visitDocumentItem: anObject
+
+	writer writeTag: 'hr'
 ]
 
 { #category : #'visiting-document' }
@@ -144,9 +154,8 @@ FOPillarHTMLVisitor >> visitItalicFormat: anObject [
 
 { #category : #'visiting-document' }
 FOPillarHTMLVisitor >> visitLineBreak: anObject [
-	<ignoreForCoverage "This method is ignored for coverage because visiting a line break is typically very much different from visiting a standard document item.">
-	self halt.
-	^ self visitDocumentItem: anObject
+
+	^ writer writeTag: 'br'
 ]
 
 { #category : #'visiting-document' }
@@ -180,9 +189,10 @@ FOPillarHTMLVisitor >> visitOrderedList: anObject [
 
 { #category : #'visiting-document' }
 FOPillarHTMLVisitor >> visitParagraph: anObject [
+
 	^ writer 
 		writeTag: 'p' 
-		with: [self visitDocumentGroup: anObject]
+		with: [ self visitDocumentGroup: anObject ]
 ]
 
 { #category : #'visiting-parameters' }
@@ -217,7 +227,7 @@ FOPillarHTMLVisitor >> visitPreformatted: anObject [
 
 { #category : #'visiting-document' }
 FOPillarHTMLVisitor >> visitRaw: aRaw [
-	self halt.
+
 	^ self visitText: aRaw
 ]
 

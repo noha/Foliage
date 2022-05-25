@@ -1,31 +1,48 @@
 Class {
 	#name : #FOBlog,
 	#superclass : #FOWebFolder,
+	#instVars : [
+		'layout',
+		'title'
+	],
 	#category : #'Foliage-Core-Blog'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #visiting }
 FOBlog >> acceptFOVisitor: aFOVisitor [ 
 	^ aFOVisitor visitBlog: self 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 FOBlog >> adaptPage: aPage [
 	^ aPage asFOBlogPost 
 ]
 
 { #category : #accessing }
-FOBlog >> at: key put: value [
-	super 
-		at: key 
-		put: value 
+FOBlog >> defaultLayout [
+
+	^ 'blog'
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
+FOBlog >> layout [
+
+	^ layout ifNil: [ self defaultLayout ]
+]
+
+{ #category : #accessing }
+FOBlog >> layout: aString [
+
+	layout := aString
+]
+
+{ #category : #accessing }
 FOBlog >> overviewPage [
+
 	^ FOBlogOverviewBuilder new 
+		blog: self;
 		posts: self posts;
-		numberOfCharacters: 600; 
+		numberOfCharacters: 100; 
 		buildSummary
 ]
 
@@ -49,7 +66,7 @@ FOBlog >> postBefore: aFOPillarPage [
 		ifFalse: [ nil ]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 FOBlog >> posts [
 	^ items values select: #isPost
 ]
@@ -57,6 +74,12 @@ FOBlog >> posts [
 { #category : #sorting }
 FOBlog >> publishedPosts [
 	^ self posts select: #isPublished
+]
+
+{ #category : #rendering }
+FOBlog >> renderContextClass [
+
+	^ FORenderContext
 ]
 
 { #category : #resolving }
@@ -74,4 +97,16 @@ FOBlog >> resolvePath: aRelativePath [
 FOBlog >> sortedByPublishDate [
 	^ self publishedPosts 
 		sorted: #publishDate ascending
+]
+
+{ #category : #accessing }
+FOBlog >> title [
+
+	^ title ifNil: [ 'Untitled' ]
+]
+
+{ #category : #accessing }
+FOBlog >> title: aString [
+
+	title := aString
 ]

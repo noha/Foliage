@@ -32,3 +32,9 @@ FOPageRenderContext >> page [
 FOPageRenderContext >> page: anObject [
 	page := anObject
 ]
+
+{ #category : #accessing }
+FOPageRenderContext >> title [
+
+	^ page title
+]

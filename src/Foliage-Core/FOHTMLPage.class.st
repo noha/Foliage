@@ -26,7 +26,7 @@ FOHTMLPage >> asFOBlogPost [
 { #category : #accessing }
 FOHTMLPage >> buildHtmlDocument [
 	| document |
-	document := Soup fromString: self htmlString.
+	document := Soup fromString: self htmlString utf8Encoded asString.
 	htmlString := nil.
 	^ document
 ]
@@ -56,7 +56,14 @@ FOHTMLPage >> newRenderContext [
 		page: self 
 ]
 
+{ #category : #'as yet unclassified' }
+FOHTMLPage >> render [
+
+	^ nil
+]
+
 { #category : #'instance creation' }
 FOHTMLPage >> renderContextClass [
+
 	^ FOPageRenderContext
 ]

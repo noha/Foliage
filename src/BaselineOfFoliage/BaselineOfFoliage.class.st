@@ -32,9 +32,10 @@ BaselineOfFoliage >> baseline: spec [
 { #category : #baselines }
 BaselineOfFoliage >> macrodown: spec [
 
-	spec baseline: 'Microdown' with: [
+	spec baseline: 'Macrodown' with: [
 		spec 
 			repository: 'github://pillar-markup/Microdown:dev/src';
+			className: 'BaselineOfMicrodown';
 			loads: #('Macrodown') ]
 ]
 

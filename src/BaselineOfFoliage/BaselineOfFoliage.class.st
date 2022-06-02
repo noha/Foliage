@@ -14,11 +14,11 @@ BaselineOfFoliage >> baseline: spec [
 			neoJson: spec;
 			soup: spec;
 			zinc: spec;
-			macrodown: spec.
+			microdown: spec.
 
 		spec 
 			package: 'Foliage-Core' with: [
-				spec requires: #('NeoJSON' 'Mustache' 'Soup' 'Macrodown') ];
+				spec requires: #('NeoJSON' 'Mustache' 'Soup' 'Microdown') ];
 			package: 'Foliage-Publisher' with: [
 				spec requires: #('Foliage-Core') ];
 			package: 'Foliage-Server' with: [
@@ -35,12 +35,11 @@ BaselineOfFoliage >> baseline: spec [
 ]
 
 { #category : #baselines }
-BaselineOfFoliage >> macrodown: spec [
+BaselineOfFoliage >> microdown: spec [
 
-	spec baseline: 'Macrodown' with: [
+	spec baseline: 'Microdown' with: [
 		spec 
 			repository: 'github://pillar-markup/Microdown:dev/src';
-			className: 'BaselineOfMicrodown';
 			loads: #('Macrodown') ]
 ]
 

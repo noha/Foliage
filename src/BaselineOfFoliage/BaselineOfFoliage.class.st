@@ -19,10 +19,15 @@ BaselineOfFoliage >> baseline: spec [
 		spec 
 			package: 'Foliage-Core' with: [
 				spec requires: #('NeoJSON' 'Mustache' 'Soup' 'Macrodown') ];
+			package: 'Foliage-Publisher' with: [
+				spec requires: #('Foliage-Core') ];
+			package: 'Foliage-Server' with: [
+				spec requires: #('Foliage-Core') ];
 			package: 'Foliage-Core-Tests' with: [
 				spec requires: #('Foliage-Core') ].
 		spec 
 			group: 'Core' with: #('Foliage-Core' );
+			group: 'Publisher' with: #('Core' 'Foliage-Publisher');
 			group: 'Tests' with: #('Foliage-Core-Tests' );
 			group: 'default' with: #('Core' 'Tests');
 			group: 'development' with: #('Core' 'Tests' 'ZincHTTPComponents') ]

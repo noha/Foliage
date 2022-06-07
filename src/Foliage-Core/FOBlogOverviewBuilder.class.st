@@ -3,7 +3,6 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'blog',
-		'posts',
 		'numberOfCharacters'
 	],
 	#category : #'Foliage-Core-Blog'
@@ -55,12 +54,8 @@ FOBlogOverviewBuilder >> numberOfCharacters: anObject [
 	numberOfCharacters := anObject
 ]
 
-{ #category : #accessing }
-FOBlogOverviewBuilder >> posts: aCollection [ 
-	posts := aCollection
-]
-
 { #category : #'page creation' }
 FOBlogOverviewBuilder >> publishedPosts [
-	^ (posts select: #isPublished) sorted: #publishDate descending
+
+	^ (blog posts select: #isPublished) sorted: #publishDate descending
 ]

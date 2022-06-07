@@ -41,7 +41,6 @@ FOBlog >> overviewPage [
 
 	^ FOBlogOverviewBuilder new 
 		blog: self;
-		posts: self posts;
 		numberOfCharacters: 100; 
 		buildSummary
 ]

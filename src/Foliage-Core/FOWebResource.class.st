@@ -30,6 +30,12 @@ FOWebResource >> absoluteLink [
 	^ self website absoluteLinkFor: self 
 ]
 
+{ #category : #layout }
+FOWebResource >> defaultLayout [
+	
+	^ 'page'
+]
+
 { #category : #copying }
 FOWebResource >> duplicate [ 
 	^ self copy resetParent
@@ -101,14 +107,14 @@ FOWebResource >> propertyAt: key ifAbsentPut: aBlock [
 		ifAbsentPut: aBlock
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 FOWebResource >> publishPath [
 	self flag: #todo.
 	"path is not properly defined. When there is raw path and when publich path?"
 	^ self website targetPath resolvePath: self relativePath  
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 FOWebResource >> publishPathFor: aString [ 
 	^ aString
 ]
@@ -120,6 +126,7 @@ FOWebResource >> relativePath [
 
 { #category : #'instance creation' }
 FOWebResource >> renderContextClass [
+
 	^ FORenderContext
 ]
 
@@ -133,7 +140,7 @@ FOWebResource >> root [
 	^ parent root
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 FOWebResource >> website [ 
 	^ self root website
 ]

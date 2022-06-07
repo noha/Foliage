@@ -12,7 +12,7 @@ FOPillarPage class >> supportedFileExtensions [
 	^ { } 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 FOPillarPage >> abstract [
 	| abstract |
 	abstract := (Character space join: (document children allButFirst collect: #text)).
@@ -41,14 +41,19 @@ FOPillarPage >> pillar: aPRDocument [
 
 { #category : #actions }
 FOPillarPage >> publish [
-	self publishPath writeStream
-		truncate;
-		nextPutAll: self htmlString;
-		flush; 
-		close.
+
+	self publishPath
+		ensureDelete;
+		writeStreamDo: [ :stream | stream << self htmlString ]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
+FOPillarPage >> publishPath [
+
+	^ super publishPath withExtension: 'html'
+]
+
+{ #category : #accessing }
 FOPillarPage >> publishPathFor: aString [ 
 	^ (aString endsWith: #html)
 		ifTrue: [ aString ]
@@ -57,17 +62,19 @@ FOPillarPage >> publishPathFor: aString [
 
 { #category : #rendering }
 FOPillarPage >> render [ 
+
 	^ self newRenderContext renderTemplate: self template.
 ]
 
 { #category : #rendering }
 FOPillarPage >> renderOn: aStream [ 
+
 	FOPillarHTMLVisitor new
 		stream: aStream;
 		start: document.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 FOPillarPage >> template [
 	^ (self website templatePathForLayout: self layout) asMustacheTemplate.
 ]

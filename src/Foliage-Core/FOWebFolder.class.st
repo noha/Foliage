@@ -86,7 +86,7 @@ FOWebFolder >> resolvePath: aRelativePath [
 		ifAbsentPut: [ 
 			FOWebFolder new 
 				parent: self ].
-	^ child resolvePath: aRelativePath segments allButFirst 
+	^ child resolvePath: (RelativePath withAll: aRelativePath segments allButFirst)
 ]
 
 { #category : #'as yet unclassified' }

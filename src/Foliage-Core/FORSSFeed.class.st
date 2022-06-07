@@ -19,7 +19,8 @@ FORSSFeed >> addChannel: aFORSSChannel [
 
 { #category : #'as yet unclassified' }
 FORSSFeed >> addHeadersTo: aPage [
-	|  htmlDocument head |
+	| htmlDocument head |
+	
 	htmlDocument := aPage htmlDocument.
 	head := (htmlDocument / #html / #head) first.
 	head addChild: ((SoupTag named: #link)
@@ -27,8 +28,8 @@ FORSSFeed >> addHeadersTo: aPage [
 		attributeAt: #href put: self href printString;
 		attributeAt: #type put: self linkType;
 		attributeAt: #title put: self title;
-		beSelfClosing ;
-		yourself )
+		beSelfClosing;
+		yourself)
 ]
 
 { #category : #accessing }

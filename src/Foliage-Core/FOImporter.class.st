@@ -49,7 +49,9 @@ FOImporter >> readerForExtension: aString [
 		^ nil ].
 	(FORawReader forFileExtension: aString)
 		ifNotNil: [ :cls | ^ cls ].
-	Error signal. 
+	
+	"just copy it"
+	^  FOFileReader
 ]
 
 { #category : #accessing }

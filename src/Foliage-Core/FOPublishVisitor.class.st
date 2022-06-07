@@ -19,16 +19,17 @@ FOPublishVisitor >> templateForLayout: aString [
 
 { #category : #visiting }
 FOPublishVisitor >> visitBlog: aFOBlog [ 
-	^ super visitWebFolder: aFOBlog.
+
+	^ super visitWebFolder: aFOBlog
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #visiting }
 FOPublishVisitor >> visitBlogPost: aFOBlogPost [ 
 	^ self visitPillarPage: aFOBlogPost 
 ]
 
 { #category : #visiting }
-FOPublishVisitor >> visitCSSObject: aFOCSSObject [ 
+FOPublishVisitor >> visitFileObject: aFOCSSObject [ 
 	self copyResource: aFOCSSObject.
 	^ aFOCSSObject 
 ]
@@ -45,7 +46,7 @@ FOPublishVisitor >> visitPillarPage: aFOPillarPage [
 	^ aFOPillarPage 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #visiting }
 FOPublishVisitor >> visitRSSFeed: aFORSSFeed [ 
 	| template targetPath stream |
 	template := (aFORSSFeed website templatePath / #'rss.xml') asMustacheTemplate.

@@ -1,16 +1,16 @@
 Class {
-	#name : #FOCSSReader,
+	#name : #FOFileReader,
 	#superclass : #FORawReader,
 	#category : #'Foliage-Core-Reader'
 }
 
 { #category : #testing }
-FOCSSReader class >> supportedFileExtensions [ 
-	^ #( css ) 
+FOFileReader class >> supportedFileExtensions [ 
+	^ #( css js ico )
 ]
 
 { #category : #accessing }
-FOCSSReader >> model [ 
-	^ FOCSSObject new 
+FOFileReader >> model [ 
+	^ FOFileObject new 
 		sourcePath: file asPath
 ]

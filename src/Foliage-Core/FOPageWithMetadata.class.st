@@ -12,6 +12,12 @@ FOPageWithMetadata class >> isAbstract [
 	^ self == FOPageWithMetadata  
 ]
 
+{ #category : #accessing }
+FOPageWithMetadata >> defaultLayout [
+
+	^ self parent defaultLayout
+]
+
 { #category : #testing }
 FOPageWithMetadata >> hasDocumentType [
 	^ meta includesKey: 'layout'
@@ -31,7 +37,7 @@ FOPageWithMetadata >> isPublished [
 FOPageWithMetadata >> layout [
 	^ self meta 
 		at: 'layout'
-		ifAbsent: [ 'page' ]
+		ifAbsent: [ self defaultLayout ]
 ]
 
 { #category : #accessing }
@@ -47,6 +53,7 @@ FOPageWithMetadata >> meta: aCollection [
 
 { #category : #accessing }
 FOPageWithMetadata >> metaAt: key put: value [
+	
 	self meta 
 		at: key
 		put: value

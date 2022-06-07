@@ -34,6 +34,12 @@ FOPageRenderContext >> page: anObject [
 ]
 
 { #category : #accessing }
+FOPageRenderContext >> publicationDate [
+
+	^ page publicationDate
+]
+
+{ #category : #accessing }
 FOPageRenderContext >> title [
 
 	^ page title

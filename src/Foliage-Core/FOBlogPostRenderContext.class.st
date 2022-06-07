@@ -27,12 +27,6 @@ FOBlogPostRenderContext >> previousPost [
 ]
 
 { #category : #accessing }
-FOBlogPostRenderContext >> publicationDate [
-
-	^ page publicationDate
-]
-
-{ #category : #accessing }
 FOBlogPostRenderContext >> title [
 
 	^ self page title

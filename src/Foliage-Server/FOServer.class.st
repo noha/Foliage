@@ -2,7 +2,8 @@ Class {
 	#name : #FOServer,
 	#superclass : #Object,
 	#instVars : [
-		'server'
+		'server',
+		'baseDirectory'
 	],
 	#category : #'Foliage-Server'
 }
@@ -24,7 +25,13 @@ FOServer class >> stop [
 { #category : #accessing }
 FOServer >> baseDirectory [
 
-	^ 'html' asFileReference
+	^ baseDirectory ifNil: [ baseDirectory := 'generated' asFileReference ]
+]
+
+{ #category : #accessing }
+FOServer >> baseDirectory: aReference [
+
+	baseDirectory := aReference
 ]
 
 { #category : #accessing }

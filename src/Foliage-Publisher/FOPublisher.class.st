@@ -15,7 +15,13 @@ Class {
 FOPublisher class >> clapPublish: args [
 	
 	self withErrorHandlingDo: [
-		(self readFile: (args at: #project) value) publish ]
+		| publisher |
+
+		publisher := self readFile: (args at: #project) value. 
+		args at: #target ifPresent: [ :arg | publisher targetPath: (arg at: #path) value ].
+		args at: #source ifPresent: [ :arg | publisher sourcePath: (arg at: #path) value ].
+		self halt.
+		publisher publish ]
 ]
 
 { #category : #clap }
@@ -28,6 +34,18 @@ FOPublisher class >> commandLine [
 		add: ((ClapCommand id: 'publish')
 			description: 'Publish foliage project';
 			add: ClapFlag forHelp;
+			add: ((ClapFlag id: 'source')
+				description: 'Site input files location';
+				add: ((ClapPositional id: 'path')
+					description: 'Path to source';
+					yourself);
+				yourself);
+			add: ((ClapFlag id: 'target')
+				description: 'Generated output location';
+				add: ((ClapPositional id: 'path')
+					description: 'Path to destination';
+					yourself);
+				yourself);
 			add: ((ClapPositional id: 'project')
 				implicitMeaning: [ self defaultProjectFileName ];
 				description: 'STON file describing project (default .foliage.ston)';
@@ -40,7 +58,7 @@ FOPublisher class >> commandLine [
 		meaning: [ :args | 
 			args at: #helpFlag ifPresent: [ :help | 
 				help value; exitSuccess ].
-			args validateAll ];			
+			args validateAll ];
 		yourself
 ]
 

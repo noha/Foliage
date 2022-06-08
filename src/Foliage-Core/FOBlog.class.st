@@ -24,6 +24,12 @@ FOBlog >> defaultLayout [
 	^ 'blog'
 ]
 
+{ #category : #converting }
+FOBlog >> emitSlots [
+
+	^ #(title layout)
+]
+
 { #category : #accessing }
 FOBlog >> layout [
 

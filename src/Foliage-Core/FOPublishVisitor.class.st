@@ -29,19 +29,22 @@ FOPublishVisitor >> visitBlogPost: aFOBlogPost [
 ]
 
 { #category : #visiting }
-FOPublishVisitor >> visitFileObject: aFOCSSObject [ 
-	self copyResource: aFOCSSObject.
-	^ aFOCSSObject 
+FOPublishVisitor >> visitFileObject: aFileObject [ 
+	aFileObject emit.
+	self copyResource: aFileObject.
+	^ aFileObject 
 ]
 
 { #category : #visiting }
 FOPublishVisitor >> visitHTMLPageSource: aFOHTMLPageSource [ 
+	aFOHTMLPageSource emit.
 	self copyResource: aFOHTMLPageSource.
 	^ aFOHTMLPageSource 
 ]
 
 { #category : #visiting }
 FOPublishVisitor >> visitPillarPage: aFOPillarPage [ 
+	aFOPillarPage emit.
 	aFOPillarPage publish.
 	^ aFOPillarPage 
 ]
@@ -49,6 +52,8 @@ FOPublishVisitor >> visitPillarPage: aFOPillarPage [
 { #category : #visiting }
 FOPublishVisitor >> visitRSSFeed: aFORSSFeed [ 
 	| template targetPath stream |
+	
+	aFORSSFeed emit.
 	template := (aFORSSFeed website templatePath / #'rss.xml') asMustacheTemplate.
 	targetPath := aFORSSFeed publishPath asFileReference.
 	stream := targetPath writeStream
@@ -61,12 +66,14 @@ FOPublishVisitor >> visitRSSFeed: aFORSSFeed [
 
 { #category : #visiting }
 FOPublishVisitor >> visitWebFolder: aFOWebsiteFolder [
+	aFOWebsiteFolder emit.
 	aFOWebsiteFolder createOnTarget.
 	^ super visitWebFolder: aFOWebsiteFolder 
 ]
 
 { #category : #visiting }
 FOPublishVisitor >> visitWebImage: aWebImage [ 
+	aWebImage emit.
 	self copyResource: aWebImage.
 	^ aWebImage 
 ]

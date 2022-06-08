@@ -47,6 +47,15 @@ FOWebSite >> acceptFOVisitor: aFOVisitor [
 	^ aFOVisitor visitWebsite: self 
 ]
 
+{ #category : #logging }
+FOWebSite >> asBeaconSignal [
+
+	^ FOObjectSignal new 
+		object: self;
+		slots: #(baseUri targetPath templatePath rawPath);
+		yourself
+]
+
 { #category : #accessing }
 FOWebSite >> baseUri [
 	^ baseUri
@@ -89,7 +98,7 @@ FOWebSite >> importDirectory: path [
 		readAll: path allFiles
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 FOWebSite >> importer [ 
 	^ FOImporter new 
 		website: self;
@@ -101,6 +110,12 @@ FOWebSite >> initialize [
 	super initialize.
 	properties := Dictionary new.
 	root := self buildRoot 
+]
+
+{ #category : #logging }
+FOWebSite >> log [
+
+	self log: self withSlots: #(baseUri targetPath templatePath rawPath)
 ]
 
 { #category : #accessing }
@@ -138,7 +153,7 @@ FOWebSite >> rawPath: anObject [
 	rawPath := anObject asFileReference 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 FOWebSite >> relativeRawPath: aFileReference [
 	^ aFileReference asAbsolute relativeTo: self rawPath asAbsolute 
 ]

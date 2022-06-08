@@ -14,14 +14,13 @@ Class {
 { #category : #'clap - commands' }
 FOPublisher class >> clapPublish: args [
 	
-	self withErrorHandlingDo: [
-		| publisher |
-
-		publisher := self readFile: (args at: #project) value. 
-		args at: #target ifPresent: [ :arg | publisher targetPath: (arg at: #path) value ].
-		args at: #source ifPresent: [ :arg | publisher sourcePath: (arg at: #path) value ].
-		self halt.
-		publisher publish ]
+	self withLoggingDo: [ 
+		self withErrorHandlingDo: [
+			| publisher |
+			publisher := self readFile: (args at: #project) value. 
+			args at: #target ifPresent: [ :arg | publisher targetPath: (arg at: #path) value ].
+			args at: #source ifPresent: [ :arg | publisher sourcePath: (arg at: #path) value ].
+			publisher publish ] ]
 ]
 
 { #category : #clap }
@@ -113,8 +112,15 @@ FOPublisher class >> withErrorHandlingDo: aBlock [
 	aBlock 
 		on: Error 
 		do: [ :e | 
-			Stdio stderr << e messageText << OSPlatform current lineEnding.
+			NonInteractiveTranscript stderr crShow: e messageText.
 			Exit signalFailure ]
+]
+
+{ #category : #clap }
+FOPublisher class >> withLoggingDo: aBlock [
+
+	FOStdoutLogger start.
+	aBlock ensure: [ FOStdoutLogger stopAll ]
 ]
 
 { #category : #accessing }

@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'post',
 		'upperLimit',
-		'amountOfCharacters'
+		'amountOfCharacters',
+		'stream'
 	],
 	#category : #'Foliage-Core-Visitor'
 }
@@ -17,8 +18,11 @@ FOPillarTruncateVisitor >> amountOfCharacters: aNumber [
 
 { #category : #accessing }
 FOPillarTruncateVisitor >> post: anObject [ 
+
 	post := anObject.
-	^ self start: anObject document copy
+	stream := String new writeStream.
+	self start: anObject document copy.
+	^ stream contents
 ]
 
 { #category : #visiting }
@@ -50,10 +54,15 @@ FOPillarTruncateVisitor >> visitHeader: aPRHeader [
 
 { #category : #'visiting-document' }
 FOPillarTruncateVisitor >> visitText: aPRText [
-	| textSize | 
+	| text textSize | 
+	
 	textSize := aPRText text size.
-	(amountOfCharacters + textSize >= upperLimit) ifTrue: [  
-		aPRText text: (aPRText text truncateWithElipsisTo: (10 max:(upperLimit - amountOfCharacters))) ].
+	text := (amountOfCharacters + textSize >= upperLimit) 
+		ifTrue: [ aPRText text truncateWithElipsisTo: (10 max: (upperLimit - amountOfCharacters)) ]
+		ifFalse: [ aPRText text ].
+	aPRText text: text.
+	stream << text.	
 	amountOfCharacters := amountOfCharacters + aPRText text size.
+	
 	^ aPRText 
 ]

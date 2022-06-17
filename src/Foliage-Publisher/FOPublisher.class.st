@@ -157,7 +157,7 @@ FOPublisher >> publish [
 		baseUri: self baseUri;
 		targetPath: self targetPath asFileReference;
 		rawPath: self sourcePath asFileReference;
-		templatePath: self templatePath asFileReference.
+		templatePath: self sourcePath asFileReference / self templatePath.
 	
 	site emit.
 

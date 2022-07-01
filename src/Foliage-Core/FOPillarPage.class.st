@@ -16,7 +16,13 @@ FOPillarPage class >> supportedFileExtensions [
 FOPillarPage >> abstract [
 	| abstract |
 	abstract := (Character space join: (document children allButFirst collect: #text)).
-	^ abstract first: (abstract size min: 400)
+	^ abstract first: (abstract size min: self abstractAmountOfCharacters)
+]
+
+{ #category : #accessing }
+FOPillarPage >> abstractAmountOfCharacters [
+
+	^ 400
 ]
 
 { #category : #visiting }

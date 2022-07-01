@@ -55,6 +55,7 @@ FOModelVisitor >> visitWebImage: aWebImage [
 
 { #category : #visiting }
 FOModelVisitor >> visitWebResource: aFOWebObject [
+	aFOWebObject emit.
 	^ aFOWebObject copy
 ]
 

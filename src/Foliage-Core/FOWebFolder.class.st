@@ -38,6 +38,12 @@ FOWebFolder >> createOnTarget [
 ]
 
 { #category : #'as yet unclassified' }
+FOWebFolder >> emitSelectors [
+
+	^ #(name)
+]
+
+{ #category : #'as yet unclassified' }
 FOWebFolder >> gtInspectorItemsIn: composite [
 	<gtInspectorPresentationOrder: 0>
 	^ composite fastTable 

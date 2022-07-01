@@ -30,6 +30,16 @@ FOWebResource >> absoluteLink [
 	^ self website absoluteLinkFor: self 
 ]
 
+{ #category : #converting }
+FOWebResource >> asBeaconSignal [
+
+	^ FOObjectSignal new 
+		object: self;
+		slots: self emitSlots;
+		selectors: self emitSelectors;
+		yourself
+]
+
 { #category : #layout }
 FOWebResource >> defaultLayout [
 	
@@ -39,6 +49,18 @@ FOWebResource >> defaultLayout [
 { #category : #copying }
 FOWebResource >> duplicate [ 
 	^ self copy resetParent
+]
+
+{ #category : #converting }
+FOWebResource >> emitSelectors [
+		
+	^ #()
+]
+
+{ #category : #converting }
+FOWebResource >> emitSlots [
+		
+	^ #()
 ]
 
 { #category : #testing }

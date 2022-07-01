@@ -12,6 +12,12 @@ FOFileBasedWebEntity class >> isAbstract [
 	^ self == FOFileBasedWebEntity
 ]
 
+{ #category : #converting }
+FOFileBasedWebEntity >> emitSlots [
+
+	^ super emitSlots, #(sourcePath)
+]
+
 { #category : #accessing }
 FOFileBasedWebEntity >> name [
 	^ parent nameOf: self

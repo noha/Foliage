@@ -14,14 +14,13 @@ Class {
 { #category : #'clap - commands' }
 FOPublisher class >> clapPublish: args [
 	
-	self withErrorHandlingDo: [
-		| publisher |
-
-		publisher := self readFile: (args at: #project) value. 
-		args at: #target ifPresent: [ :arg | publisher targetPath: (arg at: #path) value ].
-		args at: #source ifPresent: [ :arg | publisher sourcePath: (arg at: #path) value ].
-		self halt.
-		publisher publish ]
+	self withLoggingDo: [ 
+		self withErrorHandlingDo: [
+			| publisher |
+			publisher := self readFile: (args at: #project) value. 
+			args at: #target ifPresent: [ :arg | publisher targetPath: (arg at: #path) value ].
+			args at: #source ifPresent: [ :arg | publisher sourcePath: (arg at: #path) value ].
+			publisher publish ] ]
 ]
 
 { #category : #clap }
@@ -113,8 +112,15 @@ FOPublisher class >> withErrorHandlingDo: aBlock [
 	aBlock 
 		on: Error 
 		do: [ :e | 
-			Stdio stderr << e messageText << OSPlatform current lineEnding.
+			NonInteractiveTranscript stderr crShow: e messageText.
 			Exit signalFailure ]
+]
+
+{ #category : #clap }
+FOPublisher class >> withLoggingDo: aBlock [
+
+	FOStdoutLogger start.
+	aBlock ensure: [ FOStdoutLogger stopAll ]
 ]
 
 { #category : #accessing }
@@ -143,26 +149,33 @@ FOPublisher >> blogs: anObject [
 
 { #category : #actions }
 FOPublisher >> publish [
-	| site |
+	| site allFiles |
+
+	('Publishing: ', self baseUri) emit.
 
 	site := FOWebSite new
 		baseUri: self baseUri;
 		targetPath: self targetPath asFileReference;
 		rawPath: self sourcePath asFileReference;
-		templatePath: self templatePath asFileReference.
+		templatePath: self sourcePath asFileReference / self templatePath.
+	
+	site emit.
 
-	site importer readAll: site rawPath allFiles.
+	allFiles := site rawPath allFiles.
+	site importer readAll: allFiles.
 
+	('Imported ', allFiles size asString, ' files') emit.
+	
 	self blogs do: [ :assoc | | blog |
 		blog := (site / assoc key) convertToBlog.
 		blog title: assoc value.
 		blog 
-    		at: #'index.html' put: blog overviewPage";
+    		at: #'index.html' put: blog overviewPage;
     		at: #'rss.xml' put: blog rssFeed.
-		blog rssFeed addHeadersTo: blog / 'index.html'" ].
+		blog emit.
+		"blog rssFeed addHeadersTo: blog / 'index.html'" ].
 	
 	site publish
-		
 ]
 
 { #category : #accessing }

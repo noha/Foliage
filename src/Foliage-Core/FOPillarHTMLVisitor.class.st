@@ -70,8 +70,7 @@ FOPillarHTMLVisitor >> visitCodeblock: aCodeBlock [
 
 { #category : #'visiting-document' }
 FOPillarHTMLVisitor >> visitCommentedLine: aCommentedLine [
-
-	self halt.
+	"ignore line"
 ]
 
 { #category : #'visiting-document' }

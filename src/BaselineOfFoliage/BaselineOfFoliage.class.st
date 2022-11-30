@@ -39,7 +39,7 @@ BaselineOfFoliage >> microdown: spec [
 
 	spec baseline: 'Microdown' with: [
 		spec 
-			repository: 'github://pillar-markup/Microdown:dev/src';
+			repository: 'github://pillar-markup/Microdown:v1-mac/src';
 			loads: #('Macrodown') ]
 ]
 

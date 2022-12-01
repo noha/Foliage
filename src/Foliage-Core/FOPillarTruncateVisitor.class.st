@@ -40,16 +40,16 @@ FOPillarTruncateVisitor >> visitAll: aCollection [
 ]
 
 { #category : #'visiting-document' }
+FOPillarTruncateVisitor >> visitFigure: anObject [
+	"ignore figures in the abstract"
+	^ self 
+]
+
+{ #category : #'visiting-document' }
 FOPillarTruncateVisitor >> visitHeader: aPRHeader [
-	^ (aPRHeader level = 1)
-		ifTrue: [  
-			aPRHeader 
-				setChildren: (
-					Array with: (PRExternalLink new 
-						reference: (post path withExtension: #html) pathString asZnUrl ;
-						setChildren: (self visitAll: aPRHeader children)));
-				yourself ]
-		ifFalse: [ aPRHeader ]
+	"skip header in order not to copy the header text into the 
+	abstract"
+	^ self
 ]
 
 { #category : #'visiting-document' }

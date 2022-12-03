@@ -20,6 +20,7 @@ FOWebFolder >> buildRssFeed [
 FOWebFolder >> convertToBlog [ 
 	| blog |
 	blog := FOBlog new
+		title: 'Blog';
 		parent: parent;
 		setItems: (items associations collect: [ :assoc |
 			assoc value isPage 

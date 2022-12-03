@@ -76,11 +76,23 @@ FOPageWithMetadata >> metaAt: key put: value [
 FOPageWithMetadata >> publishDate [
 	^ self meta 
 		at: #publishDate 
-		ifPresent: [ :string | (DateAndTime fromString: string) asDate   ]
+		ifPresent: [ :string |
+			"reading from file an empty date easily ends up being an 
+			empty string so we consider it absent in this case" 
+			string 
+				ifNotEmpty: [ (DateAndTime fromString: string) asDate ]
+				ifEmpty: [ nil ]  ]
 		ifAbsent: [ nil ]
 ]
 
 { #category : #accessing }
 FOPageWithMetadata >> title [
 	^ self meta at: 'title'
+]
+
+{ #category : #accessing }
+FOPageWithMetadata >> title: aString [ 
+	self meta 
+		at: 'title'
+		put: aString
 ]

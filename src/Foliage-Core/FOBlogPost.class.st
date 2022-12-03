@@ -34,7 +34,7 @@ FOBlogPost >> acceptFOVisitor: aFOVisitor [
 { #category : #accessing }
 FOBlogPost >> defaultAbstractLayout [
 
-	^ 'blogpostabstract'
+	^ 'blog-post-abstract'
 ]
 
 { #category : #accessing }

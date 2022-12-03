@@ -47,6 +47,13 @@ FOPageWithMetadata >> layout [
 ]
 
 { #category : #accessing }
+FOPageWithMetadata >> layout: aString [
+	^ self meta 
+		at: 'layout'
+		put: aString
+]
+
+{ #category : #accessing }
 FOPageWithMetadata >> meta [
 	^ meta ifNil: [ 
 		meta := Dictionary new ]

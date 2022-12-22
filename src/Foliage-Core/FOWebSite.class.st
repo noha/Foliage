@@ -142,6 +142,14 @@ FOWebSite >> publish [
 
 ]
 
+{ #category : #building }
+FOWebSite >> publishPreview [
+	FOPublishVisitor new
+		bePreview;
+		start: self
+
+]
+
 { #category : #accessing }
 FOWebSite >> rawPath [
 	^ rawPath ifNil: [ 

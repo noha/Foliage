@@ -78,6 +78,20 @@ FOWebFolder >> printOn: aStream [
 ]
 
 { #category : #'as yet unclassified' }
+FOWebFolder >> publishedItems [ 
+	| newItems |
+	newItems := items species new.
+	items keysAndValuesDo: [ :key :item | 
+		item isPage 
+			ifTrue: [
+				item isPublished ifTrue: [ 
+					newItems at: key put: item ] ]
+			ifFalse: [ 
+				newItems at: key put: item ] ].
+	^ newItems
+]
+
+{ #category : #'as yet unclassified' }
 FOWebFolder >> replace: oldResource with: newResource [ 
 	items 
 		at: oldResource name 

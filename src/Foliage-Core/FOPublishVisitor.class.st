@@ -1,8 +1,16 @@
 Class {
 	#name : #FOPublishVisitor,
 	#superclass : #FOModelVisitor,
+	#instVars : [
+		'preview'
+	],
 	#category : #'Foliage-Core-Visitor'
 }
+
+{ #category : #accessing }
+FOPublishVisitor >> bePreview [ 
+	preview := true
+]
 
 { #category : #visiting }
 FOPublishVisitor >> copyResource: aResource [ 
@@ -10,6 +18,12 @@ FOPublishVisitor >> copyResource: aResource [
 	target := aResource publishPath asFileReference.
 	target exists ifTrue: [  target delete ].
 	aResource sourcePath asFileReference copyTo: target
+]
+
+{ #category : #initialization }
+FOPublishVisitor >> initialize [ 
+	super initialize.
+	preview := false.
 ]
 
 { #category : #accessing }
@@ -25,7 +39,9 @@ FOPublishVisitor >> visitBlog: aFOBlog [
 
 { #category : #visiting }
 FOPublishVisitor >> visitBlogPost: aFOBlogPost [ 
-	^ self visitPillarPage: aFOBlogPost 
+	^ (preview | aFOBlogPost isPublished) 
+		ifTrue: [ self visitPillarPage: aFOBlogPost ]
+		ifFalse: [ aFOBlogPost  ]
 ]
 
 { #category : #visiting }

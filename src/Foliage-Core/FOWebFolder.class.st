@@ -22,7 +22,7 @@ FOWebFolder >> convertToBlog [
 	blog := FOBlog new
 		title: 'Blog';
 		parent: parent;
-		setItems: (items associations collect: [ :assoc |
+		setItems: (self publishedItems associations collect: [ :assoc |
 			assoc value isPage 
 				ifTrue: [ assoc key -> (assoc value asFOBlogPost) ]
 				ifFalse: [ assoc ] ] ) asDictionary.
@@ -75,6 +75,21 @@ FOWebFolder >> name [
 { #category : #printing }
 FOWebFolder >> printOn: aStream [
 	aStream << self path asString << '/'
+]
+
+{ #category : #'as yet unclassified' }
+FOWebFolder >> publishedItems [ 
+	| newItems |
+	"prevent unpublished pages from being included in the generated site"
+	newItems := items species new.
+	items keysAndValuesDo: [ :key :item | 
+		item isPage 
+			ifTrue: [
+				item isPublished ifTrue: [ 
+					newItems at: key put: item ] ]
+			ifFalse: [ 
+				newItems at: key put: item ] ].
+	^ newItems
 ]
 
 { #category : #'as yet unclassified' }

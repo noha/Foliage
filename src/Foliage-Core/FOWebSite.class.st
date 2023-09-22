@@ -16,22 +16,6 @@ Class {
 	#category : #'Foliage-Core-RSS'
 }
 
-{ #category : #'instance creation' }
-FOWebSite class >> build [
-	^ self instance build
-]
-
-{ #category : #'instance creation' }
-FOWebSite class >> instance [
-	^ instance ifNil: [ 
-		instance := self new ]
-]
-
-{ #category : #resetting }
-FOWebSite class >> reset [
-	instance := nil
-]
-
 { #category : #arithmetic }
 FOWebSite >> / anObject [
 	^ root / anObject

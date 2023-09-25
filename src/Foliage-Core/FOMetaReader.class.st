@@ -1,8 +1,29 @@
+"
+I'm in charge of reading the Foliage Metadata header and return read properties.
+
+A valid header can be a Yaml metadata block :
+```mardown
+---
+title: Some news
+layout: post
+---
+<html>
+```
+or a list of properties followed by a blanck line:
+```mardown
+title: Some news
+layout: post
+
+<html>
+```
+"
 Class {
 	#name : #FOMetaReader,
 	#superclass : #Object,
 	#instVars : [
-		'stream'
+		'stream',
+		'line',
+		'isYamlMetadataBlock'
 	],
 	#category : #'Foliage-Core-Reader'
 }
@@ -18,23 +39,42 @@ FOMetaReader class >> parse: aString [
 	^ self new parse: aString
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
+FOMetaReader >> isEndOfMetadataBlock [
+	^ isYamlMetadataBlock 
+		ifTrue: [ self isEndOfYamlMetadataBlock ]
+		ifFalse: [ line isEmpty ]
+]
+
+{ #category : #testing }
+FOMetaReader >> isEndOfYamlMetadataBlock [
+	^ isYamlMetadataBlock and: [ self isYamlSeparator ]
+]
+
+{ #category : #testing }
+FOMetaReader >> isYamlSeparator [
+	^ line trimBoth = '---'
+]
+
+{ #category : #accessing }
 FOMetaReader >> next [
 	^ self readLines 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #parsing }
 FOMetaReader >> parse: aString [ 
 	stream := ZnCharacterReadStream on: aString asByteArray readStream encoding: #utf8.
 	^ self readLines
 ]
 
-{ #category : #'as yet unclassified' }
-FOMetaReader >> readLine [
-	| line parts key vparts |
-	line := stream nextLine.
-	line isEmpty ifTrue: [ ^ nil ].
-	parts := $: split: line.
+{ #category : #converting }
+FOMetaReader >> propertyFrom: aLine [
+	| parts key vparts |
+
+	parts := $: split: aLine.
+	parts size = 1 
+		ifTrue: [ FoMetadataHeaderBadFormat 
+						signal: 'invalid metadata syntax (key: value) or missing metadata separator' ].
 	key := parts first trimBoth.
 	vparts := $; split: parts second.
 	^ key -> ((vparts size = 1) 
@@ -42,19 +82,28 @@ FOMetaReader >> readLine [
 		ifFalse: [ vparts collect: #trimBoth ])
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #parsing }
+FOMetaReader >> readLine [
+
+	line := stream nextLine
+]
+
+{ #category : #parsing }
 FOMetaReader >> readLines [
-	| properties line |
+	| properties |
+	
+	self readLine.
+	isYamlMetadataBlock := self isYamlSeparator.
+
 	properties := Dictionary new.
-	line := ''.
-	[ stream atEnd or: [ line isNil ] ] whileFalse: [ 
-		line := self readLine.
-		line ifNotNil: [
-			properties add: line ]].
+	[ self readLine. stream atEnd or: [ self isEndOfMetadataBlock ] ] whileFalse: [ 
+		| property |
+		property := self propertyFrom: line.
+		property ifNotNil: [ properties add: property ] ].
 	^ properties
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 FOMetaReader >> stream: aZnCharacterReadStream [ 
 	stream := aZnCharacterReadStream
 ]

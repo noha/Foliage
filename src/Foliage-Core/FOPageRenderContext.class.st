@@ -18,7 +18,7 @@ FOPageRenderContext >> html [
 		page renderOn: s ].
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 FOPageRenderContext >> layout [
 	^ page layout
 ]

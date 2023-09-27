@@ -10,7 +10,8 @@ Class {
 		'targetPath',
 		'sourcePath',
 		'templatePath',
-		'blogs'
+		'blogs',
+		'dataPath'
 	],
 	#category : #'Foliage-Publisher'
 }
@@ -151,6 +152,18 @@ FOPublisher >> blogs: anObject [
 	blogs := anObject
 ]
 
+{ #category : #accessing }
+FOPublisher >> dataPath [
+
+	^ dataPath
+]
+
+{ #category : #accessing }
+FOPublisher >> dataPath: aString [
+
+	dataPath := aString
+]
+
 { #category : #actions }
 FOPublisher >> publish [
 	| site allFiles |
@@ -161,7 +174,8 @@ FOPublisher >> publish [
 		baseUri: self baseUri;
 		targetPath: self targetPath asFileReference;
 		rawPath: self sourcePath asFileReference;
-		templatePath: self sourcePath asFileReference / self templatePath.
+		templatePath: self sourcePath asFileReference / self templatePath;
+		dataPath: self dataPath.
 	
 	site emit.
 

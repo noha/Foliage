@@ -4,11 +4,9 @@ A FOPublisherTest is a test class for testing the behavior of FOPublisher
 Class {
 	#name : #FOPublisherTest,
 	#superclass : #TestCase,
+	#traits : 'FOTTestWebSite',
+	#classTraits : 'FOTTestWebSite classTrait',
 	#instVars : [
-		'fs',
-		'outputDir',
-		'srcDir',
-		'foliageConfigurationFile',
 		'publisher'
 	],
 	#category : #'Foliage-Publisher-Tests'
@@ -44,33 +42,14 @@ FOPublisherTest >> pageTemplate [
 FOPublisherTest >> setUp [
 	super setUp.
 
-	fs := FileSystem memory.
-	srcDir := fs / 'src'.
-	srcDir ensureCreateDirectory.
-	outputDir := fs / 'generated'.
-	foliageConfigurationFile := fs / '.foliage.ston'.
-	self useMinimalFoliageConfiguration.
+	self setUpFileSystem.
 	self setUpTemplates.
+	self useMinimalFoliageConfiguration.
 	
 	publisher := FOPublisher readFile: foliageConfigurationFile.
 	publisher 
 		sourcePath: srcDir;
 		targetPath: outputDir.
-]
-
-{ #category : #running }
-FOPublisherTest >> setUpTemplates [
-
-	| templateDir |
-	templateDir := (srcDir / #templates) ensureCreateDirectory.
-	
-	(self class organization protocolNamed: #templates) methodSelectors do: [ :selector | | name |
-		name := (selector endsWith: 'Template')
-			ifTrue: [ selector allButLast: 8  ]
-			ifFalse: [ selector ].
-		(templateDir / name) writeStreamDo: [ :stream | 
-			stream nextPutAll: (self perform: selector) ] ]
-
 ]
 
 { #category : #'tests - input data' }

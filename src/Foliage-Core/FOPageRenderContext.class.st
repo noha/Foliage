@@ -23,6 +23,13 @@ FOPageRenderContext >> layout [
 	^ page layout
 ]
 
+{ #category : #lookup }
+FOPageRenderContext >> mustacheLookup: aString [
+
+	^ self website data
+		 at: aString ifAbsent: [ super mustacheLookup: aString ]
+]
+
 { #category : #accessing }
 FOPageRenderContext >> page [
 	^ page

@@ -39,6 +39,12 @@ FOMetaReader class >> parse: aString [
 	^ self new parse: aString
 ]
 
+{ #category : #parsing }
+FOMetaReader >> hasMetadataHeader [
+
+	^ isYamlMetadataBlock := self isYamlSeparator
+]
+
 { #category : #testing }
 FOMetaReader >> isEndOfMetadataBlock [
 	^ isYamlMetadataBlock 
@@ -93,9 +99,9 @@ FOMetaReader >> readLines [
 	| properties |
 	
 	self readLine.
-	isYamlMetadataBlock := self isYamlSeparator.
-
 	properties := Dictionary new.
+	self hasMetadataHeader ifFalse: [ ^ properties ].
+
 	[ self readLine. stream atEnd or: [ self isEndOfMetadataBlock ] ] whileFalse: [ 
 		| property |
 		property := self propertyFrom: line.

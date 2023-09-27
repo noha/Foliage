@@ -159,6 +159,16 @@ FOPublisherTest >> testCanPublishFromASimpleMicrodownFileWithYamlMetadataBlock [
 ]
 
 { #category : #tests }
+FOPublisherTest >> testNoWarningRaisedWhenNoFoliageMetadataFound [
+
+	(srcDir / 'index.md') writeStreamDo: [ :stream | stream nextPutAll: self simpleMicrodownFile ].
+
+	publisher publish.
+	
+	self assert: outputDir fileNames equals: #('index.html').
+]
+
+{ #category : #tests }
 FOPublisherTest >> testWarningRaisedWhenMissingMetadataSeparator [
 
 	(srcDir / 'index.md') writeStreamDo: [ :stream | 
@@ -183,18 +193,6 @@ FOPublisherTest >> testWarningRaisedWhenMissingMetadataSeparatorWithYamlMetadata
 	self 
 		should: [ publisher publish ]
 		raise: FoMetadataHeaderBadFormat
-]
-
-{ #category : #tests }
-FOPublisherTest >> testWarningRaisedWhenNoFoliageMetadataFound [
-
-	(srcDir / 'index.md') writeStreamDo: [ :stream | stream nextPutAll: self simpleMicrodownFile ].
-
-	self 
-		should: [ publisher publish ]
-		raise: FoMetadataHeaderBadFormat.
-
-	
 ]
 
 { #category : #running }

@@ -18,7 +18,7 @@ FOHTMLPage >> acceptFOVisitor: aFOVisitor [
 	^ aFOVisitor visitHTMLPageSource: self 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #converting }
 FOHTMLPage >> asFOBlogPost [
 	^ self as: FOBlogPost
 ]
@@ -31,7 +31,7 @@ FOHTMLPage >> buildHtmlDocument [
 	^ document
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #converting }
 FOHTMLPage >> buildHtmlString [
 	htmlDocument ifNotNil: [ 
 		^ htmlDocument printString ].
@@ -44,7 +44,7 @@ FOHTMLPage >> htmlDocument [
 		htmlDocument := self buildHtmlDocument ]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 FOHTMLPage >> htmlString [
 	^ htmlString ifNil: [ 
 		htmlString := self buildHtmlString ]
@@ -56,7 +56,7 @@ FOHTMLPage >> newRenderContext [
 		page: self 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #converting }
 FOHTMLPage >> render [
 
 	^ nil

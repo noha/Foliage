@@ -18,9 +18,16 @@ FOPageRenderContext >> html [
 		page renderOn: s ].
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 FOPageRenderContext >> layout [
 	^ page layout
+]
+
+{ #category : #lookup }
+FOPageRenderContext >> mustacheLookup: aString [
+
+	^ self website data
+		 at: aString ifAbsent: [ super mustacheLookup: aString ]
 ]
 
 { #category : #accessing }

@@ -7,9 +7,11 @@ Class {
 { #category : #visiting }
 FOPublishVisitor >> copyResource: aResource [ 
 	| target |
+	
 	target := aResource publishPath asFileReference.
 	target exists ifTrue: [  target delete ].
-	aResource sourcePath asFileReference copyTo: target
+	"we need to resolve path when filesystem store is a memory store"
+	(aResource website rawPath parent resolvePath: aResource sourcePath) copyTo: target
 ]
 
 { #category : #accessing }

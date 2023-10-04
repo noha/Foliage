@@ -1,3 +1,7 @@
+"
+I represent the root of the web site.
+I am build from `FOWebSite`.
+"
 Class {
 	#name : #FOWebsiteRoot,
 	#superclass : #FOWebFolder,

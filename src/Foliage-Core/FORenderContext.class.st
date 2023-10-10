@@ -7,12 +7,12 @@ Class {
 	#category : #'Foliage-Core-Base'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 FORenderContext >> layout [
 	self subclassResponsibility 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 FORenderContext >> partials [ 
 	^ FOPartialProvider new 
 		layout: self layout; 

@@ -1,3 +1,7 @@
+"
+I'm the entry point to generate a static web site.
+I first read a Foliage configuration file (e.g. `.foliage.ston`) and I can then generate the web site to the specified target path from sources present in the specified source path using the `FOPublisher>>#publish` method.
+"
 Class {
 	#name : #FOPublisher,
 	#superclass : #Object,
@@ -6,7 +10,8 @@ Class {
 		'targetPath',
 		'sourcePath',
 		'templatePath',
-		'blogs'
+		'blogs',
+		'dataPath'
 	],
 	#category : #'Foliage-Publisher'
 }
@@ -138,13 +143,25 @@ FOPublisher >> baseUri: aString [
 { #category : #accessing }
 FOPublisher >> blogs [
 
-	^ blogs
+	^ blogs ifNil: [ #() ]
 ]
 
 { #category : #accessing }
 FOPublisher >> blogs: anObject [
 
 	blogs := anObject
+]
+
+{ #category : #accessing }
+FOPublisher >> dataPath [
+
+	^ dataPath
+]
+
+{ #category : #accessing }
+FOPublisher >> dataPath: aString [
+
+	dataPath := aString
 ]
 
 { #category : #actions }
@@ -157,7 +174,8 @@ FOPublisher >> publish [
 		baseUri: self baseUri;
 		targetPath: self targetPath asFileReference;
 		rawPath: self sourcePath asFileReference;
-		templatePath: self sourcePath asFileReference / self templatePath.
+		templatePath: self sourcePath asFileReference / self templatePath;
+		dataPath: self dataPath.
 	
 	site emit.
 

@@ -87,7 +87,7 @@ FOPageWithMetadata >> publishDate [
 
 { #category : #accessing }
 FOPageWithMetadata >> title [
-	^ self meta at: 'title'
+	^ self meta at: 'title' ifAbsent: ''
 ]
 
 { #category : #accessing }

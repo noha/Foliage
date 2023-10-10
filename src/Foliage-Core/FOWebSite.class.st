@@ -1,3 +1,11 @@
+"
+I represent the web site to generate.
+I hold configuration needed for the generation (pathes, properties, user data) as well as the Root element of the web site that contains all other web site elements.
+
+I'm the entry point of visitors.
+
+You can use the `publish` method to run the publication of the web site.
+"
 Class {
 	#name : #FOWebSite,
 	#superclass : #Object,
@@ -6,31 +14,15 @@ Class {
 		'targetPath',
 		'templatePath',
 		'rawPath',
-		'model',
 		'root',
-		'properties'
+		'properties',
+		'data'
 	],
 	#classInstVars : [
 		'instance'
 	],
-	#category : #'Foliage-Core-RSS'
+	#category : #'Foliage-Core-Model'
 }
-
-{ #category : #'instance creation' }
-FOWebSite class >> build [
-	^ self instance build
-]
-
-{ #category : #'instance creation' }
-FOWebSite class >> instance [
-	^ instance ifNil: [ 
-		instance := self new ]
-]
-
-{ #category : #resetting }
-FOWebSite class >> reset [
-	instance := nil
-]
 
 { #category : #arithmetic }
 FOWebSite >> / anObject [
@@ -73,6 +65,20 @@ FOWebSite >> buildRoot [
 ]
 
 { #category : #accessing }
+FOWebSite >> data [
+
+	^ data
+]
+
+{ #category : #accessing }
+FOWebSite >> dataPath: aString [
+
+	aString ifNil: [ ^ self ].
+	
+	data := STON fromString: aString asFileReference contents
+]
+
+{ #category : #accessing }
 FOWebSite >> defaultRawPath [
 	^ 'raw'
 ]
@@ -109,7 +115,8 @@ FOWebSite >> importer [
 FOWebSite >> initialize [ 
 	super initialize.
 	properties := Dictionary new.
-	root := self buildRoot 
+	data := Dictionary new: 0.
+	root := self buildRoot
 ]
 
 { #category : #logging }

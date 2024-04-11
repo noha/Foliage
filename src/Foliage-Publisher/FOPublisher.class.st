@@ -138,7 +138,7 @@ FOPublisher >> baseUri: aString [
 { #category : #accessing }
 FOPublisher >> blogs [
 
-	^ blogs
+	^ blogs ifNil: [ #() ]
 ]
 
 { #category : #accessing }

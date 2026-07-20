@@ -38,6 +38,16 @@ FOHTMLRenderVisitor >> visitCodeBlock: aCodeBlock [
 	^ '<pre><code', classAttr, '>', (self escapeHtml: aCodeBlock code), '</code></pre>'
 ]
 
+{ #category : #visiting }
+FOHTMLRenderVisitor >> visitBlockquote: aBlockquote [
+	| escapedLines |
+	escapedLines := aBlockquote text lines collect: [ :l | self escapeHtml: l ].
+	^ '<blockquote>', (String streamContents: [ :s |
+		escapedLines
+			do: [ :l | s nextPutAll: l ]
+			separatedBy: [ s nextPutAll: '<br>'; nextPut: Character lf ] ]), '</blockquote>'
+]
+
 { #category : #private }
 FOHTMLRenderVisitor >> escapeHtml: aString [
 	| result |

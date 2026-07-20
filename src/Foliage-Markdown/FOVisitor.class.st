@@ -23,3 +23,8 @@ FOVisitor >> visitParagraph: aParagraph [
 FOVisitor >> visitCodeBlock: aCodeBlock [
 	^ self subclassResponsibility
 ]
+
+{ #category : #visiting }
+FOVisitor >> visitBlockquote: aBlockquote [
+	^ self subclassResponsibility
+]

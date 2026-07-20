@@ -128,6 +128,46 @@ FOMarkdownBlockParserTest >> testIndentedCode [
 ]
 
 { #category : #tests }
+FOMarkdownBlockParserTest >> testBlockquoteSingleLine [
+	| doc quote |
+	doc := FOMarkdownParser parse: '> This is a quote'.
+	self assert: doc children size equals: 1.
+	quote := doc children first.
+	self assert: (quote isKindOf: FOBlockquote).
+	self assert: quote text equals: 'This is a quote'
+]
+
+{ #category : #tests }
+FOMarkdownBlockParserTest >> testBlockquoteMultiLinePreservesLineBreaksAndIndent [
+	| doc quote expected |
+	doc := FOMarkdownParser parse:
+		'> /', self nl,
+		'>   raw/  -> for the markdown files', self nl,
+		'>   templates/ -> for keeping the layout stuff separat'.
+	quote := doc children first.
+	expected := '/', self nl, '  raw/  -> for the markdown files', self nl, '  templates/ -> for keeping the layout stuff separat'.
+	self assert: quote text equals: expected
+]
+
+{ #category : #tests }
+FOMarkdownBlockParserTest >> testBlockquoteWithoutSpaceAfterMarker [
+	| doc quote |
+	doc := FOMarkdownParser parse: '>no space'.
+	quote := doc children first.
+	self assert: quote text equals: 'no space'
+]
+
+{ #category : #tests }
+FOMarkdownBlockParserTest >> testBlockquoteThenParagraph [
+	| doc |
+	doc := FOMarkdownParser parse: '> quoted', self nl, self nl, 'after'.
+	self assert: doc children size equals: 2.
+	self assert: (doc children first isKindOf: FOBlockquote).
+	self assert: (doc children second isKindOf: FOParagraph).
+	self assert: doc children second text equals: 'after'
+]
+
+{ #category : #tests }
 FOMarkdownBlockParserTest >> testCodeBlockThenParagraph [
 	| doc |
 	doc := FOMarkdownParser parse: '```', self nl, 'code', self nl, '```', self nl, self nl, 'after'.

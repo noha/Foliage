@@ -55,6 +55,30 @@ FOHTMLRenderVisitorTest >> testRenderCodeBlockWithoutLanguage [
 ]
 
 { #category : #tests }
+FOHTMLRenderVisitorTest >> testRenderBlockquoteSingleLine [
+	| html quote |
+	quote := FOBlockquote new text: 'This is a quote'; yourself.
+	html := FOHTMLRenderVisitor render: quote.
+	self assert: html equals: '<blockquote>This is a quote</blockquote>'
+]
+
+{ #category : #tests }
+FOHTMLRenderVisitorTest >> testRenderBlockquoteMultiLineUsesBr [
+	| html quote |
+	quote := FOBlockquote new text: 'line one', self nl, 'line two'; yourself.
+	html := FOHTMLRenderVisitor render: quote.
+	self assert: html equals: '<blockquote>line one<br>', self nl, 'line two</blockquote>'
+]
+
+{ #category : #tests }
+FOHTMLRenderVisitorTest >> testRenderBlockquoteEscapesHtml [
+	| html quote |
+	quote := FOBlockquote new text: '<div>&x</div>'; yourself.
+	html := FOHTMLRenderVisitor render: quote.
+	self assert: html equals: '<blockquote>&lt;div&gt;&amp;x&lt;/div&gt;</blockquote>'
+]
+
+{ #category : #tests }
 FOHTMLRenderVisitorTest >> testRenderCodeBlockEscapesHtml [
 	| html block |
 	block := FOCodeBlock new kind: #fenced; language: 'html'; code: '<div>&x</div>'; yourself.

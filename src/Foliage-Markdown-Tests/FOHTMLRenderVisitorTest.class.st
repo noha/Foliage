@@ -153,6 +153,18 @@ FOHTMLRenderVisitorTest >> testRenderImageWithoutAttributes [
 ]
 
 { #category : #tests }
+FOHTMLRenderVisitorTest >> testRenderNestedList [
+	| doc html |
+	doc := FOMarkdownParser parse:
+		'- A', self nl,
+		'  1. first', self nl,
+		'  2. second', self nl,
+		'- B'.
+	html := FOHTMLRenderVisitor render: doc.
+	self assert: html equals: '<ul><li>A<ol><li>first</li><li>second</li></ol></li><li>B</li></ul>'
+]
+
+{ #category : #tests }
 FOHTMLRenderVisitorTest >> testRenderParagraphWithMixedInlineContent [
 	| doc html |
 	doc := FOMarkdownParser parse: 'Text can also contain some **bold**.'.

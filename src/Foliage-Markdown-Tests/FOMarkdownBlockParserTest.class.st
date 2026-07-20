@@ -217,6 +217,24 @@ FOMarkdownBlockParserTest >> testOrderedListDoesNotMergeWithUnorderedList [
 ]
 
 { #category : #tests }
+FOMarkdownBlockParserTest >> testNestedListEndToEnd [
+	"The syntax.md fixture case, through the full document parser."
+	| doc list a |
+	doc := FOMarkdownParser parse:
+		'- A', self nl,
+		'  1. first', self nl,
+		'  2. second', self nl,
+		'- B', self nl,
+		'- C'.
+	self assert: doc children size equals: 1.
+	list := doc children first.
+	self assert: (list isKindOf: FOList).
+	a := list items first.
+	self assert: a nestedList notNil.
+	self assert: (a nestedList items collect: [ :i | self plainTextOf: i ]) asArray equals: #('first' 'second')
+]
+
+{ #category : #tests }
 FOMarkdownBlockParserTest >> testCodeBlockThenParagraph [
 	| doc |
 	doc := FOMarkdownParser parse: '```', self nl, 'code', self nl, '```', self nl, self nl, 'after'.

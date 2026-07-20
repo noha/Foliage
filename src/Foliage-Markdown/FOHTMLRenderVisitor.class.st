@@ -57,7 +57,11 @@ FOHTMLRenderVisitor >> visitList: aList [
 
 { #category : #visiting }
 FOHTMLRenderVisitor >> visitListItem: aListItem [
-	^ '<li>', (self renderChildren: aListItem), '</li>'
+	| nestedHtml |
+	nestedHtml := aListItem nestedList
+		ifNil: [ '' ]
+		ifNotNil: [ :nested | nested acceptVisitor: self ].
+	^ '<li>', (self renderChildren: aListItem), nestedHtml, '</li>'
 ]
 
 { #category : #visiting }

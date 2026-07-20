@@ -2,7 +2,8 @@ Class {
 	#name : #FOListItem,
 	#superclass : #FOBlockNode,
 	#instVars : [
-		'children'
+		'children',
+		'nestedList'
 	],
 	#category : #'Foliage-Markdown'
 }
@@ -15,6 +16,16 @@ FOListItem >> children [
 { #category : #accessing }
 FOListItem >> children: aCollection [
 	children := aCollection
+]
+
+{ #category : #accessing }
+FOListItem >> nestedList [
+	^ nestedList
+]
+
+{ #category : #accessing }
+FOListItem >> nestedList: aFOList [
+	nestedList := aFOList
 ]
 
 { #category : #visiting }

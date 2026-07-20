@@ -29,6 +29,15 @@ FOHTMLRenderVisitor >> visitParagraph: aParagraph [
 	^ '<p>', (self escapeHtml: aParagraph text), '</p>'
 ]
 
+{ #category : #visiting }
+FOHTMLRenderVisitor >> visitCodeBlock: aCodeBlock [
+	| classAttr |
+	classAttr := aCodeBlock language
+		ifNil: [ '' ]
+		ifNotNil: [ :lang | ' class="language-', lang, '"' ].
+	^ '<pre><code', classAttr, '>', (self escapeHtml: aCodeBlock code), '</code></pre>'
+]
+
 { #category : #private }
 FOHTMLRenderVisitor >> escapeHtml: aString [
 	| result |

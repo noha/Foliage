@@ -18,3 +18,8 @@ FOVisitor >> visitHeader: aHeader [
 FOVisitor >> visitParagraph: aParagraph [
 	^ self subclassResponsibility
 ]
+
+{ #category : #visiting }
+FOVisitor >> visitCodeBlock: aCodeBlock [
+	^ self subclassResponsibility
+]

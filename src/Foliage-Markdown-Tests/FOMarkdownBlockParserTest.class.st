@@ -66,3 +66,73 @@ FOMarkdownBlockParserTest >> testMultipleParagraphsSeparatedByBlankLine [
 	self assert: doc children first text equals: 'first paragraph'.
 	self assert: doc children second text equals: 'second paragraph'
 ]
+
+{ #category : #tests }
+FOMarkdownBlockParserTest >> testFencedCodeWithLanguage [
+	| doc block |
+	doc := FOMarkdownParser parse: '```language=smalltalk', self nl, 'foo bar', self nl, '```'.
+	self assert: doc children size equals: 1.
+	block := doc children first.
+	self assert: (block isKindOf: FOCodeBlock).
+	self assert: block kind equals: #fenced.
+	self assert: block language equals: 'smalltalk'.
+	self assert: block code equals: 'foo bar'
+]
+
+{ #category : #tests }
+FOMarkdownBlockParserTest >> testFencedCodeWithoutLanguage [
+	| doc block |
+	doc := FOMarkdownParser parse: '```', self nl, 'plain code', self nl, '```'.
+	block := doc children first.
+	self assert: block kind equals: #fenced.
+	self assert: block language isNil.
+	self assert: block code equals: 'plain code'
+]
+
+{ #category : #tests }
+FOMarkdownBlockParserTest >> testFencedCodeLenientAboutMismatchedFenceLength [
+	"Real content (2020-11-07_blog-navigation.md) opens with 4 backticks and closes with 3."
+	| doc block |
+	doc := FOMarkdownParser parse: '````language=html', self nl, '<div></div>', self nl, '```'.
+	block := doc children first.
+	self assert: block kind equals: #fenced.
+	self assert: block language equals: 'html'.
+	self assert: block code equals: '<div></div>'
+]
+
+{ #category : #tests }
+FOMarkdownBlockParserTest >> testFencedCodeMultipleLines [
+	| doc block |
+	doc := FOMarkdownParser parse: '```', self nl, 'line one', self nl, 'line two', self nl, '```'.
+	block := doc children first.
+	self assert: block code equals: 'line one', self nl, 'line two'
+]
+
+{ #category : #tests }
+FOMarkdownBlockParserTest >> testUnterminatedFencedCodeDoesNotCrash [
+	| doc block |
+	doc := FOMarkdownParser parse: '```language=smalltalk', self nl, 'no closing fence'.
+	block := doc children first.
+	self assert: block code equals: 'no closing fence'
+]
+
+{ #category : #tests }
+FOMarkdownBlockParserTest >> testIndentedCode [
+	| doc block |
+	doc := FOMarkdownParser parse: '    fun no fun', self nl, '    no more fun'.
+	block := doc children first.
+	self assert: (block isKindOf: FOCodeBlock).
+	self assert: block kind equals: #indented.
+	self assert: block language isNil.
+	self assert: block code equals: 'fun no fun', self nl, 'no more fun'
+]
+
+{ #category : #tests }
+FOMarkdownBlockParserTest >> testCodeBlockThenParagraph [
+	| doc |
+	doc := FOMarkdownParser parse: '```', self nl, 'code', self nl, '```', self nl, self nl, 'after'.
+	self assert: doc children size equals: 2.
+	self assert: (doc children first isKindOf: FOCodeBlock).
+	self assert: (doc children second isKindOf: FOParagraph).
+	self assert: doc children second text equals: 'after'
+]

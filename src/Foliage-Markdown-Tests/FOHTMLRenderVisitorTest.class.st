@@ -37,3 +37,27 @@ FOHTMLRenderVisitorTest >> testRenderDocumentJoinsChildrenWithNewline [
 	html := FOHTMLRenderVisitor render: doc.
 	self assert: html equals: '<h1>Title</h1>', self nl, '<p>Body text.</p>'
 ]
+
+{ #category : #tests }
+FOHTMLRenderVisitorTest >> testRenderCodeBlockWithLanguage [
+	| html block |
+	block := FOCodeBlock new kind: #fenced; language: 'smalltalk'; code: 'foo bar'; yourself.
+	html := FOHTMLRenderVisitor render: block.
+	self assert: html equals: '<pre><code class="language-smalltalk">foo bar</code></pre>'
+]
+
+{ #category : #tests }
+FOHTMLRenderVisitorTest >> testRenderCodeBlockWithoutLanguage [
+	| html block |
+	block := FOCodeBlock new kind: #indented; language: nil; code: 'foo bar'; yourself.
+	html := FOHTMLRenderVisitor render: block.
+	self assert: html equals: '<pre><code>foo bar</code></pre>'
+]
+
+{ #category : #tests }
+FOHTMLRenderVisitorTest >> testRenderCodeBlockEscapesHtml [
+	| html block |
+	block := FOCodeBlock new kind: #fenced; language: 'html'; code: '<div>&x</div>'; yourself.
+	html := FOHTMLRenderVisitor render: block.
+	self assert: html equals: '<pre><code class="language-html">&lt;div&gt;&amp;x&lt;/div&gt;</code></pre>'
+]

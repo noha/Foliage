@@ -62,6 +62,16 @@ FOImporterTest >> testUnregisteredExtensionFallsBackToFileReader [
 ]
 
 { #category : #tests }
+FOImporterTest >> testHtmlFileBecomesFOHTMLPage [
+	| files page |
+	self writeFile: 'about.html' contents: '<html><body>Hi</body></html>'.
+	files := tempDir allFiles.
+	importer readAll: files.
+	page := website root / 'about.html'.
+	self assert: (page isKindOf: FOHTMLPage)
+]
+
+{ #category : #tests }
 FOImporterTest >> testIgnoredExtensionIsSkipped [
 	| files |
 	self writeFile: '.DS_Store' contents: 'junk'.

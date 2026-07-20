@@ -27,6 +27,9 @@ FOMarkdownParser >> consumeBlock: aReader classification: aClassification [
 	aClassification kind = #atxHeader ifTrue: [ ^ self consumeHeader: aReader classification: aClassification ].
 	aClassification kind = #fenceDelimiter ifTrue: [ ^ self consumeFencedCode: aReader classification: aClassification ].
 	aClassification kind = #indentedCode ifTrue: [ ^ self consumeIndentedCode: aReader ].
+	aClassification kind = #blockquote ifTrue: [ ^ self consumeBlockquote: aReader ].
+	(aClassification kind = #unorderedListItem or: [ aClassification kind = #orderedListItem ])
+		ifTrue: [ ^ FOListParser parseFrom: aReader ].
 	^ self consumeParagraph: aReader
 ]
 
@@ -35,7 +38,7 @@ FOMarkdownParser >> consumeHeader: aReader classification: aClassification [
 	| trimmed text |
 	trimmed := aReader next trimBoth.
 	text := (trimmed copyFrom: aClassification level + 2 to: trimmed size) trimBoth.
-	^ FOHeader new level: aClassification level; text: text; yourself
+	^ FOHeader new level: aClassification level; children: (FOInlineParser parse: text); yourself
 ]
 
 { #category : #private }
@@ -44,9 +47,29 @@ FOMarkdownParser >> consumeParagraph: aReader [
 	lines := OrderedCollection new.
 	[ aReader atEnd not and: [
 		classification := FOLineClassifier classify: aReader peek.
-		(#(#blank #atxHeader #fenceDelimiter #indentedCode) includes: classification kind) not ] ]
+		(#(#blank #atxHeader #fenceDelimiter #indentedCode #blockquote #unorderedListItem #orderedListItem) includes: classification kind) not ] ]
 		whileTrue: [ lines add: aReader next trimBoth ].
-	^ FOParagraph new text: (self joinWithSpace: lines); yourself
+	^ FOParagraph new children: (FOInlineParser parse: (self joinWithSpace: lines)); yourself
+]
+
+{ #category : #private }
+FOMarkdownParser >> consumeBlockquote: aReader [
+	| lines line |
+	lines := OrderedCollection new.
+	[ aReader atEnd not and: [ (FOLineClassifier classify: aReader peek) kind = #blockquote ] ]
+		whileTrue: [
+			line := aReader next trimBoth.
+			lines add: (self stripBlockquoteMarker: line) ].
+	^ FOBlockquote new children: (FOInlineParser parse: (self joinWithNewline: lines)); yourself
+]
+
+{ #category : #private }
+FOMarkdownParser >> stripBlockquoteMarker: aLine [
+	| rest |
+	rest := aLine copyFrom: 2 to: aLine size.
+	(rest notEmpty and: [ rest first = $  ])
+		ifTrue: [ ^ rest copyFrom: 2 to: rest size ].
+	^ rest
 ]
 
 { #category : #private }

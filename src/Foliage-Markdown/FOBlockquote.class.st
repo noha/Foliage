@@ -1,5 +1,5 @@
 Class {
-	#name : #FOParagraph,
+	#name : #FOBlockquote,
 	#superclass : #FOBlockNode,
 	#instVars : [
 		'children'
@@ -8,16 +8,16 @@ Class {
 }
 
 { #category : #accessing }
-FOParagraph >> children [
+FOBlockquote >> children [
 	^ children
 ]
 
 { #category : #accessing }
-FOParagraph >> children: aCollection [
+FOBlockquote >> children: aCollection [
 	children := aCollection
 ]
 
 { #category : #visiting }
-FOParagraph >> acceptVisitor: aVisitor [
-	^ aVisitor visitParagraph: self
+FOBlockquote >> acceptVisitor: aVisitor [
+	^ aVisitor visitBlockquote: self
 ]

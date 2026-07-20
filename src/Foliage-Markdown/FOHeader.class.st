@@ -3,7 +3,7 @@ Class {
 	#superclass : #FOBlockNode,
 	#instVars : [
 		'level',
-		'text'
+		'children'
 	],
 	#category : #'Foliage-Markdown'
 }
@@ -19,13 +19,13 @@ FOHeader >> level: anInteger [
 ]
 
 { #category : #accessing }
-FOHeader >> text [
-	^ text
+FOHeader >> children [
+	^ children
 ]
 
 { #category : #accessing }
-FOHeader >> text: aString [
-	text := aString
+FOHeader >> children: aCollection [
+	children := aCollection
 ]
 
 { #category : #visiting }

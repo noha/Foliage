@@ -5,7 +5,8 @@ Class {
 		'targetPath',
 		'rawPath',
 		'root',
-		'templatePath'
+		'templatePath',
+		'blogPaths'
 	],
 	#category : #'Foliage-Core-Tests'
 }
@@ -68,4 +69,14 @@ FOTestWebsite >> templatePathForLayout: aString [
 { #category : #accessing }
 FOTestWebsite >> templatePathForLayout: aString partial: partialName [
 	^ self templatePath / partialName
+]
+
+{ #category : #accessing }
+FOTestWebsite >> blogPaths [
+	^ blogPaths ifNil: [ #() ]
+]
+
+{ #category : #accessing }
+FOTestWebsite >> blogPaths: aCollection [
+	blogPaths := aCollection
 ]

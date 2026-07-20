@@ -34,8 +34,18 @@ FOWebFolder >> resolvePath: aRelativePath [
 	segment := aRelativePath segments first.
 	child := items at: segment ifAbsent: [
 		| newChild |
-		newChild := FOWebFolder new.
+		newChild := self newChildNamed: segment.
 		self at: segment put: newChild.
 		newChild ].
 	^ child resolvePath: (RelativePath withAll: aRelativePath segments allButFirst)
+]
+
+{ #category : #resolving }
+FOWebFolder >> newChildNamed: aString [
+	"A top-level (direct child of root) name declared via the website's
+	blogPaths becomes a FOBlog right away, instead of a plain FOWebFolder -
+	replaces the old post-hoc convertToBlog object surgery."
+	^ (self isRoot and: [ self website blogPaths includes: aString ])
+		ifTrue: [ FOBlog new ]
+		ifFalse: [ FOWebFolder new ]
 ]

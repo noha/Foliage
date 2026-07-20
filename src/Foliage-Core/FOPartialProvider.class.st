@@ -10,15 +10,15 @@ Class {
 
 { #category : #accessing }
 FOPartialProvider >> at: key [
-	^ (website templatePathForLayout: layout partial: key) asMustacheTemplate 
+	^ (website templatePathForLayout: layout partial: key) asMustacheTemplate
 ]
 
 { #category : #accessing }
-FOPartialProvider >> layout: aString [ 
+FOPartialProvider >> layout: aString [
 	layout := aString
 ]
 
 { #category : #accessing }
-FOPartialProvider >> website: aWebsite [ 
-	website := aWebsite 
+FOPartialProvider >> website: aWebsite [
+	website := aWebsite
 ]

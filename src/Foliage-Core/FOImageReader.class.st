@@ -5,12 +5,12 @@ Class {
 }
 
 { #category : #testing }
-FOImageReader class >> supportedFileExtensions [ 
-	^ #( gif jpg jpeg png ) 
+FOImageReader class >> supportedFileExtensions [
+	^ #( gif jpg jpeg png )
 ]
 
 { #category : #accessing }
-FOImageReader >> model [ 
-	^ FOWebImage new 
+FOImageReader >> model [
+	^ FOWebImage new
 		sourcePath: file asPath
 ]

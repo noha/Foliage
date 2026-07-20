@@ -7,26 +7,14 @@ Class {
 	#category : #'Foliage-Core-Model'
 }
 
-{ #category : #testing }
-FOPageWithMetadata class >> isAbstract [ 
-	^ self == FOPageWithMetadata  
-]
-
 { #category : #accessing }
 FOPageWithMetadata >> defaultLayout [
-
 	^ self parent defaultLayout
-]
-
-{ #category : #converting }
-FOPageWithMetadata >> emitSlots [
-
-	^ super emitSlots, #(meta)
 ]
 
 { #category : #testing }
 FOPageWithMetadata >> hasDocumentType [
-	^ meta includesKey: 'layout'
+	^ self meta includesKey: #layout
 ]
 
 { #category : #testing }
@@ -41,58 +29,50 @@ FOPageWithMetadata >> isPublished [
 
 { #category : #accessing }
 FOPageWithMetadata >> layout [
-	^ self meta 
-		at: 'layout'
+	^ self meta
+		at: #layout
 		ifAbsent: [ self defaultLayout ]
 ]
 
 { #category : #accessing }
 FOPageWithMetadata >> layout: aString [
-	^ self meta 
-		at: 'layout'
-		put: aString
+	^ self meta at: #layout put: aString
 ]
 
 { #category : #accessing }
 FOPageWithMetadata >> meta [
-	^ meta ifNil: [ 
-		meta := Dictionary new ]
+	^ meta ifNil: [ meta := Dictionary new ]
 ]
 
 { #category : #accessing }
-FOPageWithMetadata >> meta: aCollection [ 
-	meta := aCollection 
+FOPageWithMetadata >> meta: aDictionary [
+	meta := aDictionary
 ]
 
 { #category : #accessing }
 FOPageWithMetadata >> metaAt: key put: value [
-	
-	self meta 
-		at: key
-		put: value
+	self meta at: key put: value
 ]
 
 { #category : #accessing }
 FOPageWithMetadata >> publishDate [
-	^ self meta 
-		at: #publishDate 
+	^ self meta
+		at: #publishDate
 		ifPresent: [ :string |
-			"reading from file an empty date easily ends up being an 
-			empty string so we consider it absent in this case" 
-			string 
+			"an empty value ('publishDate:' with nothing after it) is treated as
+			absent, not as an error"
+			string
 				ifNotEmpty: [ (DateAndTime fromString: string) asDate ]
-				ifEmpty: [ nil ]  ]
+				ifEmpty: [ nil ] ]
 		ifAbsent: [ nil ]
 ]
 
 { #category : #accessing }
 FOPageWithMetadata >> title [
-	^ self meta at: 'title'
+	^ self meta at: #title
 ]
 
 { #category : #accessing }
-FOPageWithMetadata >> title: aString [ 
-	self meta 
-		at: 'title'
-		put: aString
+FOPageWithMetadata >> title: aString [
+	self meta at: #title put: aString
 ]

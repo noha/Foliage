@@ -7,23 +7,24 @@ Class {
 	#category : #'Foliage-Core-Base'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 FORenderContext >> layout [
-	self subclassResponsibility 
+	^ self subclassResponsibility
 ]
 
-{ #category : #'as yet unclassified' }
-FORenderContext >> partials [ 
-	^ FOPartialProvider new 
-		layout: self layout; 
-		website: website
+{ #category : #accessing }
+FORenderContext >> partials [
+	^ FOPartialProvider new
+		layout: self layout;
+		website: website;
+		yourself
 ]
 
 { #category : #rendering }
 FORenderContext >> renderTemplate: template [
-	^ template 
-		value: self 
-		partials: self partials.
+	^ template
+		value: self
+		partials: self partials
 ]
 
 { #category : #accessing }

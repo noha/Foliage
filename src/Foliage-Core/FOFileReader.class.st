@@ -5,12 +5,12 @@ Class {
 }
 
 { #category : #testing }
-FOFileReader class >> supportedFileExtensions [ 
-	^ #( css js ico )
+FOFileReader class >> supportedFileExtensions [
+	^ #( css js )
 ]
 
 { #category : #accessing }
-FOFileReader >> model [ 
-	^ FOFileObject new 
+FOFileReader >> model [
+	^ FOFileObject new
 		sourcePath: file asPath
 ]

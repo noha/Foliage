@@ -6,28 +6,20 @@ Class {
 
 { #category : #accessing }
 FOBlogPostRenderContext >> abstract [
-
 	^ self page abstract
 ]
 
-{ #category : #'as yet unclassified' }
-FOBlogPostRenderContext >> nextPost [ 
+{ #category : #accessing }
+FOBlogPostRenderContext >> nextPost [
 	^ page parent postAfter: self page
 ]
 
 { #category : #accessing }
 FOBlogPostRenderContext >> pathString [
-
 	^ page pathString
 ]
 
-{ #category : #'as yet unclassified' }
-FOBlogPostRenderContext >> previousPost [ 
-	^ page parent postBefore: self page
-]
-
 { #category : #accessing }
-FOBlogPostRenderContext >> title [
-
-	^ self page title
+FOBlogPostRenderContext >> previousPost [
+	^ page parent postBefore: self page
 ]

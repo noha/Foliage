@@ -8,17 +8,16 @@ Class {
 }
 
 { #category : #accessing }
-FOPageRenderContext >> body [ 
+FOPageRenderContext >> body [
 	^ self html
 ]
 
 { #category : #accessing }
 FOPageRenderContext >> html [
-	^ String streamContents: [ :s| 
-		page renderOn: s ].
+	^ String streamContents: [ :s | page renderOn: s ]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 FOPageRenderContext >> layout [
 	^ page layout
 ]
@@ -34,13 +33,11 @@ FOPageRenderContext >> page: anObject [
 ]
 
 { #category : #accessing }
-FOPageRenderContext >> publicationDate [
-
-	^ page publicationDate
+FOPageRenderContext >> publishDate [
+	^ page publishDate
 ]
 
 { #category : #accessing }
 FOPageRenderContext >> title [
-
 	^ page title
 ]

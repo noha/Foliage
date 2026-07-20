@@ -9,7 +9,7 @@ FOHTMLReader class >> supportedFileExtensions [
 	^ #( html )
 ]
 
-{ #category : #'instance creation' }
+{ #category : #accessing }
 FOHTMLReader >> model [
 	^ FOHTMLPage new
 		sourcePath: file asPath

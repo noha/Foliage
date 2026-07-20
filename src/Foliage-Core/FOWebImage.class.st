@@ -5,11 +5,11 @@ Class {
 }
 
 { #category : #testing }
-FOWebImage class >> supportedFileExtensions [ 
-	^ #( gif jpg jpeg png ico  ) 
+FOWebImage class >> supportedFileExtensions [
+	^ #( gif jpg jpeg png ico )
 ]
 
 { #category : #visiting }
-FOWebImage >> acceptFOVisitor: aFOVisitor [ 
-	^ aFOVisitor visitWebImage: self  
+FOWebImage >> acceptFOVisitor: aFOVisitor [
+	^ aFOVisitor visitWebImage: self
 ]

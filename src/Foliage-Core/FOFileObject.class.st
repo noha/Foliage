@@ -5,11 +5,11 @@ Class {
 }
 
 { #category : #testing }
-FOFileObject class >> supportedFileExtensions [ 
+FOFileObject class >> supportedFileExtensions [
 	^ #( css js )
 ]
 
 { #category : #visiting }
-FOFileObject >> acceptFOVisitor: aFOVisitor [ 
-	^ aFOVisitor visitFileObject: self 
+FOFileObject >> acceptFOVisitor: aFOVisitor [
+	^ aFOVisitor visitFileObject: self
 ]

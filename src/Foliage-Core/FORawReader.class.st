@@ -10,28 +10,27 @@ Class {
 
 { #category : #accessing }
 FORawReader class >> file: aFileReference [
-	^ self new file: aFileReference 
+	^ self new file: aFileReference
 ]
 
 { #category : #accessing }
-FORawReader class >> forFileExtension: aString [ 
+FORawReader class >> forFileExtension: aString [
 	^ (self allSubclasses reject: #isAbstract)
 		detect: [ :each | each matchesFileExtension: aString ]
-		ifNone: [  nil ]
+		ifNone: [ nil ]
 ]
 
 { #category : #testing }
-FORawReader class >> matchesFileExtension: aString [ 
+FORawReader class >> matchesFileExtension: aString [
 	^ self supportedFileExtensions includes: aString
 ]
 
 { #category : #accessing }
-FORawReader >> file: aFileReference [ 
-	file := aFileReference 
+FORawReader >> file: aFileReference [
+	file := aFileReference
 ]
 
 { #category : #accessing }
-FORawReader >> stream [ 
-	^ stream ifNil: [ 
-		stream := file readStream ]
+FORawReader >> stream [
+	^ stream ifNil: [ stream := file readStream ]
 ]

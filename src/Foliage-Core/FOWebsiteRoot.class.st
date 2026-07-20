@@ -5,13 +5,12 @@ Class {
 }
 
 { #category : #visiting }
-FOWebsiteRoot >> acceptFOVisitor: aFOVisitor [ 
-	^ aFOVisitor visitWebsiteRoot: self 
+FOWebsiteRoot >> acceptFOVisitor: aFOVisitor [
+	^ aFOVisitor visitWebsiteRoot: self
 ]
 
 { #category : #accessing }
 FOWebsiteRoot >> defaultLayout [
-
 	^ 'page'
 ]
 
@@ -21,21 +20,21 @@ FOWebsiteRoot >> isRoot [
 ]
 
 { #category : #accessing }
-FOWebsiteRoot >> name [ 
+FOWebsiteRoot >> name [
 	^ #/
 ]
 
 { #category : #accessing }
-FOWebsiteRoot >> path [ 
+FOWebsiteRoot >> path [
 	^ Path root
 ]
 
 { #category : #accessing }
-FOWebsiteRoot >> root [ 	
-	^ self 
+FOWebsiteRoot >> root [
+	^ self
 ]
 
 { #category : #accessing }
-FOWebsiteRoot >> website [ 
-	^ parent 
+FOWebsiteRoot >> website [
+	^ parent
 ]

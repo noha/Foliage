@@ -24,3 +24,26 @@ FOFoliagePageTest >> testPublishPathAlwaysHasHtmlExtension [
 	root at: #'my-post' put: page.
 	self assert: page publishPath asString equals: 'docs/my-post.html' asFileReference asString
 ]
+
+{ #category : #tests }
+FOFoliagePageTest >> testRenderProducesFullTemplatedPageThroughMustache [
+	| templateDir website root page html |
+	templateDir := FileLocator temp / ('fo-foliage-page-test-', UUID new asString36).
+	templateDir ensureCreateDirectory.
+	[
+		(templateDir / 'blog-post') writeStreamDo: [ :s |
+			s nextPutAll: '<html><head><title>{{page.title}}</title></head><body>{{> page-header}}<div>{{{ body }}}</div></body></html>' ].
+		(templateDir / 'page-header') writeStreamDo: [ :s | s nextPutAll: '<header>Site</header>' ].
+
+		website := FOTestWebsite new templatePath: templateDir; yourself.
+		root := FOWebsiteRoot new parent: website; yourself.
+		page := FOFoliagePage new
+			meta: (Dictionary new at: #title put: 'Hi'; at: #layout put: 'blog-post'; yourself);
+			document: (FOMarkdownParser parse: 'Body text.');
+			yourself.
+		root at: #'my-post' put: page.
+
+		html := page render.
+		self assert: html equals: '<html><head><title>Hi</title></head><body><header>Site</header><div><p>Body text.</p></div></body></html>'
+	] ensure: [ templateDir deleteAll ]
+]

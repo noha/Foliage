@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'targetPath',
 		'rawPath',
-		'root'
+		'root',
+		'templatePath'
 	],
 	#category : #'Foliage-Core-Tests'
 }
@@ -47,4 +48,24 @@ FOTestWebsite >> resolvePath: aPath [
 { #category : #accessing }
 FOTestWebsite >> relativeRawPath: aFileReference [
 	^ aFileReference asAbsolute relativeTo: self rawPath asAbsolute
+]
+
+{ #category : #accessing }
+FOTestWebsite >> templatePath [
+	^ templatePath
+]
+
+{ #category : #accessing }
+FOTestWebsite >> templatePath: aFileReference [
+	templatePath := aFileReference
+]
+
+{ #category : #accessing }
+FOTestWebsite >> templatePathForLayout: aString [
+	^ self templatePath / aString
+]
+
+{ #category : #accessing }
+FOTestWebsite >> templatePathForLayout: aString partial: partialName [
+	^ self templatePath / partialName
 ]

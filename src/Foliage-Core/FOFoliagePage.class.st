@@ -35,6 +35,16 @@ FOFoliagePage >> publishPath [
 ]
 
 { #category : #rendering }
+FOFoliagePage >> render [
+	^ self newRenderContext renderTemplate: self template
+]
+
+{ #category : #rendering }
 FOFoliagePage >> renderOn: aStream [
 	aStream nextPutAll: (FOHTMLRenderVisitor render: self document)
+]
+
+{ #category : #accessing }
+FOFoliagePage >> template [
+	^ (self website templatePathForLayout: self layout) asMustacheTemplate
 ]

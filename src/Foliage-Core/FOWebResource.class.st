@@ -53,11 +53,6 @@ FOWebResource >> publishPath [
 ]
 
 { #category : #accessing }
-FOWebResource >> publishPathFor: aString [
-	^ aString
-]
-
-{ #category : #accessing }
 FOWebResource >> properties [
 	^ properties ifNil: [ properties := Dictionary new ]
 ]

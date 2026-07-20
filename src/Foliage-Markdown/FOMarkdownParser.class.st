@@ -28,6 +28,8 @@ FOMarkdownParser >> consumeBlock: aReader classification: aClassification [
 	aClassification kind = #fenceDelimiter ifTrue: [ ^ self consumeFencedCode: aReader classification: aClassification ].
 	aClassification kind = #indentedCode ifTrue: [ ^ self consumeIndentedCode: aReader ].
 	aClassification kind = #blockquote ifTrue: [ ^ self consumeBlockquote: aReader ].
+	(aClassification kind = #unorderedListItem or: [ aClassification kind = #orderedListItem ])
+		ifTrue: [ ^ self consumeList: aReader classification: aClassification ].
 	^ self consumeParagraph: aReader
 ]
 
@@ -45,7 +47,7 @@ FOMarkdownParser >> consumeParagraph: aReader [
 	lines := OrderedCollection new.
 	[ aReader atEnd not and: [
 		classification := FOLineClassifier classify: aReader peek.
-		(#(#blank #atxHeader #fenceDelimiter #indentedCode #blockquote) includes: classification kind) not ] ]
+		(#(#blank #atxHeader #fenceDelimiter #indentedCode #blockquote #unorderedListItem #orderedListItem) includes: classification kind) not ] ]
 		whileTrue: [ lines add: aReader next trimBoth ].
 	^ FOParagraph new text: (self joinWithSpace: lines); yourself
 ]
@@ -98,6 +100,35 @@ FOMarkdownParser >> consumeIndentedCode: aReader [
 		language: nil;
 		code: (self joinWithNewline: lines);
 		yourself
+]
+
+{ #category : #private }
+FOMarkdownParser >> consumeList: aReader classification: aClassification [
+	| items ordered indent |
+	ordered := aClassification ordered.
+	indent := aClassification indent.
+	items := OrderedCollection new.
+	[ self atListItem: aReader ordered: ordered indent: indent ]
+		whileTrue: [ items add: (self consumeListItem: aReader) ].
+	^ FOList new ordered: ordered; items: items; yourself
+]
+
+{ #category : #private }
+FOMarkdownParser >> atListItem: aReader ordered: aBoolean indent: anIndent [
+	| c |
+	aReader atEnd ifTrue: [ ^ false ].
+	c := FOLineClassifier classify: aReader peek.
+	^ (c kind = #unorderedListItem or: [ c kind = #orderedListItem ])
+		and: [ c ordered = aBoolean and: [ c indent = anIndent ] ]
+]
+
+{ #category : #private }
+FOMarkdownParser >> consumeListItem: aReader [
+	| classification line text |
+	classification := FOLineClassifier classify: aReader peek.
+	line := aReader next.
+	text := (line copyFrom: classification contentColumn + 1 to: line size) trimBoth.
+	^ FOListItem new text: text; yourself
 ]
 
 { #category : #private }

@@ -79,6 +79,30 @@ FOHTMLRenderVisitorTest >> testRenderBlockquoteEscapesHtml [
 ]
 
 { #category : #tests }
+FOHTMLRenderVisitorTest >> testRenderUnorderedList [
+	| doc html |
+	doc := FOMarkdownParser parse: '- A', self nl, '- B'.
+	html := FOHTMLRenderVisitor render: doc.
+	self assert: html equals: '<ul><li>A</li><li>B</li></ul>'
+]
+
+{ #category : #tests }
+FOHTMLRenderVisitorTest >> testRenderOrderedList [
+	| doc html |
+	doc := FOMarkdownParser parse: '1. first', self nl, '2. second'.
+	html := FOHTMLRenderVisitor render: doc.
+	self assert: html equals: '<ol><li>first</li><li>second</li></ol>'
+]
+
+{ #category : #tests }
+FOHTMLRenderVisitorTest >> testRenderListItemEscapesHtml [
+	| html item |
+	item := FOListItem new text: 'a & b'; yourself.
+	html := FOHTMLRenderVisitor render: item.
+	self assert: html equals: '<li>a &amp; b</li>'
+]
+
+{ #category : #tests }
 FOHTMLRenderVisitorTest >> testRenderCodeBlockEscapesHtml [
 	| html block |
 	block := FOCodeBlock new kind: #fenced; language: 'html'; code: '<div>&x</div>'; yourself.

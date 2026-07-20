@@ -48,6 +48,20 @@ FOHTMLRenderVisitor >> visitBlockquote: aBlockquote [
 			separatedBy: [ s nextPutAll: '<br>'; nextPut: Character lf ] ]), '</blockquote>'
 ]
 
+{ #category : #visiting }
+FOHTMLRenderVisitor >> visitList: aList [
+	| tag itemsHtml |
+	tag := aList ordered ifTrue: [ 'ol' ] ifFalse: [ 'ul' ].
+	itemsHtml := String streamContents: [ :s |
+		aList items do: [ :item | s nextPutAll: (item acceptVisitor: self) ] ].
+	^ '<', tag, '>', itemsHtml, '</', tag, '>'
+]
+
+{ #category : #visiting }
+FOHTMLRenderVisitor >> visitListItem: aListItem [
+	^ '<li>', (self escapeHtml: aListItem text), '</li>'
+]
+
 { #category : #private }
 FOHTMLRenderVisitor >> escapeHtml: aString [
 	| result |

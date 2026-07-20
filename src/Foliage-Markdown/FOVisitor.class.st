@@ -28,3 +28,13 @@ FOVisitor >> visitCodeBlock: aCodeBlock [
 FOVisitor >> visitBlockquote: aBlockquote [
 	^ self subclassResponsibility
 ]
+
+{ #category : #visiting }
+FOVisitor >> visitList: aList [
+	^ self subclassResponsibility
+]
+
+{ #category : #visiting }
+FOVisitor >> visitListItem: aListItem [
+	^ self subclassResponsibility
+]

@@ -168,6 +168,46 @@ FOMarkdownBlockParserTest >> testBlockquoteThenParagraph [
 ]
 
 { #category : #tests }
+FOMarkdownBlockParserTest >> testUnorderedListFlat [
+	| doc list |
+	doc := FOMarkdownParser parse: '- A', self nl, '- B', self nl, '- C'.
+	self assert: doc children size equals: 1.
+	list := doc children first.
+	self assert: (list isKindOf: FOList).
+	self assert: list ordered equals: false.
+	self assert: list items size equals: 3.
+	self assert: (list items collect: [ :i | i text ]) asArray equals: #('A' 'B' 'C')
+]
+
+{ #category : #tests }
+FOMarkdownBlockParserTest >> testOrderedListFlat [
+	| doc list |
+	doc := FOMarkdownParser parse: '1. first', self nl, '2. second'.
+	list := doc children first.
+	self assert: list ordered equals: true.
+	self assert: (list items collect: [ :i | i text ]) asArray equals: #('first' 'second')
+]
+
+{ #category : #tests }
+FOMarkdownBlockParserTest >> testListThenParagraph [
+	| doc |
+	doc := FOMarkdownParser parse: '- A', self nl, '- B', self nl, self nl, 'after'.
+	self assert: doc children size equals: 2.
+	self assert: (doc children first isKindOf: FOList).
+	self assert: (doc children second isKindOf: FOParagraph).
+	self assert: doc children second text equals: 'after'
+]
+
+{ #category : #tests }
+FOMarkdownBlockParserTest >> testOrderedListDoesNotMergeWithUnorderedList [
+	| doc |
+	doc := FOMarkdownParser parse: '- A', self nl, '1. first'.
+	self assert: doc children size equals: 2.
+	self assert: doc children first ordered equals: false.
+	self assert: doc children second ordered equals: true
+]
+
+{ #category : #tests }
 FOMarkdownBlockParserTest >> testCodeBlockThenParagraph [
 	| doc |
 	doc := FOMarkdownParser parse: '```', self nl, 'code', self nl, '```', self nl, self nl, 'after'.

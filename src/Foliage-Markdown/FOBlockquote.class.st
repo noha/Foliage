@@ -2,19 +2,19 @@ Class {
 	#name : #FOBlockquote,
 	#superclass : #FOBlockNode,
 	#instVars : [
-		'text'
+		'children'
 	],
 	#category : #'Foliage-Markdown'
 }
 
 { #category : #accessing }
-FOBlockquote >> text [
-	^ text
+FOBlockquote >> children [
+	^ children
 ]
 
 { #category : #accessing }
-FOBlockquote >> text: aString [
-	text := aString
+FOBlockquote >> children: aCollection [
+	children := aCollection
 ]
 
 { #category : #visiting }

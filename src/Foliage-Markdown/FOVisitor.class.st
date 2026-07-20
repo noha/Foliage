@@ -38,3 +38,28 @@ FOVisitor >> visitList: aList [
 FOVisitor >> visitListItem: aListItem [
 	^ self subclassResponsibility
 ]
+
+{ #category : #visiting }
+FOVisitor >> visitText: aText [
+	^ self subclassResponsibility
+]
+
+{ #category : #visiting }
+FOVisitor >> visitBold: aBold [
+	^ self subclassResponsibility
+]
+
+{ #category : #visiting }
+FOVisitor >> visitItalic: anItalic [
+	^ self subclassResponsibility
+]
+
+{ #category : #visiting }
+FOVisitor >> visitLink: aLink [
+	^ self subclassResponsibility
+]
+
+{ #category : #visiting }
+FOVisitor >> visitImage: anImage [
+	^ self subclassResponsibility
+]

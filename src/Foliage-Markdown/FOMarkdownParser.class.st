@@ -38,7 +38,7 @@ FOMarkdownParser >> consumeHeader: aReader classification: aClassification [
 	| trimmed text |
 	trimmed := aReader next trimBoth.
 	text := (trimmed copyFrom: aClassification level + 2 to: trimmed size) trimBoth.
-	^ FOHeader new level: aClassification level; text: text; yourself
+	^ FOHeader new level: aClassification level; children: (FOInlineParser parse: text); yourself
 ]
 
 { #category : #private }
@@ -49,7 +49,7 @@ FOMarkdownParser >> consumeParagraph: aReader [
 		classification := FOLineClassifier classify: aReader peek.
 		(#(#blank #atxHeader #fenceDelimiter #indentedCode #blockquote #unorderedListItem #orderedListItem) includes: classification kind) not ] ]
 		whileTrue: [ lines add: aReader next trimBoth ].
-	^ FOParagraph new text: (self joinWithSpace: lines); yourself
+	^ FOParagraph new children: (FOInlineParser parse: (self joinWithSpace: lines)); yourself
 ]
 
 { #category : #private }
@@ -60,7 +60,7 @@ FOMarkdownParser >> consumeBlockquote: aReader [
 		whileTrue: [
 			line := aReader next trimBoth.
 			lines add: (self stripBlockquoteMarker: line) ].
-	^ FOBlockquote new text: (self joinWithNewline: lines); yourself
+	^ FOBlockquote new children: (FOInlineParser parse: (self joinWithNewline: lines)); yourself
 ]
 
 { #category : #private }
@@ -128,7 +128,7 @@ FOMarkdownParser >> consumeListItem: aReader [
 	classification := FOLineClassifier classify: aReader peek.
 	line := aReader next.
 	text := (line copyFrom: classification contentColumn + 1 to: line size) trimBoth.
-	^ FOListItem new text: text; yourself
+	^ FOListItem new children: (FOInlineParser parse: text); yourself
 ]
 
 { #category : #private }

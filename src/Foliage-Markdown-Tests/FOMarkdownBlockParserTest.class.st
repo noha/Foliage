@@ -9,6 +9,15 @@ FOMarkdownBlockParserTest >> nl [
 	^ String with: Character lf
 ]
 
+{ #category : #private }
+FOMarkdownBlockParserTest >> plainTextOf: aBlockNode [
+	^ String streamContents: [ :s |
+		aBlockNode children do: [ :child |
+			(child isKindOf: FOText)
+				ifTrue: [ s nextPutAll: child string ]
+				ifFalse: [ s nextPutAll: child text ] ] ]
+]
+
 { #category : #tests }
 FOMarkdownBlockParserTest >> testSingleHeader [
 	| doc header |
@@ -17,7 +26,7 @@ FOMarkdownBlockParserTest >> testSingleHeader [
 	header := doc children first.
 	self assert: (header isKindOf: FOHeader).
 	self assert: header level equals: 1.
-	self assert: header text equals: 'Hello'
+	self assert: (self plainTextOf: header) equals: 'Hello'
 ]
 
 { #category : #tests }
@@ -26,7 +35,7 @@ FOMarkdownBlockParserTest >> testHeaderLevelFour [
 	doc := FOMarkdownParser parse: '#### H4 header'.
 	header := doc children first.
 	self assert: header level equals: 4.
-	self assert: header text equals: 'H4 header'
+	self assert: (self plainTextOf: header) equals: 'H4 header'
 ]
 
 { #category : #tests }
@@ -36,7 +45,7 @@ FOMarkdownBlockParserTest >> testSingleParagraph [
 	self assert: doc children size equals: 1.
 	paragraph := doc children first.
 	self assert: (paragraph isKindOf: FOParagraph).
-	self assert: paragraph text equals: 'just a paragraph'
+	self assert: (self plainTextOf: paragraph) equals: 'just a paragraph'
 ]
 
 { #category : #tests }
@@ -45,9 +54,9 @@ FOMarkdownBlockParserTest >> testHeaderThenParagraph [
 	doc := FOMarkdownParser parse: '# Title', self nl, self nl, 'Some text.'.
 	self assert: doc children size equals: 2.
 	self assert: (doc children first isKindOf: FOHeader).
-	self assert: doc children first text equals: 'Title'.
+	self assert: (self plainTextOf: doc children first) equals: 'Title'.
 	self assert: (doc children second isKindOf: FOParagraph).
-	self assert: doc children second text equals: 'Some text.'
+	self assert: (self plainTextOf: doc children second) equals: 'Some text.'
 ]
 
 { #category : #tests }
@@ -55,7 +64,7 @@ FOMarkdownBlockParserTest >> testMultiLineParagraphJoinsWithSpace [
 	| doc paragraph |
 	doc := FOMarkdownParser parse: 'line one', self nl, 'line two'.
 	paragraph := doc children first.
-	self assert: paragraph text equals: 'line one line two'
+	self assert: (self plainTextOf: paragraph) equals: 'line one line two'
 ]
 
 { #category : #tests }
@@ -63,8 +72,8 @@ FOMarkdownBlockParserTest >> testMultipleParagraphsSeparatedByBlankLine [
 	| doc |
 	doc := FOMarkdownParser parse: 'first paragraph', self nl, self nl, 'second paragraph'.
 	self assert: doc children size equals: 2.
-	self assert: doc children first text equals: 'first paragraph'.
-	self assert: doc children second text equals: 'second paragraph'
+	self assert: (self plainTextOf: doc children first) equals: 'first paragraph'.
+	self assert: (self plainTextOf: doc children second) equals: 'second paragraph'
 ]
 
 { #category : #tests }
@@ -134,7 +143,7 @@ FOMarkdownBlockParserTest >> testBlockquoteSingleLine [
 	self assert: doc children size equals: 1.
 	quote := doc children first.
 	self assert: (quote isKindOf: FOBlockquote).
-	self assert: quote text equals: 'This is a quote'
+	self assert: (self plainTextOf: quote) equals: 'This is a quote'
 ]
 
 { #category : #tests }
@@ -146,7 +155,7 @@ FOMarkdownBlockParserTest >> testBlockquoteMultiLinePreservesLineBreaksAndIndent
 		'>   templates/ -> for keeping the layout stuff separat'.
 	quote := doc children first.
 	expected := '/', self nl, '  raw/  -> for the markdown files', self nl, '  templates/ -> for keeping the layout stuff separat'.
-	self assert: quote text equals: expected
+	self assert: (self plainTextOf: quote) equals: expected
 ]
 
 { #category : #tests }
@@ -154,7 +163,7 @@ FOMarkdownBlockParserTest >> testBlockquoteWithoutSpaceAfterMarker [
 	| doc quote |
 	doc := FOMarkdownParser parse: '>no space'.
 	quote := doc children first.
-	self assert: quote text equals: 'no space'
+	self assert: (self plainTextOf: quote) equals: 'no space'
 ]
 
 { #category : #tests }
@@ -164,7 +173,7 @@ FOMarkdownBlockParserTest >> testBlockquoteThenParagraph [
 	self assert: doc children size equals: 2.
 	self assert: (doc children first isKindOf: FOBlockquote).
 	self assert: (doc children second isKindOf: FOParagraph).
-	self assert: doc children second text equals: 'after'
+	self assert: (self plainTextOf: doc children second) equals: 'after'
 ]
 
 { #category : #tests }
@@ -176,7 +185,7 @@ FOMarkdownBlockParserTest >> testUnorderedListFlat [
 	self assert: (list isKindOf: FOList).
 	self assert: list ordered equals: false.
 	self assert: list items size equals: 3.
-	self assert: (list items collect: [ :i | i text ]) asArray equals: #('A' 'B' 'C')
+	self assert: (list items collect: [ :i | self plainTextOf: i ]) asArray equals: #('A' 'B' 'C')
 ]
 
 { #category : #tests }
@@ -185,7 +194,7 @@ FOMarkdownBlockParserTest >> testOrderedListFlat [
 	doc := FOMarkdownParser parse: '1. first', self nl, '2. second'.
 	list := doc children first.
 	self assert: list ordered equals: true.
-	self assert: (list items collect: [ :i | i text ]) asArray equals: #('first' 'second')
+	self assert: (list items collect: [ :i | self plainTextOf: i ]) asArray equals: #('first' 'second')
 ]
 
 { #category : #tests }
@@ -195,7 +204,7 @@ FOMarkdownBlockParserTest >> testListThenParagraph [
 	self assert: doc children size equals: 2.
 	self assert: (doc children first isKindOf: FOList).
 	self assert: (doc children second isKindOf: FOParagraph).
-	self assert: doc children second text equals: 'after'
+	self assert: (self plainTextOf: doc children second) equals: 'after'
 ]
 
 { #category : #tests }
@@ -214,5 +223,93 @@ FOMarkdownBlockParserTest >> testCodeBlockThenParagraph [
 	self assert: doc children size equals: 2.
 	self assert: (doc children first isKindOf: FOCodeBlock).
 	self assert: (doc children second isKindOf: FOParagraph).
-	self assert: doc children second text equals: 'after'
+	self assert: (self plainTextOf: doc children second) equals: 'after'
+]
+
+{ #category : #tests }
+FOMarkdownBlockParserTest >> testParagraphWithBold [
+	| doc paragraph |
+	doc := FOMarkdownParser parse: 'Text can also contain some **bold**.'.
+	paragraph := doc children first.
+	self assert: paragraph children size equals: 3.
+	self assert: (paragraph children first isKindOf: FOText).
+	self assert: paragraph children first string equals: 'Text can also contain some '.
+	self assert: (paragraph children second isKindOf: FOBold).
+	self assert: paragraph children second text equals: 'bold'.
+	self assert: (paragraph children third isKindOf: FOText).
+	self assert: paragraph children third string equals: '.'
+]
+
+{ #category : #tests }
+FOMarkdownBlockParserTest >> testParagraphWithItalic [
+	| doc paragraph |
+	doc := FOMarkdownParser parse: 'some _italic_ text'.
+	paragraph := doc children first.
+	self assert: paragraph children size equals: 3.
+	self assert: (paragraph children second isKindOf: FOItalic).
+	self assert: paragraph children second text equals: 'italic'
+]
+
+{ #category : #tests }
+FOMarkdownBlockParserTest >> testBoldAdjacentToPunctuationNoWhitespace [
+	"Real content: 'A basic setup of the (few**!!!**) software components'"
+	| doc paragraph |
+	doc := FOMarkdownParser parse: '(few**!!!**) software'.
+	paragraph := doc children first.
+	self assert: paragraph children size equals: 3.
+	self assert: paragraph children first string equals: '(few'.
+	self assert: (paragraph children second isKindOf: FOBold).
+	self assert: paragraph children second text equals: '!!!'.
+	self assert: paragraph children third string equals: ') software'
+]
+
+{ #category : #tests }
+FOMarkdownBlockParserTest >> testHttpLink [
+	| doc paragraph link |
+	doc := FOMarkdownParser parse: 'See [A text](http://a.link.to) here'.
+	paragraph := doc children first.
+	link := paragraph children detect: [ :c | c isKindOf: FOLink ].
+	self assert: link text equals: 'A text'.
+	self assert: link url equals: 'http://a.link.to'
+]
+
+{ #category : #tests }
+FOMarkdownBlockParserTest >> testSiteSchemeLink [
+	| doc paragraph link |
+	doc := FOMarkdownParser parse: 'non http [Structure](site:foo:test) internal'.
+	paragraph := doc children first.
+	link := paragraph children detect: [ :c | c isKindOf: FOLink ].
+	self assert: link text equals: 'Structure'.
+	self assert: link url equals: 'site:foo:test'
+]
+
+{ #category : #tests }
+FOMarkdownBlockParserTest >> testMailtoLink [
+	| doc paragraph link |
+	doc := FOMarkdownParser parse: '[mail](mailto:user@domain.com) us'.
+	paragraph := doc children first.
+	link := paragraph children detect: [ :c | c isKindOf: FOLink ].
+	self assert: link text equals: 'mail'.
+	self assert: link url equals: 'mailto:user@domain.com'
+]
+
+{ #category : #tests }
+FOMarkdownBlockParserTest >> testInlineImageWithAttributes [
+	| doc paragraph image |
+	doc := FOMarkdownParser parse: 'See ![alt text](/images/IMG_9474.jpeg class=u-max-full-width) above'.
+	paragraph := doc children first.
+	image := paragraph children detect: [ :c | c isKindOf: FOImage ].
+	self assert: image alt equals: 'alt text'.
+	self assert: image src equals: '/images/IMG_9474.jpeg'.
+	self assert: (image attributes at: #class) equals: 'u-max-full-width'
+]
+
+{ #category : #tests }
+FOMarkdownBlockParserTest >> testInlineImageWithoutAttributes [
+	| doc paragraph image |
+	doc := FOMarkdownParser parse: '![plain](/images/x.png) done'.
+	paragraph := doc children first.
+	image := paragraph children detect: [ :c | c isKindOf: FOImage ].
+	self assert: image src equals: '/images/x.png'.
+	self assert: image attributes isEmpty
 ]

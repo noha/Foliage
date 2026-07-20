@@ -21,12 +21,12 @@ FOHTMLRenderVisitor >> visitDocument: aDocument [
 FOHTMLRenderVisitor >> visitHeader: aHeader [
 	| level |
 	level := aHeader level printString.
-	^ '<h', level, '>', (self escapeHtml: aHeader text), '</h', level, '>'
+	^ '<h', level, '>', (self renderChildren: aHeader), '</h', level, '>'
 ]
 
 { #category : #visiting }
 FOHTMLRenderVisitor >> visitParagraph: aParagraph [
-	^ '<p>', (self escapeHtml: aParagraph text), '</p>'
+	^ '<p>', (self renderChildren: aParagraph), '</p>'
 ]
 
 { #category : #visiting }
@@ -40,12 +40,10 @@ FOHTMLRenderVisitor >> visitCodeBlock: aCodeBlock [
 
 { #category : #visiting }
 FOHTMLRenderVisitor >> visitBlockquote: aBlockquote [
-	| escapedLines |
-	escapedLines := aBlockquote text lines collect: [ :l | self escapeHtml: l ].
-	^ '<blockquote>', (String streamContents: [ :s |
-		escapedLines
-			do: [ :l | s nextPutAll: l ]
-			separatedBy: [ s nextPutAll: '<br>'; nextPut: Character lf ] ]), '</blockquote>'
+	| rendered |
+	rendered := self renderChildren: aBlockquote.
+	rendered := rendered copyReplaceAll: (String with: Character lf) with: ('<br>', (String with: Character lf)).
+	^ '<blockquote>', rendered, '</blockquote>'
 ]
 
 { #category : #visiting }
@@ -59,7 +57,42 @@ FOHTMLRenderVisitor >> visitList: aList [
 
 { #category : #visiting }
 FOHTMLRenderVisitor >> visitListItem: aListItem [
-	^ '<li>', (self escapeHtml: aListItem text), '</li>'
+	^ '<li>', (self renderChildren: aListItem), '</li>'
+]
+
+{ #category : #visiting }
+FOHTMLRenderVisitor >> visitText: aText [
+	^ self escapeHtml: aText string
+]
+
+{ #category : #visiting }
+FOHTMLRenderVisitor >> visitBold: aBold [
+	^ '<strong>', (self escapeHtml: aBold text), '</strong>'
+]
+
+{ #category : #visiting }
+FOHTMLRenderVisitor >> visitItalic: anItalic [
+	^ '<em>', (self escapeHtml: anItalic text), '</em>'
+]
+
+{ #category : #visiting }
+FOHTMLRenderVisitor >> visitLink: aLink [
+	^ '<a href="', (self escapeHtml: aLink url), '">', (self escapeHtml: aLink text), '</a>'
+]
+
+{ #category : #visiting }
+FOHTMLRenderVisitor >> visitImage: anImage [
+	| attrs |
+	attrs := String streamContents: [ :s |
+		anImage attributes keysAndValuesDo: [ :k :v |
+			s nextPutAll: ' ', k asString, '="', (self escapeHtml: v), '"' ] ].
+	^ '<img src="', (self escapeHtml: anImage src), '" alt="', (self escapeHtml: anImage alt), '"', attrs, '>'
+]
+
+{ #category : #private }
+FOHTMLRenderVisitor >> renderChildren: aBlockNode [
+	^ String streamContents: [ :s |
+		aBlockNode children do: [ :child | s nextPutAll: (child acceptVisitor: self) ] ]
 ]
 
 { #category : #private }

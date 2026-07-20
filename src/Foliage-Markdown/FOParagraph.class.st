@@ -2,19 +2,19 @@ Class {
 	#name : #FOParagraph,
 	#superclass : #FOBlockNode,
 	#instVars : [
-		'text'
+		'children'
 	],
 	#category : #'Foliage-Markdown'
 }
 
 { #category : #accessing }
-FOParagraph >> text [
-	^ text
+FOParagraph >> children [
+	^ children
 ]
 
 { #category : #accessing }
-FOParagraph >> text: aString [
-	text := aString
+FOParagraph >> children: aCollection [
+	children := aCollection
 ]
 
 { #category : #visiting }

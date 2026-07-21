@@ -41,21 +41,29 @@ FOInlineParser >> isTriggerChar: aChar [
 FOInlineParser >> tryParseAt: i in: aString [
 	| char |
 	char := aString at: i.
-	char = $* ifTrue: [ ^ self tryParseBoldAt: i in: aString ].
-	char = $_ ifTrue: [ ^ self tryParseItalicAt: i in: aString ].
+	char = $* ifTrue: [ ^ self tryParseBoldAt: i in: aString delimiter: '**' ].
+	char = $_ ifTrue: [
+		(i + 1 <= aString size and: [ (aString at: i + 1) = $_ ])
+			ifTrue: [ ^ self tryParseBoldAt: i in: aString delimiter: '__' ].
+		^ self tryParseItalicAt: i in: aString ].
 	char = $! ifTrue: [ ^ self tryParseImageAt: i in: aString ].
 	char = $[ ifTrue: [ ^ self tryParseLinkAt: i in: aString ].
 	^ nil
 ]
 
 { #category : #private }
-FOInlineParser >> tryParseBoldAt: i in: aString [
+FOInlineParser >> tryParseBoldAt: i in: aString delimiter: aDelimiter [
+	"Real content (noha.github.io/raw/blog/2020-10-24_a-website-model.md,
+	2020-10-06_on-to-number-2.md) uses __bold__ (double underscore)
+	alongside **bold** - both delimiters mean the same FOBold node."
 	| closeIndex text |
-	(i + 1 <= aString size and: [ (aString at: i + 1) = $* ]) ifFalse: [ ^ nil ].
-	closeIndex := aString indexOfSubCollection: '**' startingAt: i + 2.
+	(i + aDelimiter size - 1 <= aString size
+		and: [ (aString copyFrom: i to: i + aDelimiter size - 1) = aDelimiter ])
+		ifFalse: [ ^ nil ].
+	closeIndex := aString indexOfSubCollection: aDelimiter startingAt: i + aDelimiter size.
 	closeIndex = 0 ifTrue: [ ^ nil ].
-	text := aString copyFrom: i + 2 to: closeIndex - 1.
-	^ { FOBold new text: text; yourself. closeIndex + 2 }
+	text := aString copyFrom: i + aDelimiter size to: closeIndex - 1.
+	^ { FOBold new text: text; yourself. closeIndex + aDelimiter size }
 ]
 
 { #category : #private }

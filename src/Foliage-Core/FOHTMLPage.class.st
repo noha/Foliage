@@ -51,8 +51,6 @@ FOHTMLPage >> htmlString [
 
 { #category : #accessing }
 FOHTMLPage >> htmlString: aString [
-	"Lets a caller (e.g. the blog overview page builder) set already-rendered
-	HTML directly, bypassing #render entirely."
 	htmlString := aString
 ]
 

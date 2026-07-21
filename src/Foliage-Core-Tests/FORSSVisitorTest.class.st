@@ -50,3 +50,17 @@ FORSSVisitorTest >> testChannelItemsComeOnlyFromPublishedPosts [
 	self assert: channel items first link asString equals: 'https://example.test/blog/jan.html'.
 	self assert: channel items first description equals: 'January text.'
 ]
+
+{ #category : #tests }
+FORSSVisitorTest >> testChannelItemsAreOrderedNewestFirstRegardlessOfInsertionOrder [
+	"A real 9-post dry run against noha.github.io surfaced this: publishedPosts
+	is unsorted (raw dictionary/filesystem order), so inserting posts out of
+	date order used to leak straight into the feed's item order."
+	| channel |
+	blog at: #feb put: (self makePostTitled: 'Feb post' publishDate: '2020-02-01' text: 'Feb text.').
+	blog at: #jan put: (self makePostTitled: 'Jan post' publishDate: '2020-01-01' text: 'Jan text.').
+	blog at: #mar put: (self makePostTitled: 'Mar post' publishDate: '2020-03-01' text: 'Mar text.').
+	channel := (FORSSVisitor new visit: blog) channels first.
+	self assert: (channel items collect: #title) asArray
+		equals: #('Mar post' 'Feb post' 'Jan post')
+]

@@ -35,10 +35,14 @@ FOPageRenderContextTest >> testHtmlAndBodyRenderThePageContent [
 ]
 
 { #category : #tests }
-FOPageRenderContextTest >> testPublishDateDelegatesToPage [
-	"Confirms the publicationDate/publishDate name-mismatch bug from the old
-	FOPageRenderContext is fixed - this must actually resolve, not DNU."
+FOPageRenderContextTest >> testPublicationDateDelegatesToPagesPublishDate [
+	"The old bug: this delegated to `page publicationDate`, which never
+	existed (only `page publishDate` did) - DNU the moment any template
+	referenced {{publicationDate}}. Fixed by delegating to the right method,
+	keeping this method's own name as-is since real templates
+	(blog-post-abstract) reference the Mustache key `publicationDate`
+	directly."
 	| context |
 	context := FOPageRenderContext new page: self makePage; yourself.
-	self assert: context publishDate equals: (Date year: 2020 month: 9 day: 15)
+	self assert: context publicationDate equals: (Date year: 2020 month: 9 day: 15)
 ]

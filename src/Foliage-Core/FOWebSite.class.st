@@ -7,7 +7,8 @@ Class {
 		'templatePath',
 		'rawPath',
 		'root',
-		'properties'
+		'properties',
+		'blogPaths'
 	],
 	#category : #'Foliage-Core-Base'
 }
@@ -40,10 +41,23 @@ FOWebSite >> baseUri: anObject [
 { #category : #accessing }
 FOWebSite >> blogPaths [
 	"Top-level (direct child of root) folder names that should become FOBlog
-	instead of a plain FOWebFolder as soon as the import creates them -
-	override in a subclass, same pattern as defaultRawPath/defaultTargetPath/
-	defaultTemplatePath. Replaces the old post-hoc
-	FOWebFolder>>convertToBlog object surgery."
+	instead of a plain FOWebFolder as soon as the import creates them.
+	Same ivar-with-overridable-default pattern as rawPath/targetPath/
+	templatePath: a subclass can override defaultBlogPaths (like
+	NohaWebsite overrides defaultRawPath) for a compile-time declaration, or
+	a caller can set blogPaths: at runtime (e.g. FOPublisher, driven by a
+	per-invocation .foliage.ston project file) - either way works. Replaces
+	the old post-hoc FOWebFolder>>convertToBlog object surgery."
+	^ blogPaths ifNil: [ blogPaths := self defaultBlogPaths ]
+]
+
+{ #category : #accessing }
+FOWebSite >> blogPaths: aCollection [
+	blogPaths := aCollection
+]
+
+{ #category : #accessing }
+FOWebSite >> defaultBlogPaths [
 	^ #()
 ]
 

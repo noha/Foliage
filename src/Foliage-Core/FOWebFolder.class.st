@@ -24,6 +24,17 @@ FOWebFolder >> printOn: aStream [
 	aStream << self path asString << '/'
 ]
 
+{ #category : #accessing }
+FOWebFolder >> pathString [
+	"The base FOWebResource>>pathString forces a .html extension, correct for
+	pages but wrong for a folder's own link (would produce '/blog.html'
+	instead of '/blog') - only found because deriving an RSS channel's link
+	from the blog itself (rather than the old hardcoded literal) newly
+	exercises this path; a folder was apparently never linked to directly
+	before."
+	^ self path pathString
+]
+
 { #category : #resolving }
 FOWebFolder >> resolvePath: aRelativePath [
 	"Missing folders are always auto-created while navigating - deliberately

@@ -25,6 +25,21 @@ FOInlineParserTest >> testBold [
 ]
 
 { #category : #tests }
+FOInlineParserTest >> testDoubleUnderscoreBold [
+	"Real content (noha.github.io/raw/blog/2020-10-24_a-website-model.md)
+	uses __bold__ alongside **bold** - a dry run against the full real site
+	surfaced __raw/__ rendering as a literal underscore plus an italic
+	instead of bold."
+	| nodes |
+	nodes := FOInlineParser parse: 'a __bold__ word'.
+	self assert: nodes size equals: 3.
+	self assert: nodes first string equals: 'a '.
+	self assert: (nodes second isKindOf: FOBold).
+	self assert: nodes second text equals: 'bold'.
+	self assert: nodes third string equals: ' word'
+]
+
+{ #category : #tests }
 FOInlineParserTest >> testItalic [
 	| nodes |
 	nodes := FOInlineParser parse: 'an _italic_ word'.

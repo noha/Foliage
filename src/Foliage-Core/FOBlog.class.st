@@ -83,6 +83,20 @@ FOBlog >> publishedPosts [
 	^ self posts select: #isPublished
 ]
 
+{ #category : #accessing }
+FOBlog >> buildRssFeed [
+	^ (FORSSVisitor new visit: self)
+		parent: self;
+		yourself
+]
+
+{ #category : #accessing }
+FOBlog >> rssFeed [
+	^ self
+		propertyAt: #rssFeed
+		ifAbsentPut: [ self buildRssFeed ]
+]
+
 { #category : #sorting }
 FOBlog >> sortedByPublishDate [
 	^ self publishedPosts sorted: #publishDate ascending

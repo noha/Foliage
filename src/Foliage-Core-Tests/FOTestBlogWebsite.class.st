@@ -5,6 +5,6 @@ Class {
 }
 
 { #category : #accessing }
-FOTestBlogWebsite >> blogPaths [
+FOTestBlogWebsite >> defaultBlogPaths [
 	^ #( 'blog' )
 ]

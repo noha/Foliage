@@ -26,11 +26,13 @@ BaselineOfFoliage >> baseline: spec [
 			spec requires: #('Foliage-Core') ].
 		spec package: 'Foliage-Publisher' with: [
 			spec requires: #('Foliage-Core') ].
+		spec package: 'Foliage-Publisher-Tests' with: [
+			spec requires: #('Foliage-Publisher') ].
 		spec package: 'Foliage-Server' with: [
 			spec requires: #('Foliage-Core') ].
 
 		spec
-			group: 'tests' with: #('Foliage-Frontmatter-Tests' 'Foliage-Markdown-Tests' 'Foliage-Core-Tests');
+			group: 'tests' with: #('Foliage-Frontmatter-Tests' 'Foliage-Markdown-Tests' 'Foliage-Core-Tests' 'Foliage-Publisher-Tests');
 			group: 'default' with: #('Foliage-Frontmatter' 'Foliage-Markdown' 'Foliage-Core' 'Foliage-Publisher' 'Foliage-Server' 'tests') ]
 ]
 

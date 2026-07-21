@@ -49,6 +49,16 @@ FOPublishVisitor >> visitFoliagePage: aFOFoliagePage [
 ]
 
 { #category : #visiting }
+FOPublishVisitor >> visitRSSFeed: aFORSSFeed [
+	| template |
+	template := (aFORSSFeed website templatePath / #'rss.xml') asMustacheTemplate.
+	aFORSSFeed publishPath
+		ensureDelete;
+		writeStreamDo: [ :stream | stream nextPutAll: (template value: aFORSSFeed) ].
+	^ aFORSSFeed
+]
+
+{ #category : #visiting }
 FOPublishVisitor >> visitWebFolder: aFOWebsiteFolder [
 	aFOWebsiteFolder createOnTarget.
 	^ super visitWebFolder: aFOWebsiteFolder

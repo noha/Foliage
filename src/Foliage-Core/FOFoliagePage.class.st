@@ -2,7 +2,8 @@ Class {
 	#name : #FOFoliagePage,
 	#superclass : #FOPageWithMetadata,
 	#instVars : [
-		'document'
+		'document',
+		'bodyHtml'
 	],
 	#category : #'Foliage-Core-Model'
 }
@@ -10,6 +11,16 @@ Class {
 { #category : #visiting }
 FOFoliagePage >> acceptFOVisitor: aFOVisitor [
 	^ aFOVisitor visitFoliagePage: self
+]
+
+{ #category : #accessing }
+FOFoliagePage >> bodyHtml: aString [
+	"Lets a caller (the blog overview page builder) supply already-rendered
+	body content directly instead of a parsed FODocument - #renderOn: uses it
+	verbatim when set. Unlike bypassing #render/#template entirely, this still
+	goes through the normal templating pipeline (outer layout, {{page.title}},
+	partials, ...) - only the *body* is precomputed, not the whole page."
+	bodyHtml := aString
 ]
 
 { #category : #accessing }
@@ -41,7 +52,7 @@ FOFoliagePage >> render [
 
 { #category : #rendering }
 FOFoliagePage >> renderOn: aStream [
-	aStream nextPutAll: (FOHTMLRenderVisitor render: self document)
+	aStream nextPutAll: (bodyHtml ifNil: [ FOHTMLRenderVisitor render: self document ] ifNotNil: [ bodyHtml ])
 ]
 
 { #category : #accessing }

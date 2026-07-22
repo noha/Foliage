@@ -92,23 +92,30 @@ FOBlogOverviewBuilder >> buildPageIndex: aPageNumber ofTotal: aPageCount posts: 
 
 { #category : #building }
 FOBlogOverviewBuilder >> navigationHtmlForPageIndex: aPageNumber ofTotal: aPageCount [
-	"Older posts live on later pages (higher page numbers), newer posts on
-	earlier ones - mirrors the blog-post template's own previousPost (older,
-	left)/nextPost (newer, right) convention, so 'older' is only shown when
-	a later page exists and 'newer' only when an earlier one does: page 1
-	gets only 'older', the last page gets only 'newer', pages in between get
-	both. Absolute (blog-rooted) paths for the same reason as
+	"'newer' always sits bottom-left (with a left arrow), 'older' always
+	bottom-right - a fixed three-columns/six-columns/three-columns row
+	layout (same column scheme as the blog-post template's own
+	previousPost/nextPost row), so the link that's present never jumps
+	position depending on which one it is. Deliberately the mirror image of
+	blog-post's own left/right assignment (there, older/previousPost is on
+	the left) - this is what was explicitly asked for here, not an
+	inconsistency. Absolute (blog-rooted) paths for the same reason as
 	pageFilenameFor: callers elsewhere: this same rendered body is reused
 	verbatim as the site's root index.html too, where a relative filename
 	would resolve wrong."
-	| links |
-	links := OrderedCollection new.
-	aPageNumber < aPageCount ifTrue: [
-		links add: '<a href="', blog pathString, '/', (self class pageFilenameFor: aPageNumber + 1), '">older</a>' ].
-	aPageNumber > 1 ifTrue: [
-		links add: '<a href="', blog pathString, '/', (self class pageFilenameFor: aPageNumber - 1), '">newer</a>' ].
-	links isEmpty ifTrue: [ ^ '' ].
-	^ '<p>', (String streamContents: [ :s | links do: [ :l | s nextPutAll: l ] separatedBy: [ s nextPutAll: ' ' ] ]), '</p>'
+	| newerLink olderLink |
+	newerLink := aPageNumber > 1
+		ifTrue: [ '&lt;-- <a href="', blog pathString, '/', (self class pageFilenameFor: aPageNumber - 1), '">newer</a>' ]
+		ifFalse: [ '' ].
+	olderLink := aPageNumber < aPageCount
+		ifTrue: [ '<a href="', blog pathString, '/', (self class pageFilenameFor: aPageNumber + 1), '">older</a> --&gt;' ]
+		ifFalse: [ '' ].
+	(newerLink isEmpty and: [ olderLink isEmpty ]) ifTrue: [ ^ '' ].
+	^ '<div class="row">
+	<div class="three columns">', newerLink, '</div>
+	<div class="six columns">&nbsp;</div>
+	<div class="three columns">', olderLink, '</div>
+</div>'
 ]
 
 { #category : #accessing }

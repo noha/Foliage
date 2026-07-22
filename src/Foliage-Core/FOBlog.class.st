@@ -48,9 +48,17 @@ FOBlog >> layout: aString [
 
 { #category : #accessing }
 FOBlog >> overviewPage [
+	"The first page of the paginated overview - kept as a single-page
+	accessor since most callers (and all callers before pagination existed)
+	only need the blog's own index.html; see overviewPages for the full set."
+	^ self overviewPages first
+]
+
+{ #category : #accessing }
+FOBlog >> overviewPages [
 	^ FOBlogOverviewBuilder new
 		blog: self;
-		buildSummary
+		buildPages
 ]
 
 { #category : #accessing }

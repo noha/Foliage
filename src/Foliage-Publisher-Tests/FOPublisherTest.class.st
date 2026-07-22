@@ -56,6 +56,27 @@ FOPublisherTest >> testPublishGeneratesPostOverviewAndFeed [
 ]
 
 { #category : #tests }
+FOPublisherTest >> testPublishPaginatesOverviewPastDefaultPageSizeOfTen [
+	"jan.md (from setUp) plus 10 more posts = 11 published posts total,
+	one more than the default page size of 10 - should split into
+	index.html (10 newest) + page2.html (1 oldest, with a 'more' link
+	from index.html pointing to it)."
+	1 to: 10 do: [ :n |
+		(tempDir / 'source' / 'blog' / ('post', n printString, '.md')) writeStreamDo: [ :s |
+			s nextPutAll: 'title: Post ', n printString, String lf,
+				'layout: blog-post', String lf,
+				'publishDate: 2020-02-', (n + 10) printString, String lf,
+				String lf,
+				'Post ', n printString, ' text.' ] ].
+	publisher publish.
+	self assert: (tempDir / 'generated' / 'blog' / 'index.html') exists.
+	self assert: (tempDir / 'generated' / 'blog' / 'page2.html') exists.
+	self assert: ((tempDir / 'generated' / 'blog' / 'index.html') contents includesSubstring: 'href="page2.html">more</a>').
+	self assert: ((tempDir / 'generated' / 'blog' / 'index.html') contents includesSubstring: 'January text.') not.
+	self assert: ((tempDir / 'generated' / 'blog' / 'page2.html') contents includesSubstring: 'January text.')
+]
+
+{ #category : #tests }
 FOPublisherTest >> testDefaults [
 	| fresh |
 	fresh := FOPublisher new.

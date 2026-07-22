@@ -89,9 +89,9 @@ FOPublisher >> publish [
 		| blog |
 		blog := site / assoc key.
 		blog title: assoc value.
-		blog
-			at: #'index.html' put: blog overviewPage;
-			at: #'rss.xml' put: blog rssFeed ].
+		blog overviewPages doWithIndex: [ :page :i |
+			blog at: (FOBlogOverviewBuilder pageFilenameFor: i) put: page ].
+		blog at: #'rss.xml' put: blog rssFeed ].
 	site publish
 ]
 

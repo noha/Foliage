@@ -75,3 +75,39 @@ FOBlogOverviewBuilderTest >> testOverviewPagePublishesCorrectly [
 	self assert: publishedFile exists.
 	self assert: publishedFile contents equals: '<html><title>My Blog</title><article>January text.</article></html>'
 ]
+
+{ #category : #tests }
+FOBlogOverviewBuilderTest >> testFewerPostsThanPageSizeYieldsOnePageWithNoMoreLink [
+	blog at: #jan put: (self makePostTitled: 'Jan post' publishDate: '2020-01-01' text: 'January text.').
+	blog at: #feb put: (self makePostTitled: 'Feb post' publishDate: '2020-02-01' text: 'February text.').
+	self assert: blog overviewPages size equals: 1.
+	self assert: (blog overviewPage htmlString includesSubstring: 'more') not
+]
+
+{ #category : #tests }
+FOBlogOverviewBuilderTest >> testPaginationSplitsPostsAcrossPagesNewestFirst [
+	"5 posts, page size 2 (set below default 10 so the test doesn't need 11
+	posts to exercise pagination) -> pages of [mar,feb] [jan,dec] [nov]."
+	| builder pages |
+	blog at: #jan put: (self makePostTitled: 'Jan post' publishDate: '2020-01-01' text: 'Jan text.').
+	blog at: #feb put: (self makePostTitled: 'Feb post' publishDate: '2020-02-01' text: 'Feb text.').
+	blog at: #mar put: (self makePostTitled: 'Mar post' publishDate: '2020-03-01' text: 'Mar text.').
+	blog at: #dec put: (self makePostTitled: 'Dec post' publishDate: '2019-12-01' text: 'Dec text.').
+	blog at: #nov put: (self makePostTitled: 'Nov post' publishDate: '2019-11-01' text: 'Nov text.').
+	builder := FOBlogOverviewBuilder new blog: blog; pageSize: 2; yourself.
+	pages := builder buildPages.
+	self assert: pages size equals: 3.
+	self assert: (pages first htmlString includesSubstring: '<article>Mar text.</article><article>Feb text.</article>').
+	self assert: (pages first htmlString includesSubstring: 'href="page2.html">more</a>').
+	self assert: (pages second htmlString includesSubstring: '<article>Jan text.</article><article>Dec text.</article>').
+	self assert: (pages second htmlString includesSubstring: 'href="page3.html">more</a>').
+	self assert: (pages third htmlString includesSubstring: '<article>Nov text.</article>').
+	self assert: (pages third htmlString includesSubstring: 'more') not
+]
+
+{ #category : #tests }
+FOBlogOverviewBuilderTest >> testPageFilenames [
+	self assert: (FOBlogOverviewBuilder pageFilenameFor: 1) equals: #'index.html'.
+	self assert: (FOBlogOverviewBuilder pageFilenameFor: 2) equals: #'page2.html'.
+	self assert: (FOBlogOverviewBuilder pageFilenameFor: 3) equals: #'page3.html'
+]

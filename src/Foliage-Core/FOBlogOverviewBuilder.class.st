@@ -93,16 +93,20 @@ FOBlogOverviewBuilder >> buildPageIndex: aPageNumber ofTotal: aPageCount posts: 
 { #category : #building }
 FOBlogOverviewBuilder >> navigationHtmlForPageIndex: aPageNumber ofTotal: aPageCount [
 	"'newer' always sits bottom-left (with a left arrow), 'older' always
-	bottom-right - a fixed three-columns/six-columns/three-columns row
-	layout (same column scheme as the blog-post template's own
-	previousPost/nextPost row), so the link that's present never jumps
-	position depending on which one it is. Deliberately the mirror image of
-	blog-post's own left/right assignment (there, older/previousPost is on
-	the left) - this is what was explicitly asked for here, not an
-	inconsistency. Absolute (blog-rooted) paths for the same reason as
-	pageFilenameFor: callers elsewhere: this same rendered body is reused
-	verbatim as the site's root index.html too, where a relative filename
-	would resolve wrong."
+	bottom-right. Uses an actual CSS grid (two fixed 1fr columns) instead of
+	Skeleton's float-based row/columns classes - those are meant for
+	top-level layout rows and visibly misaligned here because this row ends
+	up nested inside the blog template's own '.twelve.columns' body column
+	rather than being a sibling row at the '.container' level (unlike the
+	blog-post template's previousPost/nextPost row, which isn't nested).
+	A plain 2-column grid doesn't care about that nesting and keeps both
+	slots fixed in place even when only one link is present. Deliberately
+	the mirror image of blog-post's own left/right assignment (there,
+	older/previousPost is on the left) - this is what was explicitly asked
+	for here, not an inconsistency. Absolute (blog-rooted) paths for the
+	same reason as pageFilenameFor: callers elsewhere: this same rendered
+	body is reused verbatim as the site's root index.html too, where a
+	relative filename would resolve wrong."
 	| newerLink olderLink |
 	newerLink := aPageNumber > 1
 		ifTrue: [ '&lt;-- <a href="', blog pathString, '/', (self class pageFilenameFor: aPageNumber - 1), '">newer</a>' ]
@@ -111,10 +115,9 @@ FOBlogOverviewBuilder >> navigationHtmlForPageIndex: aPageNumber ofTotal: aPageC
 		ifTrue: [ '<a href="', blog pathString, '/', (self class pageFilenameFor: aPageNumber + 1), '">older</a> --&gt;' ]
 		ifFalse: [ '' ].
 	(newerLink isEmpty and: [ olderLink isEmpty ]) ifTrue: [ ^ '' ].
-	^ '<div class="row">
-	<div class="three columns">', newerLink, '</div>
-	<div class="six columns">&nbsp;</div>
-	<div class="three columns">', olderLink, '</div>
+	^ '<div style="display: grid; grid-template-columns: 1fr 1fr; margin-top: 2em;">
+	<div style="text-align: left;">', newerLink, '</div>
+	<div style="text-align: right;">', olderLink, '</div>
 </div>'
 ]
 

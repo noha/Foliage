@@ -59,8 +59,9 @@ FOPublisherTest >> testPublishGeneratesPostOverviewAndFeed [
 FOPublisherTest >> testPublishPaginatesOverviewPastDefaultPageSizeOfTen [
 	"jan.md (from setUp) plus 10 more posts = 11 published posts total,
 	one more than the default page size of 10 - should split into
-	index.html (10 newest) + page2.html (1 oldest, with a 'more' link
-	from index.html pointing to it)."
+	index.html (10 newest, 'older' link to page2) + page2.html (1 oldest,
+	'newer' link back to index.html, no 'older' link since it's the last
+	page)."
 	1 to: 10 do: [ :n |
 		(tempDir / 'source' / 'blog' / ('post', n printString, '.md')) writeStreamDo: [ :s |
 			s nextPutAll: 'title: Post ', n printString, String lf,
@@ -71,8 +72,11 @@ FOPublisherTest >> testPublishPaginatesOverviewPastDefaultPageSizeOfTen [
 	publisher publish.
 	self assert: (tempDir / 'generated' / 'blog' / 'index.html') exists.
 	self assert: (tempDir / 'generated' / 'blog' / 'page2.html') exists.
-	self assert: ((tempDir / 'generated' / 'blog' / 'index.html') contents includesSubstring: 'href="/blog/page2.html">more</a>').
+	self assert: ((tempDir / 'generated' / 'blog' / 'index.html') contents includesSubstring: 'href="/blog/page2.html">older</a>').
+	self assert: ((tempDir / 'generated' / 'blog' / 'index.html') contents includesSubstring: 'newer') not.
 	self assert: ((tempDir / 'generated' / 'blog' / 'index.html') contents includesSubstring: 'January text.') not.
+	self assert: ((tempDir / 'generated' / 'blog' / 'page2.html') contents includesSubstring: 'href="/blog/index.html">newer</a>').
+	self assert: ((tempDir / 'generated' / 'blog' / 'page2.html') contents includesSubstring: 'older') not.
 	self assert: ((tempDir / 'generated' / 'blog' / 'page2.html') contents includesSubstring: 'January text.')
 ]
 

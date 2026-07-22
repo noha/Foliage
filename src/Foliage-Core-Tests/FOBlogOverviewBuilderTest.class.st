@@ -77,17 +77,21 @@ FOBlogOverviewBuilderTest >> testOverviewPagePublishesCorrectly [
 ]
 
 { #category : #tests }
-FOBlogOverviewBuilderTest >> testFewerPostsThanPageSizeYieldsOnePageWithNoMoreLink [
+FOBlogOverviewBuilderTest >> testFewerPostsThanPageSizeYieldsOnePageWithNoNavigationLinks [
 	blog at: #jan put: (self makePostTitled: 'Jan post' publishDate: '2020-01-01' text: 'January text.').
 	blog at: #feb put: (self makePostTitled: 'Feb post' publishDate: '2020-02-01' text: 'February text.').
 	self assert: blog overviewPages size equals: 1.
-	self assert: (blog overviewPage htmlString includesSubstring: 'more') not
+	self assert: (blog overviewPage htmlString includesSubstring: 'older') not.
+	self assert: (blog overviewPage htmlString includesSubstring: 'newer') not
 ]
 
 { #category : #tests }
 FOBlogOverviewBuilderTest >> testPaginationSplitsPostsAcrossPagesNewestFirst [
 	"5 posts, page size 2 (set below default 10 so the test doesn't need 11
-	posts to exercise pagination) -> pages of [mar,feb] [jan,dec] [nov]."
+	posts to exercise pagination) -> pages of [mar,feb] [jan,dec] [nov].
+	First page: only 'older' (nothing is newer than the newest page). Last
+	page: only 'newer' (nothing is older than the oldest page). Middle
+	page: both."
 	| builder pages |
 	blog at: #jan put: (self makePostTitled: 'Jan post' publishDate: '2020-01-01' text: 'Jan text.').
 	blog at: #feb put: (self makePostTitled: 'Feb post' publishDate: '2020-02-01' text: 'Feb text.').
@@ -97,12 +101,18 @@ FOBlogOverviewBuilderTest >> testPaginationSplitsPostsAcrossPagesNewestFirst [
 	builder := FOBlogOverviewBuilder new blog: blog; pageSize: 2; yourself.
 	pages := builder buildPages.
 	self assert: pages size equals: 3.
+
 	self assert: (pages first htmlString includesSubstring: '<article>Mar text.</article><article>Feb text.</article>').
-	self assert: (pages first htmlString includesSubstring: 'href="/blog/page2.html">more</a>').
+	self assert: (pages first htmlString includesSubstring: 'href="/blog/page2.html">older</a>').
+	self assert: (pages first htmlString includesSubstring: 'newer') not.
+
 	self assert: (pages second htmlString includesSubstring: '<article>Jan text.</article><article>Dec text.</article>').
-	self assert: (pages second htmlString includesSubstring: 'href="/blog/page3.html">more</a>').
+	self assert: (pages second htmlString includesSubstring: 'href="/blog/index.html">newer</a>').
+	self assert: (pages second htmlString includesSubstring: 'href="/blog/page3.html">older</a>').
+
 	self assert: (pages third htmlString includesSubstring: '<article>Nov text.</article>').
-	self assert: (pages third htmlString includesSubstring: 'more') not
+	self assert: (pages third htmlString includesSubstring: 'href="/blog/page2.html">newer</a>').
+	self assert: (pages third htmlString includesSubstring: 'older') not
 ]
 
 { #category : #tests }

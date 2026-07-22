@@ -98,9 +98,9 @@ FOBlogOverviewBuilderTest >> testPaginationSplitsPostsAcrossPagesNewestFirst [
 	pages := builder buildPages.
 	self assert: pages size equals: 3.
 	self assert: (pages first htmlString includesSubstring: '<article>Mar text.</article><article>Feb text.</article>').
-	self assert: (pages first htmlString includesSubstring: 'href="page2.html">more</a>').
+	self assert: (pages first htmlString includesSubstring: 'href="/blog/page2.html">more</a>').
 	self assert: (pages second htmlString includesSubstring: '<article>Jan text.</article><article>Dec text.</article>').
-	self assert: (pages second htmlString includesSubstring: 'href="page3.html">more</a>').
+	self assert: (pages second htmlString includesSubstring: 'href="/blog/page3.html">more</a>').
 	self assert: (pages third htmlString includesSubstring: '<article>Nov text.</article>').
 	self assert: (pages third htmlString includesSubstring: 'more') not
 ]

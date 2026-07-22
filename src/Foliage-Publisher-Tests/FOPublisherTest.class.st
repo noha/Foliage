@@ -71,7 +71,7 @@ FOPublisherTest >> testPublishPaginatesOverviewPastDefaultPageSizeOfTen [
 	publisher publish.
 	self assert: (tempDir / 'generated' / 'blog' / 'index.html') exists.
 	self assert: (tempDir / 'generated' / 'blog' / 'page2.html') exists.
-	self assert: ((tempDir / 'generated' / 'blog' / 'index.html') contents includesSubstring: 'href="page2.html">more</a>').
+	self assert: ((tempDir / 'generated' / 'blog' / 'index.html') contents includesSubstring: 'href="/blog/page2.html">more</a>').
 	self assert: ((tempDir / 'generated' / 'blog' / 'index.html') contents includesSubstring: 'January text.') not.
 	self assert: ((tempDir / 'generated' / 'blog' / 'page2.html') contents includesSubstring: 'January text.')
 ]

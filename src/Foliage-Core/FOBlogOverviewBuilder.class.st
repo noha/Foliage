@@ -93,7 +93,12 @@ FOBlogOverviewBuilder >> buildPageIndex: aPageNumber ofTotal: aPageCount posts: 
 
 { #category : #building }
 FOBlogOverviewBuilder >> moreLinkHtmlFor: aNextPageNumber [
-	^ '<p><a href="', (self class pageFilenameFor: aNextPageNumber), '">more</a></p>'
+	"Absolute (blog-rooted) path, not a bare relative filename: the same
+	rendered page content is reused verbatim as both blog/pageN.html AND -
+	in this site's own build script - the site's root index.html, where a
+	relative 'page2.html' would wrongly resolve to /page2.html instead of
+	/blog/page2.html."
+	^ '<p><a href="', blog pathString, '/', (self class pageFilenameFor: aNextPageNumber), '">more</a></p>'
 ]
 
 { #category : #accessing }

@@ -17,7 +17,7 @@ FOPublishVisitorTest >> setUp [
 	(tempDir / 'templates' / 'page') writeStreamDo: [ :s |
 		s nextPutAll: '<html><title>{{page.title}}</title>{{{ body }}}</html>' ].
 	site := FOWebSite new
-		targetPath: (tempDir / 'docs');
+		outputPath: (tempDir / 'docs');
 		templatePath: (tempDir / 'templates');
 		yourself
 ]

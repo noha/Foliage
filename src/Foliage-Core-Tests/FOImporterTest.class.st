@@ -16,7 +16,7 @@ FOImporterTest >> setUp [
 	tempDir ensureCreateDirectory.
 	website := FOTestWebsite new
 		contentPath: tempDir;
-		targetPath: (tempDir / 'docs');
+		outputPath: (tempDir / 'docs');
 		yourself.
 	website root: (FOWebsiteRoot new parent: website; yourself).
 	importer := FOImporter new website: website; yourself

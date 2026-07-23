@@ -3,7 +3,7 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'baseUri',
-		'targetPath',
+		'outputPath',
 		'templatePath',
 		'contentPath',
 		'dataPath',
@@ -43,7 +43,7 @@ FOWebSite >> baseUri: anObject [
 FOWebSite >> blogPaths [
 	"Top-level (direct child of root) folder names that should become FOBlog
 	instead of a plain FOWebFolder as soon as the import creates them.
-	Same ivar-with-overridable-default pattern as contentPath/targetPath/
+	Same ivar-with-overridable-default pattern as contentPath/outputPath/
 	templatePath: a subclass can override defaultBlogPaths (like
 	NohaWebsite overrides defaultContentPath) for a compile-time declaration, or
 	a caller can set blogPaths: at runtime (e.g. FOPublisher, driven by a
@@ -79,7 +79,7 @@ FOWebSite >> defaultDataPath [
 ]
 
 { #category : #accessing }
-FOWebSite >> defaultTargetPath [
+FOWebSite >> defaultOutputPath [
 	^ 'output'
 ]
 
@@ -171,13 +171,13 @@ FOWebSite >> root [
 ]
 
 { #category : #accessing }
-FOWebSite >> targetPath [
-	^ targetPath ifNil: [ targetPath := self defaultTargetPath asFileReference ]
+FOWebSite >> outputPath [
+	^ outputPath ifNil: [ outputPath := self defaultOutputPath asFileReference ]
 ]
 
 { #category : #accessing }
-FOWebSite >> targetPath: anObject [
-	targetPath := anObject
+FOWebSite >> outputPath: anObject [
+	outputPath := anObject
 ]
 
 { #category : #accessing }

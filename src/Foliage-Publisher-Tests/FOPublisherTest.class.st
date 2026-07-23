@@ -34,7 +34,7 @@ FOPublisherTest >> setUp [
 	publisher := FOPublisher new
 		baseUri: 'https://example.test';
 		sourcePath: (tempDir / 'source') fullName;
-		targetPath: (tempDir / 'generated') fullName;
+		outputPath: (tempDir / 'generated') fullName;
 		templatePath: 'templates';
 		blogs: { #blog -> 'My Blog' };
 		yourself
@@ -123,7 +123,7 @@ FOPublisherTest >> testDefaults [
 	| fresh |
 	fresh := FOPublisher new.
 	self assert: fresh sourcePath equals: '.'.
-	self assert: fresh targetPath equals: 'generated'.
+	self assert: fresh outputPath equals: 'generated'.
 	self assert: fresh templatePath equals: 'templates'.
 	self assert: fresh blogs isEmpty
 ]

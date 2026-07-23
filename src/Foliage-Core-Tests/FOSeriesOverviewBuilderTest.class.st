@@ -22,7 +22,7 @@ FOSeriesOverviewBuilderTest >> setUp [
 	(tempDir / 'templates' / 'blog-post') writeStreamDo: [ :s |
 		s nextPutAll: '<html><title>{{page.title}}</title>{{{ body }}}</html>' ].
 	site := FOWebSite new
-		targetPath: (tempDir / 'docs');
+		outputPath: (tempDir / 'docs');
 		templatePath: (tempDir / 'templates');
 		yourself.
 	blog := FOBlog new title: 'My Blog'; yourself.

@@ -3,7 +3,7 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'baseUri',
-		'targetPath',
+		'outputPath',
 		'sourcePath',
 		'templatePath',
 		'dataPath',
@@ -23,7 +23,7 @@ FOPublisher class >> defaultSourcePath [
 ]
 
 { #category : #defaults }
-FOPublisher class >> defaultTargetPath [
+FOPublisher class >> defaultOutputPath [
 	^ 'generated'
 ]
 
@@ -84,7 +84,7 @@ FOPublisher >> publish [
 	| site allFiles |
 	site := FOWebSite new
 		baseUri: self baseUri;
-		targetPath: self targetPath asFileReference;
+		outputPath: self outputPath asFileReference;
 		contentPath: self sourcePath asFileReference;
 		templatePath: self sourcePath asFileReference / self templatePath;
 		dataPath: self sourcePath asFileReference / self dataPath;
@@ -120,13 +120,13 @@ FOPublisher >> sourcePath: aString [
 ]
 
 { #category : #accessing }
-FOPublisher >> targetPath [
-	^ targetPath ifNil: [ targetPath := self class defaultTargetPath ]
+FOPublisher >> outputPath [
+	^ outputPath ifNil: [ outputPath := self class defaultOutputPath ]
 ]
 
 { #category : #accessing }
-FOPublisher >> targetPath: aString [
-	targetPath := aString
+FOPublisher >> outputPath: aString [
+	outputPath := aString
 ]
 
 { #category : #accessing }

@@ -2,7 +2,7 @@ Class {
 	#name : #FOTestWebsite,
 	#superclass : #Object,
 	#instVars : [
-		'targetPath',
+		'outputPath',
 		'contentPath',
 		'root',
 		'templatePath',
@@ -12,13 +12,13 @@ Class {
 }
 
 { #category : #accessing }
-FOTestWebsite >> targetPath [
-	^ targetPath
+FOTestWebsite >> outputPath [
+	^ outputPath
 ]
 
 { #category : #accessing }
-FOTestWebsite >> targetPath: aFileReference [
-	targetPath := aFileReference
+FOTestWebsite >> outputPath: aFileReference [
+	outputPath := aFileReference
 ]
 
 { #category : #accessing }

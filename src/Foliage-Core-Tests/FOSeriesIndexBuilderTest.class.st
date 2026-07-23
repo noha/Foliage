@@ -62,6 +62,27 @@ FOSeriesIndexBuilderTest >> testSeriesRenderAbstractUsesTheSeriesAbstractTemplat
 ]
 
 { #category : #tests }
+FOSeriesIndexBuilderTest >> testAbstractPrefersHandWrittenDataFileOverAutoDerivedOne [
+	| aSeries |
+	site dataPath: (tempDir / 'data').
+	(tempDir / 'data' / 'series') ensureCreateDirectory.
+	(tempDir / 'data' / 'series' / 'soil.md') writeStreamDo: [ :s |
+		s nextPutAll: 'A hand-written description of the whole series.' ].
+	blog at: #part1 put: (self makePostTitled: 'Part 1' publishDate: '2026-07-20' series: 'soil').
+	aSeries := blog series detect: [ :s | s slug = 'soil' ].
+	self assert: aSeries abstract equals: 'A hand-written description of the whole series.'
+]
+
+{ #category : #tests }
+FOSeriesIndexBuilderTest >> testAbstractFallsBackToFirstPostWhenNoDataFileExists [
+	| aSeries |
+	site dataPath: (tempDir / 'data').
+	blog at: #part1 put: (self makePostTitled: 'Part 1' publishDate: '2026-07-20' series: 'soil').
+	aSeries := blog series detect: [ :s | s slug = 'soil' ].
+	self assert: aSeries abstract equals: 'Part 1 text.'
+]
+
+{ #category : #tests }
 FOSeriesIndexBuilderTest >> testBuildPageListsEverySeriesNewestActiveFirst [
 	| builder page stream |
 	blog at: #soilOld put: (self makePostTitled: 'Soil old' publishDate: '2020-01-01' series: 'soil').

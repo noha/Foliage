@@ -6,6 +6,7 @@ Class {
 		'targetPath',
 		'sourcePath',
 		'templatePath',
+		'dataPath',
 		'blogs'
 	],
 	#category : #'Foliage-Publisher'
@@ -29,6 +30,11 @@ FOPublisher class >> defaultTargetPath [
 { #category : #defaults }
 FOPublisher class >> defaultTemplatePath [
 	^ 'templates'
+]
+
+{ #category : #defaults }
+FOPublisher class >> defaultDataPath [
+	^ 'data'
 ]
 
 { #category : #'instance creation' }
@@ -79,11 +85,12 @@ FOPublisher >> publish [
 	site := FOWebSite new
 		baseUri: self baseUri;
 		targetPath: self targetPath asFileReference;
-		rawPath: self sourcePath asFileReference;
+		contentPath: self sourcePath asFileReference;
 		templatePath: self sourcePath asFileReference / self templatePath;
+		dataPath: self sourcePath asFileReference / self dataPath;
 		blogPaths: (self blogs collect: [ :assoc | assoc key asString ]);
 		yourself.
-	allFiles := site rawPath allFiles.
+	allFiles := site contentPath allFiles.
 	site importer readAll: allFiles.
 	self blogs do: [ :assoc |
 		| blog seriesFolder |
@@ -130,4 +137,14 @@ FOPublisher >> templatePath [
 { #category : #accessing }
 FOPublisher >> templatePath: aString [
 	templatePath := aString
+]
+
+{ #category : #accessing }
+FOPublisher >> dataPath [
+	^ dataPath ifNil: [ dataPath := self class defaultDataPath ]
+]
+
+{ #category : #accessing }
+FOPublisher >> dataPath: aString [
+	dataPath := aString
 ]

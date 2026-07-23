@@ -23,10 +23,31 @@ FOSeries class >> titleFromSlug: aSlug [
 
 { #category : #accessing }
 FOSeries >> abstract [
-	"Reuses the first (oldest, i.e. reading-order-first) post's own already-
-	truncated abstract - same zero-config reasoning as titleFromSlug:, no
-	separate series-description field/registry needed yet."
-	^ self posts first abstract
+	"A hand-written data/series/<slug>.md overrides the auto-derived
+	abstract, if present - read directly from disk (frontmatter + body,
+	same parsers as any other content file) rather than through the normal
+	FOImporter/site-tree mechanism, since this file must never become a
+	published page of its own (it would collide with the auto-generated
+	overview page at the same slug). Falls back to the first (oldest, i.e.
+	reading-order-first) post's own already-truncated abstract when no such
+	file exists - same zero-config reasoning as titleFromSlug:."
+	| dataFile |
+	dataFile := self dataAbstractFile.
+	^ dataFile exists
+		ifTrue: [ self renderDataAbstract: dataFile ]
+		ifFalse: [ self posts first abstract ]
+]
+
+{ #category : #accessing }
+FOSeries >> dataAbstractFile [
+	^ (self website dataPath / 'series' / (slug, '.md')) asFileReference
+]
+
+{ #category : #accessing }
+FOSeries >> renderDataAbstract: aFileReference [
+	| frontmatter |
+	frontmatter := FOFrontmatterParser parse: aFileReference contents.
+	^ FOPlainTextVisitor render: (FOMarkdownParser parse: frontmatter body)
 ]
 
 { #category : #accessing }

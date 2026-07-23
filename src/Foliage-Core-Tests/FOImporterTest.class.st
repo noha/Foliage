@@ -15,7 +15,7 @@ FOImporterTest >> setUp [
 	tempDir := FileLocator temp / ('fo-importer-test-', UUID new asString36).
 	tempDir ensureCreateDirectory.
 	website := FOTestWebsite new
-		rawPath: tempDir;
+		contentPath: tempDir;
 		targetPath: (tempDir / 'docs');
 		yourself.
 	website root: (FOWebsiteRoot new parent: website; yourself).

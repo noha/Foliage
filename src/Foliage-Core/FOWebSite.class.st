@@ -80,7 +80,7 @@ FOWebSite >> defaultDataPath [
 
 { #category : #accessing }
 FOWebSite >> defaultTargetPath [
-	^ 'docs'
+	^ 'output'
 ]
 
 { #category : #accessing }

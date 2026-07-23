@@ -24,7 +24,7 @@ FOSeriesIndexBuilderTest >> setUp [
 	(tempDir / 'templates' / 'series-abstract') writeStreamDo: [ :s |
 		s nextPutAll: '<section><a href="{{pathString}}">{{title}}</a> ({{partCount}} parts): {{abstract}}</section>' ].
 	site := FOWebSite new
-		targetPath: (tempDir / 'docs');
+		outputPath: (tempDir / 'docs');
 		templatePath: (tempDir / 'templates');
 		yourself.
 	blog := FOBlog new title: 'My Blog'; yourself.

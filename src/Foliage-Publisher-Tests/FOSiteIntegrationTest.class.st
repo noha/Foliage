@@ -113,7 +113,7 @@ FOSiteIntegrationTest >> setUp [
 	publisher := FOPublisher new
 		baseUri: 'https://norbert.hartl.name';
 		sourcePath: (tempDir / 'source') fullName;
-		targetPath: (tempDir / 'docs') fullName;
+		outputPath: (tempDir / 'docs') fullName;
 		templatePath: 'templates';
 		blogs: { #blog -> 'norbert.hartl.name' };
 		yourself

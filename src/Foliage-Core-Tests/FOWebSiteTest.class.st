@@ -9,7 +9,7 @@ FOWebSiteTest >> testDefaultPaths [
 	| site |
 	site := FOWebSite new.
 	self assert: site contentPath asString equals: 'content' asFileReference asString.
-	self assert: site targetPath asString equals: 'output' asFileReference asString.
+	self assert: site outputPath asString equals: 'output' asFileReference asString.
 	self assert: site templatePath asString equals: 'templates' asFileReference asString.
 	self assert: site dataPath asString equals: 'data' asFileReference asString
 ]
@@ -19,10 +19,10 @@ FOWebSiteTest >> testExplicitPathsOverrideDefaults [
 	| site |
 	site := FOWebSite new
 		contentPath: '/tmp/content';
-		targetPath: '/tmp/docs' asFileReference;
+		outputPath: '/tmp/docs' asFileReference;
 		yourself.
 	self assert: site contentPath asString equals: '/tmp/content' asFileReference asString.
-	self assert: site targetPath asString equals: '/tmp/docs' asFileReference asString
+	self assert: site outputPath asString equals: '/tmp/docs' asFileReference asString
 ]
 
 { #category : #tests }
@@ -61,7 +61,7 @@ FOWebSiteTest >> testImportBuildsRealTreeFromDisk [
 		((tempDir / 'images') / 'logo.png') writeStreamDo: [ :s | s nextPutAll: 'fake png' ].
 		site := FOWebSite new
 			contentPath: tempDir;
-			targetPath: (tempDir / 'docs');
+			outputPath: (tempDir / 'docs');
 			yourself.
 		site import.
 		logo := (site resolvePath: (RelativePath from: 'images')) / 'logo.png'.

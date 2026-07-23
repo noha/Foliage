@@ -43,6 +43,11 @@ FOSeries >> dataAbstractFile [
 	^ (self website dataPath / 'series' / (slug, '.md')) asFileReference
 ]
 
+{ #category : #testing }
+FOSeries >> hasCustomAbstract [
+	^ self dataAbstractFile exists
+]
+
 { #category : #accessing }
 FOSeries >> renderDataAbstract: aFileReference [
 	| frontmatter |

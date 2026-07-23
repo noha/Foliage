@@ -41,7 +41,7 @@ FORSSFeedTest >> setUp [
 		s nextPutAll: '<html><title>{{page.title}}</title>{{{ body }}}</html>' ].
 	site := FOWebSite new
 		baseUri: 'https://example.test';
-		targetPath: (tempDir / 'docs');
+		outputPath: (tempDir / 'docs');
 		templatePath: (tempDir / 'templates');
 		yourself.
 	blog := FOBlog new title: 'My Blog'; yourself.

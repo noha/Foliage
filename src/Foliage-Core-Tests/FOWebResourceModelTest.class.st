@@ -11,7 +11,7 @@ Class {
 { #category : #running }
 FOWebResourceModelTest >> setUp [
 	super setUp.
-	website := FOTestWebsite new targetPath: 'docs' asFileReference; yourself.
+	website := FOTestWebsite new outputPath: 'docs' asFileReference; yourself.
 	root := FOWebsiteRoot new parent: website; yourself
 ]
 

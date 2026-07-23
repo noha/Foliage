@@ -18,7 +18,7 @@ FOFoliagePageTest >> testRenderOnUsesHTMLRenderVisitor [
 { #category : #tests }
 FOFoliagePageTest >> testPublishPathAlwaysHasHtmlExtension [
 	| page website root |
-	website := FOTestWebsite new targetPath: 'docs' asFileReference; yourself.
+	website := FOTestWebsite new outputPath: 'docs' asFileReference; yourself.
 	root := FOWebsiteRoot new parent: website; yourself.
 	page := FOFoliagePage new.
 	root at: #'my-post' put: page.

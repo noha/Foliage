@@ -91,6 +91,49 @@ FOBlog >> publishedPosts [
 	^ self posts select: #isPublished
 ]
 
+{ #category : #series }
+FOBlog >> series [
+	"One FOSeries per distinct 'series' slug found among published posts,
+	alphabetically by slug for deterministic output ordering."
+	^ self seriesSlugs asSortedCollection asArray collect: [ :slug |
+		FOSeries new
+			slug: slug;
+			posts: (self postsInSeries: slug);
+			yourself ]
+]
+
+{ #category : #series }
+FOBlog >> seriesSlugs [
+	^ ((self publishedPosts select: #hasSeries) collect: #series) asSet
+]
+
+{ #category : #series }
+FOBlog >> postsInSeries: aSlug [
+	"Reading order (oldest/part-1 first) - a series is meant to be read in
+	sequence, unlike the blog overview's newest-first browsing order."
+	^ (self publishedPosts select: [ :post | post series = aSlug ]) sorted: #publishDate ascending
+]
+
+{ #category : #series }
+FOBlog >> seriesPostAfter: aFOBlogPost [
+	| list index |
+	list := self postsInSeries: aFOBlogPost series.
+	index := list indexOf: aFOBlogPost.
+	^ (index < list size)
+		ifTrue: [ list at: index + 1 ]
+		ifFalse: [ nil ]
+]
+
+{ #category : #series }
+FOBlog >> seriesPostBefore: aFOBlogPost [
+	| list index |
+	list := self postsInSeries: aFOBlogPost series.
+	index := list indexOf: aFOBlogPost.
+	^ (index > 1)
+		ifTrue: [ list at: index - 1 ]
+		ifFalse: [ nil ]
+]
+
 { #category : #accessing }
 FOBlog >> buildRssFeed [
 	^ (FORSSVisitor new visit: self)

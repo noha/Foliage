@@ -81,6 +81,39 @@ FOPublisherTest >> testPublishPaginatesOverviewPastDefaultPageSizeOfTen [
 ]
 
 { #category : #tests }
+FOPublisherTest >> testPublishGeneratesSeriesOverviewPage [
+	| html |
+	(tempDir / 'source' / 'blog' / 'soil1.md') writeStreamDo: [ :s |
+		s nextPutAll: 'title: Soil part 1', String lf,
+			'layout: blog-post', String lf,
+			'publishDate: 2026-07-20', String lf,
+			'series: soil', String lf,
+			String lf,
+			'Soil part 1 text.' ].
+	(tempDir / 'source' / 'blog' / 'soil2.md') writeStreamDo: [ :s |
+		s nextPutAll: 'title: Soil part 2', String lf,
+			'layout: blog-post', String lf,
+			'publishDate: 2026-07-21', String lf,
+			'series: soil', String lf,
+			String lf,
+			'Soil part 2 text.' ].
+	publisher publish.
+	self assert: (tempDir / 'generated' / 'blog' / 'series' / 'soil.html') exists.
+	html := (tempDir / 'generated' / 'blog' / 'series' / 'soil.html') contents.
+	self assert: (html includesSubstring: '<title>Soil</title>').
+	self assert: (html includesSubstring: 'Soil part 1 text.').
+	self assert: (html includesSubstring: 'Soil part 2 text.').
+	self assert: (html indexOfSubCollection: 'Soil part 1 text.') <
+		(html indexOfSubCollection: 'Soil part 2 text.')
+]
+
+{ #category : #tests }
+FOPublisherTest >> testPublishCreatesNoSeriesFolderWhenNoPostHasASeries [
+	publisher publish.
+	self deny: (tempDir / 'generated' / 'blog' / 'series') exists
+]
+
+{ #category : #tests }
 FOPublisherTest >> testDefaults [
 	| fresh |
 	fresh := FOPublisher new.

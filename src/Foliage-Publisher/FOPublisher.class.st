@@ -86,12 +86,18 @@ FOPublisher >> publish [
 	allFiles := site rawPath allFiles.
 	site importer readAll: allFiles.
 	self blogs do: [ :assoc |
-		| blog |
+		| blog seriesFolder |
 		blog := site / assoc key.
 		blog title: assoc value.
 		blog overviewPages doWithIndex: [ :page :i |
 			blog at: (FOBlogOverviewBuilder pageFilenameFor: i) put: page ].
-		blog at: #'rss.xml' put: blog rssFeed ].
+		blog at: #'rss.xml' put: blog rssFeed.
+		blog series ifNotEmpty: [
+			seriesFolder := blog resolvePath: (RelativePath from: 'series').
+			blog series do: [ :aSeries |
+				seriesFolder
+					at: (aSeries slug, '.html') asSymbol
+					put: (FOSeriesOverviewBuilder new blog: blog; series: aSeries; buildPage) ] ] ].
 	site publish
 ]
 

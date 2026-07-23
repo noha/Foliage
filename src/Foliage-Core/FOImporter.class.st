@@ -23,7 +23,7 @@ FOImporter >> readAll: files [
 FOImporter >> readFile: file [
 	self
 		readFile: file
-		path: (website relativeRawPath: file)
+		path: (website relativeContentPath: file)
 ]
 
 { #category : #generation }

@@ -15,8 +15,8 @@ FOSiteIntegrationTest >> nl [
 
 { #category : #private }
 FOSiteIntegrationTest >> writeFile: aRelativeName contents: aString [
-	"FOPublisher>>publish uses sourcePath directly as rawPath (no further
-	'raw' subfolder), so content files live straight under tempDir/source."
+	"FOPublisher>>publish uses sourcePath directly as contentPath (no further
+	'content' subfolder), so content files live straight under tempDir/source."
 	| file |
 	file := tempDir / 'source' / aRelativeName.
 	file parent ensureCreateDirectory.

@@ -3,7 +3,7 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'targetPath',
-		'rawPath',
+		'contentPath',
 		'root',
 		'templatePath',
 		'blogPaths'
@@ -22,13 +22,13 @@ FOTestWebsite >> targetPath: aFileReference [
 ]
 
 { #category : #accessing }
-FOTestWebsite >> rawPath [
-	^ rawPath
+FOTestWebsite >> contentPath [
+	^ contentPath
 ]
 
 { #category : #accessing }
-FOTestWebsite >> rawPath: aFileReference [
-	rawPath := aFileReference
+FOTestWebsite >> contentPath: aFileReference [
+	contentPath := aFileReference
 ]
 
 { #category : #accessing }
@@ -47,8 +47,8 @@ FOTestWebsite >> resolvePath: aPath [
 ]
 
 { #category : #accessing }
-FOTestWebsite >> relativeRawPath: aFileReference [
-	^ aFileReference asAbsolute relativeTo: self rawPath asAbsolute
+FOTestWebsite >> relativeContentPath: aFileReference [
+	^ aFileReference asAbsolute relativeTo: self contentPath asAbsolute
 ]
 
 { #category : #accessing }

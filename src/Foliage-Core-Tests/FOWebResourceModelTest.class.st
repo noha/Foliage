@@ -49,7 +49,7 @@ FOWebResourceModelTest >> testPathComputation [
 ]
 
 { #category : #tests }
-FOWebResourceModelTest >> testPublishPathMirrorsRawPathByDefault [
+FOWebResourceModelTest >> testPublishPathMirrorsContentPathByDefault [
 	| blog post |
 	blog := FOWebFolder new.
 	root at: #blog put: blog.

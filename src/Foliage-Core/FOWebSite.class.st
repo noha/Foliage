@@ -5,7 +5,8 @@ Class {
 		'baseUri',
 		'targetPath',
 		'templatePath',
-		'rawPath',
+		'contentPath',
+		'dataPath',
 		'root',
 		'properties',
 		'blogPaths'
@@ -42,9 +43,9 @@ FOWebSite >> baseUri: anObject [
 FOWebSite >> blogPaths [
 	"Top-level (direct child of root) folder names that should become FOBlog
 	instead of a plain FOWebFolder as soon as the import creates them.
-	Same ivar-with-overridable-default pattern as rawPath/targetPath/
+	Same ivar-with-overridable-default pattern as contentPath/targetPath/
 	templatePath: a subclass can override defaultBlogPaths (like
-	NohaWebsite overrides defaultRawPath) for a compile-time declaration, or
+	NohaWebsite overrides defaultContentPath) for a compile-time declaration, or
 	a caller can set blogPaths: at runtime (e.g. FOPublisher, driven by a
 	per-invocation .foliage.ston project file) - either way works. Replaces
 	the old post-hoc FOWebFolder>>convertToBlog object surgery."
@@ -68,8 +69,13 @@ FOWebSite >> buildRoot [
 ]
 
 { #category : #accessing }
-FOWebSite >> defaultRawPath [
-	^ 'raw'
+FOWebSite >> defaultContentPath [
+	^ 'content'
+]
+
+{ #category : #accessing }
+FOWebSite >> defaultDataPath [
+	^ 'data'
 ]
 
 { #category : #accessing }
@@ -84,7 +90,7 @@ FOWebSite >> defaultTemplatePath [
 
 { #category : #building }
 FOWebSite >> import [
-	self importDirectory: self rawPath
+	self importDirectory: self contentPath
 ]
 
 { #category : #building }
@@ -130,18 +136,28 @@ FOWebSite >> publish [
 ]
 
 { #category : #accessing }
-FOWebSite >> rawPath [
-	^ rawPath ifNil: [ rawPath := self defaultRawPath asFileReference ]
+FOWebSite >> contentPath [
+	^ contentPath ifNil: [ contentPath := self defaultContentPath asFileReference ]
 ]
 
 { #category : #accessing }
-FOWebSite >> rawPath: anObject [
-	rawPath := anObject asFileReference
+FOWebSite >> contentPath: anObject [
+	contentPath := anObject asFileReference
 ]
 
 { #category : #accessing }
-FOWebSite >> relativeRawPath: aFileReference [
-	^ aFileReference asAbsolute relativeTo: self rawPath asAbsolute
+FOWebSite >> dataPath [
+	^ dataPath ifNil: [ dataPath := self defaultDataPath asFileReference ]
+]
+
+{ #category : #accessing }
+FOWebSite >> dataPath: anObject [
+	dataPath := anObject asFileReference
+]
+
+{ #category : #accessing }
+FOWebSite >> relativeContentPath: aFileReference [
+	^ aFileReference asAbsolute relativeTo: self contentPath asAbsolute
 ]
 
 { #category : #navigating }

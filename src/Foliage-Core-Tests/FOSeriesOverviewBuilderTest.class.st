@@ -64,3 +64,32 @@ FOSeriesOverviewBuilderTest >> testBuildPageContainsOnlyThatSeriesAbstractsOldes
 	self assert: stream contents equals:
 		'<article>Part 1 text.</article><article>Part 2 text.</article>'
 ]
+
+{ #category : #tests }
+FOSeriesOverviewBuilderTest >> testBuildPageShowsHandWrittenAbstractAsIntroWhenPresent [
+	| builder aSeries page stream |
+	site dataPath: (tempDir / 'data').
+	(tempDir / 'data' / 'series') ensureCreateDirectory.
+	(tempDir / 'data' / 'series' / 'soil.md') writeStreamDo: [ :s |
+		s nextPutAll: 'A hand-written intro.' ].
+	blog at: #part1 put: (self makePostTitled: 'Part 1' publishDate: '2026-07-20' series: 'soil').
+	aSeries := blog series detect: [ :s | s slug = 'soil' ].
+	builder := FOSeriesOverviewBuilder new blog: blog; series: aSeries; yourself.
+	page := builder buildPage.
+	stream := WriteStream on: String new.
+	page renderOn: stream.
+	self assert: stream contents equals:
+		'<p>A hand-written intro.</p><article>Part 1 text.</article>'
+]
+
+{ #category : #tests }
+FOSeriesOverviewBuilderTest >> testBuildPageHasNoIntroWhenNoDataFileExists [
+	| builder aSeries page stream |
+	blog at: #part1 put: (self makePostTitled: 'Part 1' publishDate: '2026-07-20' series: 'soil').
+	aSeries := blog series detect: [ :s | s slug = 'soil' ].
+	builder := FOSeriesOverviewBuilder new blog: blog; series: aSeries; yourself.
+	page := builder buildPage.
+	stream := WriteStream on: String new.
+	page renderOn: stream.
+	self assert: stream contents equals: '<article>Part 1 text.</article>'
+]

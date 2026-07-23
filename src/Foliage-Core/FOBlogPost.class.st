@@ -49,6 +49,11 @@ FOBlogPost >> defaultLayout [
 ]
 
 { #category : #testing }
+FOBlogPost >> hasSeries [
+	^ self series notNil
+]
+
+{ #category : #testing }
 FOBlogPost >> isPost [
 	^ true
 ]
@@ -56,6 +61,13 @@ FOBlogPost >> isPost [
 { #category : #accessing }
 FOBlogPost >> renderAbstract [
 	^ self newRenderContext renderTemplate: self abstractTemplate
+]
+
+{ #category : #accessing }
+FOBlogPost >> series [
+	"The frontmatter 'series: <slug>' key, e.g. 'series: soil' - a post
+	belongs to at most one series; absent means it isn't part of one."
+	^ self meta at: #series ifAbsent: [ nil ]
 ]
 
 { #category : #'instance creation' }

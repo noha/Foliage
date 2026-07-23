@@ -94,12 +94,18 @@ FOBlog >> publishedPosts [
 { #category : #series }
 FOBlog >> series [
 	"One FOSeries per distinct 'series' slug found among published posts,
-	alphabetically by slug for deterministic output ordering."
-	^ self seriesSlugs asSortedCollection asArray collect: [ :slug |
+	newest-active-first: sorted by each series' most recent post (posts are
+	stored reading-order-ascending, so that's simply the last one) -
+	matches the blog overview's own newest-first convention, which is the
+	common way other blogs/SSGs order a listing of multiple series."
+	| unsorted |
+	unsorted := self seriesSlugs asSortedCollection asArray collect: [ :slug |
 		FOSeries new
 			slug: slug;
 			posts: (self postsInSeries: slug);
-			yourself ]
+			blog: self;
+			yourself ].
+	^ unsorted asSortedCollection: [ :a :b | a posts last publishDate > b posts last publishDate ]
 ]
 
 { #category : #series }

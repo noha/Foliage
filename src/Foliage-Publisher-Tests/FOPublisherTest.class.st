@@ -27,6 +27,8 @@ FOPublisherTest >> setUp [
 		s nextPutAll: '<html><title>{{page.title}}</title>{{{ body }}}</html>' ].
 	(tempDir / 'source' / 'templates' / 'blog-post-abstract') writeStreamDo: [ :s |
 		s nextPutAll: '<article>{{abstract}}</article>' ].
+	(tempDir / 'source' / 'templates' / 'series-abstract') writeStreamDo: [ :s |
+		s nextPutAll: '<section><a href="{{pathString}}">{{title}}</a>: {{abstract}}</section>' ].
 	(tempDir / 'source' / 'templates' / 'rss.xml') writeStreamDo: [ :s |
 		s nextPutAll: '<rss>{{# channels }}<channel>{{# items }}<item><title>{{title}}</title></item>{{/ items }}</channel>{{/ channels }}</rss>' ].
 	publisher := FOPublisher new
@@ -104,7 +106,10 @@ FOPublisherTest >> testPublishGeneratesSeriesOverviewPage [
 	self assert: (html includesSubstring: 'Soil part 1 text.').
 	self assert: (html includesSubstring: 'Soil part 2 text.').
 	self assert: (html indexOfSubCollection: 'Soil part 1 text.') <
-		(html indexOfSubCollection: 'Soil part 2 text.')
+		(html indexOfSubCollection: 'Soil part 2 text.').
+	self assert: (tempDir / 'generated' / 'blog' / 'series' / 'index.html') exists.
+	self assert: ((tempDir / 'generated' / 'blog' / 'series' / 'index.html') contents
+		includesSubstring: '<a href="/blog/series/soil.html">Soil</a>')
 ]
 
 { #category : #tests }

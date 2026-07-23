@@ -94,6 +94,7 @@ FOPublisher >> publish [
 		blog at: #'rss.xml' put: blog rssFeed.
 		blog series ifNotEmpty: [
 			seriesFolder := blog resolvePath: (RelativePath from: 'series').
+			seriesFolder at: #'index.html' put: (FOSeriesIndexBuilder new blog: blog; buildPage).
 			blog series do: [ :aSeries |
 				seriesFolder
 					at: (aSeries slug, '.html') asSymbol

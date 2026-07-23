@@ -9,7 +9,7 @@ FOWebSiteTest >> testDefaultPaths [
 	| site |
 	site := FOWebSite new.
 	self assert: site contentPath asString equals: 'content' asFileReference asString.
-	self assert: site targetPath asString equals: 'docs' asFileReference asString.
+	self assert: site targetPath asString equals: 'output' asFileReference asString.
 	self assert: site templatePath asString equals: 'templates' asFileReference asString.
 	self assert: site dataPath asString equals: 'data' asFileReference asString
 ]

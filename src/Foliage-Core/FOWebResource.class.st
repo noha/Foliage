@@ -46,7 +46,7 @@ FOWebResource >> relativePath [
 
 { #category : #accessing }
 FOWebResource >> publishPath [
-	"Mirrors contentPath 1:1 by default (content/foo.md -> docs/foo.html); pages that
+	"Mirrors contentPath 1:1 by default (content/foo.md -> output/foo.html); pages that
 	need a different output path (e.g. a generated blog overview page) override
 	this."
 	^ self website targetPath resolvePath: self relativePath

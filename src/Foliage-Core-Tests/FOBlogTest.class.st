@@ -109,14 +109,25 @@ FOBlogTest >> testPostsInSeriesReturnsOnlyMatchingPostsOldestFirst [
 ]
 
 { #category : #tests }
-FOBlogTest >> testSeriesSlugsAndSeriesCollectionSortedAlphabetically [
+FOBlogTest >> testSeriesSlugsAndSeriesCollection [
 	blog at: #a put: (self makePostTitled: 'Soil A' publishDate: '2026-07-20' series: 'soil').
 	blog at: #b put: (self makePostTitled: 'Byob A' publishDate: '2023-01-07' series: 'byob').
 	blog at: #c put: (self makePostTitled: 'No series' publishDate: '2020-01-01').
 	self assert: blog seriesSlugs equals: #('soil' 'byob') asSet.
-	self assert: (blog series collect: #slug) asArray equals: #('byob' 'soil').
-	self assert: (blog series first title) equals: 'Byob'.
+	self assert: (blog series collect: #slug) asArray equals: #('soil' 'byob').
+	self assert: (blog series first title) equals: 'Soil'.
 	self assert: (blog series first posts size) equals: 1
+]
+
+{ #category : #tests }
+FOBlogTest >> testSeriesAreSortedByTheirMostRecentPostDescending [
+	"'byob' has an older first post but a NEWER last post than 'soil' -
+	proves the sort looks at each series' most recent (last) post, not its
+	first one or its slug."
+	blog at: #byobOld put: (self makePostTitled: 'Byob old' publishDate: '2020-01-01' series: 'byob').
+	blog at: #byobNew put: (self makePostTitled: 'Byob new' publishDate: '2026-07-01' series: 'byob').
+	blog at: #soil put: (self makePostTitled: 'Soil only' publishDate: '2023-06-01' series: 'soil').
+	self assert: (blog series collect: #slug) asArray equals: #('byob' 'soil')
 ]
 
 { #category : #tests }

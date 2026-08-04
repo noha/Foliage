@@ -54,6 +54,11 @@ FOBlogPost >> hasSeries [
 ]
 
 { #category : #testing }
+FOBlogPost >> hasTags [
+	^ self tags notEmpty
+]
+
+{ #category : #testing }
 FOBlogPost >> isPost [
 	^ true
 ]
@@ -68,6 +73,17 @@ FOBlogPost >> series [
 	"The frontmatter 'series: <slug>' key, e.g. 'series: soil' - a post
 	belongs to at most one series; absent means it isn't part of one."
 	^ self meta at: #series ifAbsent: [ nil ]
+]
+
+{ #category : #accessing }
+FOBlogPost >> tags [
+	"Frontmatter 'tags: [a, b]'. A missing key yields no tags; a value that
+	came through as a plain string (e.g. a forgotten-brackets typo, 'tags: a')
+	is treated as a single-element list rather than iterated character-by-
+	character."
+	| raw |
+	raw := self meta at: #tags ifAbsent: [ #() ].
+	^ raw isString ifTrue: [ { raw } ] ifFalse: [ raw ]
 ]
 
 { #category : #'instance creation' }

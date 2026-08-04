@@ -140,6 +140,33 @@ FOBlog >> seriesPostBefore: aFOBlogPost [
 		ifFalse: [ nil ]
 ]
 
+{ #category : #tags }
+FOBlog >> tags [
+	"One FOTag per distinct tag slug found among published posts, newest-
+	active-first: sorted by each tag's most recent post. Unlike #series,
+	posts within a tag are themselves stored newest-first (no reading order),
+	so that's posts first here, not posts last."
+	| unsorted |
+	unsorted := self tagSlugs asSortedCollection asArray collect: [ :slug |
+		FOTag new
+			slug: slug;
+			posts: (self postsTagged: slug);
+			blog: self;
+			yourself ].
+	^ unsorted asSortedCollection: [ :a :b | a posts first publishDate > b posts first publishDate ]
+]
+
+{ #category : #tags }
+FOBlog >> tagSlugs [
+	^ self publishedPosts inject: Set new into: [ :set :post | set addAll: post tags; yourself ]
+]
+
+{ #category : #tags }
+FOBlog >> postsTagged: aSlug [
+	"Newest-first, unlike #postsInSeries: - tags have no reading order."
+	^ (self publishedPosts select: [ :post | post tags includes: aSlug ]) sorted: #publishDate descending
+]
+
 { #category : #accessing }
 FOBlog >> buildRssFeed [
 	^ (FORSSVisitor new visit: self)

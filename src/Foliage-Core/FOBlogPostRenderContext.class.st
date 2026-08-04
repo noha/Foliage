@@ -58,3 +58,21 @@ FOBlogPostRenderContext >> seriesPreviousPost [
 FOBlogPostRenderContext >> seriesNextPost [
 	^ page parent seriesPostAfter: self page
 ]
+
+{ #category : #tags }
+FOBlogPostRenderContext >> hasTags [
+	^ self page hasTags
+]
+
+{ #category : #tags }
+FOBlogPostRenderContext >> tagsHtml [
+	"Templates here never iterate raw collections (see FOBlogOverviewBuilder/
+	FOSeriesOverviewBuilder - multi-item HTML is always assembled in
+	Smalltalk). Same idiom for a post's own tag list."
+	^ String streamContents: [ :s |
+		self page tags
+			do: [ :slug |
+				s nextPutAll: '<a href="', page parent pathString, '/tags/', slug, '/index.html">',
+					(FOTag titleFromSlug: slug), '</a>' ]
+			separatedBy: [ s nextPutAll: ', ' ] ]
+]

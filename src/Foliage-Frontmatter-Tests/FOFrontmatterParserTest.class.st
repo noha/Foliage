@@ -66,6 +66,41 @@ FOFrontmatterParserTest >> testNoFrontmatterMeansWholeFileIsBody [
 ]
 
 { #category : #tests }
+FOFrontmatterParserTest >> testBracketListValueBecomesACollectionOfTrimmedElements [
+	| result |
+	result := FOFrontmatterParser parse: 'tags: [soil, database]', self nl, self nl, 'body text'.
+	self assert: (result at: #tags) equals: #('soil' 'database')
+]
+
+{ #category : #tests }
+FOFrontmatterParserTest >> testBracketListValueTrimsWhitespaceAroundElements [
+	| result |
+	result := FOFrontmatterParser parse: 'tags: [ soil ,  database ]', self nl, self nl, 'body text'.
+	self assert: (result at: #tags) equals: #('soil' 'database')
+]
+
+{ #category : #tests }
+FOFrontmatterParserTest >> testBracketListValueStripsQuotesFromElements [
+	| result |
+	result := FOFrontmatterParser parse: 'tags: ["soil", "database"]', self nl, self nl, 'body text'.
+	self assert: (result at: #tags) equals: #('soil' 'database')
+]
+
+{ #category : #tests }
+FOFrontmatterParserTest >> testEmptyBracketListValueBecomesAnEmptyCollection [
+	| result |
+	result := FOFrontmatterParser parse: 'tags: []', self nl, self nl, 'body text'.
+	self assert: (result at: #tags) equals: #()
+]
+
+{ #category : #tests }
+FOFrontmatterParserTest >> testSingleElementBracketListValue [
+	| result |
+	result := FOFrontmatterParser parse: 'tags: [soil]', self nl, self nl, 'body text'.
+	self assert: (result at: #tags) equals: #('soil')
+]
+
+{ #category : #tests }
 FOFrontmatterParserTest >> testProseWithColonIsNotMistakenForFrontmatter [
 	| result original |
 	original := 'This is unusual: right from the start.', self nl, self nl, 'More text.'.

@@ -28,7 +28,7 @@ FOFrontmatterParser >> parse: aString [
 						ifFalse: [
 							key := (line copyFrom: 1 to: colonIndex - 1) trimBoth.
 							value := (line copyFrom: colonIndex + 1 to: line size) trimBoth.
-							properties at: key asSymbol put: (self stripQuotes: value) ] ] ] ].
+							properties at: key asSymbol put: (self parseValue: value) ] ] ] ].
 	^ FOFrontmatter
 		properties: properties
 		body: (bodyStartIndex isNil
@@ -41,6 +41,22 @@ FOFrontmatterParser >> isValidKey: aSubstring [
 	| trimmed |
 	trimmed := aSubstring trimBoth.
 	^ trimmed isEmpty not and: [ (trimmed anySatisfy: [ :c | c isSeparator ]) not ]
+]
+
+{ #category : #private }
+FOFrontmatterParser >> parseValue: aString [
+	"A value that looks like '[a, b, c]' becomes a collection of trimmed,
+	unquoted elements - generic (not tied to any specific key) so future
+	multi-value frontmatter fields work without another parser change. No
+	comma-escaping inside elements is supported, matching this parser's
+	existing 'only what real content needs' scope."
+	| trimmed inner |
+	trimmed := aString trimBoth.
+	(trimmed size >= 2 and: [ trimmed first = $[ and: [ trimmed last = $] ] ])
+		ifFalse: [ ^ self stripQuotes: trimmed ].
+	inner := (trimmed copyFrom: 2 to: trimmed size - 1) trimBoth.
+	inner isEmpty ifTrue: [ ^ #() ].
+	^ (inner substrings: ',') collect: [ :item | self stripQuotes: item trimBoth ]
 ]
 
 { #category : #private }

@@ -58,6 +58,39 @@ FOBlogPostRenderContextTest >> testSeriesNavigationAndTitleForMiddlePart [
 	self assert: context seriesNextPost equals: part3
 ]
 
+{ #category : #private }
+FOBlogPostRenderContextTest >> makePostTitled: aTitle publishDate: aDateString tags: aTagsArray [
+	| post |
+	post := FOFoliagePage new
+		meta: (Dictionary new
+			at: #title put: aTitle;
+			at: #publishDate put: aDateString;
+			yourself);
+		document: (FOMarkdownParser parse: aTitle, ' text.');
+		yourself.
+	post meta at: #tags put: aTagsArray.
+	^ post
+]
+
+{ #category : #tests }
+FOBlogPostRenderContextTest >> testHasTagsIsFalseWhenPostHasNoTags [
+	blog at: #solo put: (self makePostTitled: 'Solo' publishDate: '2020-01-01' series: nil).
+	self deny: (self contextFor: (blog / #solo)) hasTags
+]
+
+{ #category : #tests }
+FOBlogPostRenderContextTest >> testHasTagsIsTrueWhenPostHasTags [
+	blog at: #tagged put: (self makePostTitled: 'Tagged' publishDate: '2020-01-01' tags: #('soil')).
+	self assert: (self contextFor: (blog / #tagged)) hasTags
+]
+
+{ #category : #tests }
+FOBlogPostRenderContextTest >> testTagsHtmlListsAllTagsAsLinksToTheirOverviewPages [
+	blog at: #tagged put: (self makePostTitled: 'Tagged' publishDate: '2020-01-01' tags: #('soil' 'byob-database')).
+	self assert: (self contextFor: (blog / #tagged)) tagsHtml equals:
+		'<a href="/blog/tags/soil/index.html">Soil</a>, <a href="/blog/tags/byob-database/index.html">Byob Database</a>'
+]
+
 { #category : #tests }
 FOBlogPostRenderContextTest >> testSeriesNavigationHasNoPreviousOnFirstPartOrNextOnLastPart [
 	| part1 part2 |

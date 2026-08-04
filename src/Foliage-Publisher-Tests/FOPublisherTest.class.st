@@ -29,6 +29,8 @@ FOPublisherTest >> setUp [
 		s nextPutAll: '<article>{{abstract}}</article>' ].
 	(tempDir / 'source' / 'templates' / 'series-abstract') writeStreamDo: [ :s |
 		s nextPutAll: '<section><a href="{{pathString}}">{{title}}</a>: {{abstract}}</section>' ].
+	(tempDir / 'source' / 'templates' / 'tag-abstract') writeStreamDo: [ :s |
+		s nextPutAll: '<section><a href="{{pathString}}">{{title}}</a>: {{abstract}}</section>' ].
 	(tempDir / 'source' / 'templates' / 'rss.xml') writeStreamDo: [ :s |
 		s nextPutAll: '<rss>{{# channels }}<channel>{{# items }}<item><title>{{title}}</title></item>{{/ items }}</channel>{{/ channels }}</rss>' ].
 	publisher := FOPublisher new
@@ -116,6 +118,62 @@ FOPublisherTest >> testPublishGeneratesSeriesOverviewPage [
 FOPublisherTest >> testPublishCreatesNoSeriesFolderWhenNoPostHasASeries [
 	publisher publish.
 	self deny: (tempDir / 'generated' / 'blog' / 'series') exists
+]
+
+{ #category : #tests }
+FOPublisherTest >> testPublishGeneratesTagOverviewPage [
+	| html |
+	(tempDir / 'source' / 'blog' / 'soil1.md') writeStreamDo: [ :s |
+		s nextPutAll: 'title: Soil post 1', String lf,
+			'layout: blog-post', String lf,
+			'publishDate: 2026-07-20', String lf,
+			'tags: [soil, database]', String lf,
+			String lf,
+			'Soil post 1 text.' ].
+	(tempDir / 'source' / 'blog' / 'soil2.md') writeStreamDo: [ :s |
+		s nextPutAll: 'title: Soil post 2', String lf,
+			'layout: blog-post', String lf,
+			'publishDate: 2026-07-21', String lf,
+			'tags: [soil]', String lf,
+			String lf,
+			'Soil post 2 text.' ].
+	publisher publish.
+	self assert: (tempDir / 'generated' / 'blog' / 'tags' / 'soil' / 'index.html') exists.
+	html := (tempDir / 'generated' / 'blog' / 'tags' / 'soil' / 'index.html') contents.
+	self assert: (html includesSubstring: '<title>Soil</title>').
+	self assert: (html includesSubstring: 'Soil post 1 text.').
+	self assert: (html includesSubstring: 'Soil post 2 text.').
+	self assert: (html indexOfSubCollection: 'Soil post 2 text.') <
+		(html indexOfSubCollection: 'Soil post 1 text.').
+	self assert: (tempDir / 'generated' / 'blog' / 'tags' / 'database' / 'index.html') exists.
+	self assert: (tempDir / 'generated' / 'blog' / 'tags' / 'index.html') exists.
+	self assert: ((tempDir / 'generated' / 'blog' / 'tags' / 'index.html') contents
+		includesSubstring: '<a href="/blog/tags/soil/index.html">Soil</a>')
+]
+
+{ #category : #tests }
+FOPublisherTest >> testPublishPaginatesTagOverviewPastDefaultPageSizeOfTen [
+	1 to: 11 do: [ :n |
+		(tempDir / 'source' / 'blog' / ('soil', n printString, '.md')) writeStreamDo: [ :s |
+			s nextPutAll: 'title: Soil post ', n printString, String lf,
+				'layout: blog-post', String lf,
+				'publishDate: 2026-08-', (n < 10 ifTrue: [ '0', n printString ] ifFalse: [ n printString ]), String lf,
+				'tags: [soil]', String lf,
+				String lf,
+				'Soil post ', n printString, ' text.' ] ].
+	publisher publish.
+	self assert: (tempDir / 'generated' / 'blog' / 'tags' / 'soil' / 'index.html') exists.
+	self assert: (tempDir / 'generated' / 'blog' / 'tags' / 'soil' / 'page2.html') exists.
+	self assert: ((tempDir / 'generated' / 'blog' / 'tags' / 'soil' / 'index.html') contents
+		includesSubstring: 'href="/blog/tags/soil/page2.html">older</a>').
+	self assert: ((tempDir / 'generated' / 'blog' / 'tags' / 'soil' / 'page2.html') contents
+		includesSubstring: 'href="/blog/tags/soil/index.html">newer</a>')
+]
+
+{ #category : #tests }
+FOPublisherTest >> testPublishCreatesNoTagsFolderWhenNoPostHasATag [
+	publisher publish.
+	self deny: (tempDir / 'generated' / 'blog' / 'tags') exists
 ]
 
 { #category : #tests }

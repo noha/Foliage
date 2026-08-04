@@ -93,7 +93,7 @@ FOPublisher >> publish [
 	allFiles := site contentPath allFiles.
 	site importer readAll: allFiles.
 	self blogs do: [ :assoc |
-		| blog seriesFolder |
+		| blog seriesFolder tagsFolder |
 		blog := site / assoc key.
 		blog title: assoc value.
 		blog overviewPages doWithIndex: [ :page :i |
@@ -105,7 +105,15 @@ FOPublisher >> publish [
 			blog series do: [ :aSeries |
 				seriesFolder
 					at: (aSeries slug, '.html') asSymbol
-					put: (FOSeriesOverviewBuilder new blog: blog; series: aSeries; buildPage) ] ] ].
+					put: (FOSeriesOverviewBuilder new blog: blog; series: aSeries; buildPage) ] ].
+		blog tags ifNotEmpty: [
+			tagsFolder := blog resolvePath: (RelativePath from: 'tags').
+			tagsFolder at: #'index.html' put: (FOTagIndexBuilder new blog: blog; buildPage).
+			blog tags do: [ :aTag |
+				| tagFolder |
+				tagFolder := tagsFolder resolvePath: (RelativePath from: aTag slug).
+				(FOTagOverviewBuilder new blog: blog; tag: aTag; buildPages) doWithIndex: [ :page :i |
+					tagFolder at: (FOBlogOverviewBuilder pageFilenameFor: i) put: page ] ] ] ].
 	site publish
 ]
 

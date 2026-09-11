@@ -1,21 +1,12 @@
+"
+Emphasis, written with * or _. Its children are inline nodes, so emphasis can be
+nested and can contain links.
+"
 Class {
 	#name : #FOItalic,
 	#superclass : #FOInlineNode,
-	#instVars : [
-		'text'
-	],
 	#category : #'Foliage-Markdown'
 }
-
-{ #category : #accessing }
-FOItalic >> text [
-	^ text
-]
-
-{ #category : #accessing }
-FOItalic >> text: aString [
-	text := aString
-]
 
 { #category : #visiting }
 FOItalic >> acceptVisitor: aVisitor [

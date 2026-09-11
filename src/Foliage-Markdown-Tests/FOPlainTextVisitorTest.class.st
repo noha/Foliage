@@ -41,7 +41,7 @@ FOPlainTextVisitorTest >> testImageContributesNothing [
 { #category : #tests }
 FOPlainTextVisitorTest >> testCodeBlockKeepsVerbatimCode [
 	self assert: (self plainTextOf: '```', self nl, 'a + b', self nl, '```')
-		equals: 'a + b'
+		equals: 'a + b', self nl
 ]
 
 { #category : #tests }

@@ -15,10 +15,9 @@ FOMarkdownIntegrationTest >> nl [
 { #category : #private }
 FOMarkdownIntegrationTest >> syntaxMdFixture [
 	"An inlined copy of noha.github.io/raw/syntax.md's examples, normalized to
-	 single LF line endings (the real file mixes CR/LF/CRLF, already covered
-	 separately by FOLineReader/blockquote tests) and using the space-delimited
-	 image attribute syntax that is now canonical (syntax.md itself was updated
-	 to match, replacing its original pipe-delimited `|class=...`)."
+	 single LF line endings and using the space-delimited image attribute syntax
+	 that is now canonical (syntax.md itself was updated to match, replacing its
+	 original pipe-delimited `|class=...`)."
 	^ 'title: A syntax example for testing', self nl,
 		'layout: page', self nl, self nl,
 		'# H1 header', self nl, self nl,
@@ -64,13 +63,18 @@ FOMarkdownIntegrationTest >> setUp [
 	doc := FOMarkdownParser parse: frontmatter body
 ]
 
+{ #category : #private }
+FOMarkdownIntegrationTest >> textOf: aNode [
+	^ FOPlainTextVisitor render: aNode
+]
+
 { #category : #tests }
 FOMarkdownIntegrationTest >> testTopLevelBlockCountOrderAndTypes [
 	self assert: (doc children collect: [ :c | c class ]) asArray equals: {
 		FOHeader. FOHeader. FOParagraph. FOParagraph. FOList. FOParagraph.
-		FOBlockquote. FOParagraph. FOCodeBlock. FOParagraph. FOCodeBlock.
-		FOParagraph. FOParagraph. FOParagraph. FOParagraph. FOParagraph.
-		FOParagraph. FOParagraph. FOParagraph. FOParagraph }
+		FOBlockquote. FOParagraph. FOIndentedCodeBlock. FOParagraph.
+		FOFencedCodeBlock. FOParagraph. FOParagraph. FOParagraph. FOParagraph.
+		FOParagraph. FOParagraph. FOParagraph. FOParagraph. FOParagraph }
 ]
 
 { #category : #tests }
@@ -81,23 +85,27 @@ FOMarkdownIntegrationTest >> testHeaderLevels [
 
 { #category : #tests }
 FOMarkdownIntegrationTest >> testNestedList [
-	| list |
+	| list nested |
 	list := doc children at: 5.
 	self assert: list ordered equals: false.
-	self assert: (list items collect: [ :i | i children first string ]) asArray equals: #('A' 'B' 'C').
-	self assert: list items first nestedList notNil.
-	self assert: list items first nestedList ordered equals: true.
-	self assert: (list items first nestedList items collect: [ :i | i children first string ]) asArray
-		equals: #('first' 'second').
-	self assert: list items second nestedList isNil.
-	self assert: list items third nestedList isNil
+	self assert: (list items collect: [ :i | self textOf: i children first ]) asArray
+		equals: #( 'A' 'B' 'C' ).
+	nested := list items first children detect: [ :each | each isKindOf: FOList ].
+	self assert: nested ordered equals: true.
+	self assert: (nested items collect: [ :i | self textOf: i ]) asArray
+		equals: #( 'first' 'second' ).
+	self assert: (list items second children noneSatisfy: [ :each | each isKindOf: FOList ]).
+	self assert: (list items third children noneSatisfy: [ :each | each isKindOf: FOList ])
 ]
 
 { #category : #tests }
 FOMarkdownIntegrationTest >> testBlockquote [
 	| quote |
 	quote := doc children at: 7.
-	self assert: quote children first string equals: 'This is a', self nl, 'block quote'
+	self assert: (quote children collect: [ :each | each class ]) asArray equals: { FOParagraph }.
+	self assert: (self textOf: quote) equals: 'This is a block quote'.
+	self assert: ((FOHTMLRenderVisitor render: quote)
+		includesSubstring: '<p>This is a', self nl, 'block quote</p>')
 ]
 
 { #category : #tests }
@@ -118,18 +126,17 @@ FOMarkdownIntegrationTest >> testLinks [
 	httpLink := (doc children at: 13) children first.
 	siteLink := (doc children at: 15) children first.
 	self assert: (httpLink isKindOf: FOLink).
-	self assert: httpLink text equals: 'A text'.
+	self assert: (self textOf: httpLink) equals: 'A text'.
 	self assert: httpLink url equals: 'http://a.link.to'.
 	self assert: (siteLink isKindOf: FOLink).
-	self assert: siteLink text equals: 'Structure'.
+	self assert: (self textOf: siteLink) equals: 'Structure'.
 	self assert: siteLink url equals: 'site:foo:test'
 ]
 
 { #category : #tests }
 FOMarkdownIntegrationTest >> testBareMailtoIsNotLinkified [
-	"Only bracketed [text](mailto:...) is a link (see FOInlineParserTest testMailtoLink) -
-	 syntax.md's bare '(mailto:user@domain.com)' line has no [text] part, so it must
-	 stay plain text rather than being mistaken for a link."
+	"A bare '(mailto:user@domain.com)' has no [text] part and no angle brackets,
+	 so it stays plain text."
 	| para |
 	para := doc children at: 19.
 	self assert: para children size equals: 1.
@@ -138,12 +145,14 @@ FOMarkdownIntegrationTest >> testBareMailtoIsNotLinkified [
 ]
 
 { #category : #tests }
-FOMarkdownIntegrationTest >> testSingleAsteriskIsNotBold [
+FOMarkdownIntegrationTest >> testSingleAsteriskPairIsEmphasis [
+	"The old hand written parser only knew ** and __; CommonMark makes a single
+	 pair of asterisks emphasis too, so syntax.md's '*@a>b@*' is now italic."
 	| para |
 	para := doc children at: 17.
 	self assert: para children size equals: 1.
-	self assert: (para children first isKindOf: FOText).
-	self assert: para children first string equals: '*@a>b@*'
+	self assert: (para children first isKindOf: FOItalic).
+	self assert: (self textOf: para) equals: '@a>b@'
 ]
 
 { #category : #tests }
@@ -154,7 +163,7 @@ FOMarkdownIntegrationTest >> testTrailingStandaloneImage [
 	self assert: lastPara children size equals: 1.
 	image := lastPara children first.
 	self assert: (image isKindOf: FOImage).
-	self assert: image alt equals: 'alt text'.
+	self assert: (FOAltTextVisitor render: image) equals: 'alt text'.
 	self assert: image src equals: '/images/IMG_9474.jpeg'.
 	self assert: (image attributes at: #class) equals: 'u-max-full-width'
 ]
@@ -171,9 +180,8 @@ FOMarkdownIntegrationTest >> testFullDocumentRendersWithoutError [
 
 { #category : #tests }
 FOMarkdownIntegrationTest >> testRawHtmlBlockAppendedToRealisticDocument [
-	"The syntax.md fixture itself contains no raw HTML (see testTopLevelBlockCountOrderAndTypes);
-	 appending an iframe after a blank line must add exactly one FORawHTMLBlock and leave
-	 every other block untouched."
+	"The syntax.md fixture contains no raw HTML; appending an iframe after a blank
+	 line must add exactly one FORawHTMLBlock and leave every other block alone."
 	| iframe extended html |
 	iframe := '<iframe src="/crowdsec.html" style="width:100%; height:800px; border:1px solid #ddd;"></iframe>'.
 	extended := FOMarkdownParser parse:
@@ -183,6 +191,6 @@ FOMarkdownIntegrationTest >> testRawHtmlBlockAppendedToRealisticDocument [
 		equals: (doc children collect: [ :c | c class ]) asArray.
 	self assert: (extended children last isKindOf: FORawHTMLBlock).
 	html := FOHTMLRenderVisitor render: extended.
-	self assert: (html endsWith: self nl, iframe).
-	self assert: (html includesSubstring: '&lt;iframe') not
+	self assert: (html endsWith: iframe, self nl).
+	self deny: (html includesSubstring: '&lt;iframe')
 ]

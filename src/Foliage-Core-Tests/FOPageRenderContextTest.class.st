@@ -30,7 +30,7 @@ FOPageRenderContextTest >> testLayoutDelegatesToPage [
 FOPageRenderContextTest >> testHtmlAndBodyRenderThePageContent [
 	| context |
 	context := FOPageRenderContext new page: self makePage; yourself.
-	self assert: context html equals: '<p>Body text.</p>'.
+	self assert: context html equals: '<p>Body text.</p>', (String with: Character lf).
 	self assert: context body equals: context html
 ]
 

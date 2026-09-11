@@ -70,7 +70,10 @@ FOSeriesIndexBuilderTest >> testAbstractPrefersHandWrittenDataFileOverAutoDerive
 		s nextPutAll: 'A hand-written description of the whole series.' ].
 	blog at: #part1 put: (self makePostTitled: 'Part 1' publishDate: '2026-07-20' series: 'soil').
 	aSeries := blog series detect: [ :s | s slug = 'soil' ].
-	self assert: aSeries abstract equals: 'A hand-written description of the whole series.'
+	"#abstract renders the data file to HTML (see FOSeriesTest), so the paragraph
+	markup is part of the expected value."
+	self assert: aSeries abstract
+		equals: '<p>A hand-written description of the whole series.</p>', (String with: Character lf)
 ]
 
 { #category : #tests }

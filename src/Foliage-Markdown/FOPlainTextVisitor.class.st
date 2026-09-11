@@ -1,3 +1,8 @@
+"
+Renders the readable text of a document, used for things like the abstract of a
+blog post. Markup, code blocks aside, contributes its text; images and raw HTML
+contribute nothing.
+"
 Class {
 	#name : #FOPlainTextVisitor,
 	#superclass : #FOVisitor,
@@ -9,81 +14,108 @@ FOPlainTextVisitor class >> render: aNode [
 	^ aNode acceptVisitor: self new
 ]
 
-{ #category : #visiting }
-FOPlainTextVisitor >> visitDocument: aDocument [
-	^ String streamContents: [ :s |
-		aDocument children
-			do: [ :child | s nextPutAll: (child acceptVisitor: self) ]
-			separatedBy: [ s nextPut: $  ] ]
+{ #category : #'private - writing' }
+FOPlainTextVisitor >> renderChildren: aNode [
+	^ String streamContents: [ :out |
+		aNode children do: [ :each | out nextPutAll: (each acceptVisitor: self) ] ]
 ]
 
-{ #category : #visiting }
-FOPlainTextVisitor >> visitHeader: aHeader [
-	^ self renderChildren: aHeader
+{ #category : #'private - writing' }
+FOPlainTextVisitor >> renderChildren: aNode separatedBySpace: aBoolean [
+	^ String streamContents: [ :out |
+		aNode children
+			do: [ :each | out nextPutAll: (each acceptVisitor: self) ]
+			separatedBy: [ aBoolean ifTrue: [ out nextPut: $  ] ] ]
 ]
 
-{ #category : #visiting }
-FOPlainTextVisitor >> visitParagraph: aParagraph [
-	^ self renderChildren: aParagraph
+{ #category : #'visiting - blocks' }
+FOPlainTextVisitor >> visitBlockquote: aBlockquote [
+	^ self renderChildren: aBlockquote separatedBySpace: true
 ]
 
-{ #category : #visiting }
+{ #category : #'visiting - inlines' }
+FOPlainTextVisitor >> visitBold: aBold [
+	^ self renderChildren: aBold
+]
+
+{ #category : #'visiting - blocks' }
 FOPlainTextVisitor >> visitCodeBlock: aCodeBlock [
 	^ aCodeBlock code
 ]
 
-{ #category : #visiting }
-FOPlainTextVisitor >> visitRawHTMLBlock: aRawHTMLBlock [
-	"Markup has no textual content worth including in a plain-text abstract."
-	^ ''
+{ #category : #'visiting - inlines' }
+FOPlainTextVisitor >> visitCodeSpan: aCodeSpan [
+	^ aCodeSpan code
 ]
 
-{ #category : #visiting }
-FOPlainTextVisitor >> visitBlockquote: aBlockquote [
-	^ self renderChildren: aBlockquote
+{ #category : #'visiting - blocks' }
+FOPlainTextVisitor >> visitDocument: aDocument [
+	^ self renderChildren: aDocument separatedBySpace: true
 ]
 
-{ #category : #visiting }
-FOPlainTextVisitor >> visitList: aList [
-	^ String streamContents: [ :s |
-		aList items
-			do: [ :item | s nextPutAll: (item acceptVisitor: self) ]
-			separatedBy: [ s nextPut: $  ] ]
+{ #category : #'visiting - inlines' }
+FOPlainTextVisitor >> visitHardBreak: aHardBreak [
+	^ ' '
 ]
 
-{ #category : #visiting }
-FOPlainTextVisitor >> visitListItem: aListItem [
-	^ self renderChildren: aListItem
+{ #category : #'visiting - blocks' }
+FOPlainTextVisitor >> visitHeader: aHeader [
+	^ self renderChildren: aHeader
 ]
 
-{ #category : #visiting }
-FOPlainTextVisitor >> visitText: aText [
-	^ aText string
-]
-
-{ #category : #visiting }
-FOPlainTextVisitor >> visitBold: aBold [
-	^ aBold text
-]
-
-{ #category : #visiting }
-FOPlainTextVisitor >> visitItalic: anItalic [
-	^ anItalic text
-]
-
-{ #category : #visiting }
-FOPlainTextVisitor >> visitLink: aLink [
-	^ aLink text
-]
-
-{ #category : #visiting }
+{ #category : #'visiting - inlines' }
 FOPlainTextVisitor >> visitImage: anImage [
 	"An image has no textual content worth including in a plain-text abstract."
 	^ ''
 ]
 
-{ #category : #private }
-FOPlainTextVisitor >> renderChildren: aBlockNode [
-	^ String streamContents: [ :s |
-		aBlockNode children do: [ :child | s nextPutAll: (child acceptVisitor: self) ] ]
+{ #category : #'visiting - inlines' }
+FOPlainTextVisitor >> visitItalic: anItalic [
+	^ self renderChildren: anItalic
+]
+
+{ #category : #'visiting - inlines' }
+FOPlainTextVisitor >> visitLink: aLink [
+	^ self renderChildren: aLink
+]
+
+{ #category : #'visiting - blocks' }
+FOPlainTextVisitor >> visitList: aList [
+	^ self renderChildren: aList separatedBySpace: true
+]
+
+{ #category : #'visiting - blocks' }
+FOPlainTextVisitor >> visitListItem: aListItem [
+	^ self renderChildren: aListItem separatedBySpace: true
+]
+
+{ #category : #'visiting - blocks' }
+FOPlainTextVisitor >> visitParagraph: aParagraph [
+	^ self renderChildren: aParagraph
+]
+
+{ #category : #'visiting - blocks' }
+FOPlainTextVisitor >> visitRawHTMLBlock: aRawHTMLBlock [
+	"Markup has no textual content worth including in a plain-text abstract."
+	^ ''
+]
+
+{ #category : #'visiting - inlines' }
+FOPlainTextVisitor >> visitRawHTMLInline: aRawHTMLInline [
+	^ ''
+]
+
+{ #category : #'visiting - inlines' }
+FOPlainTextVisitor >> visitSoftBreak: aSoftBreak [
+	^ ' '
+]
+
+{ #category : #'visiting - inlines' }
+FOPlainTextVisitor >> visitText: aText [
+	^ aText string
+]
+
+{ #category : #'visiting - blocks' }
+FOPlainTextVisitor >> visitThematicBreak: aThematicBreak [
+	^ ''
 ]

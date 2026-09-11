@@ -1,3 +1,8 @@
+"
+Checks the HTML the renderer produces. The tests start from markdown source
+rather than hand built nodes, because the contract that matters is source in,
+HTML out - including where the newlines go, which CommonMark prescribes.
+"
 Class {
 	#name : #FOHTMLRenderVisitorTest,
 	#superclass : #TestCase,
@@ -10,190 +15,186 @@ FOHTMLRenderVisitorTest >> nl [
 ]
 
 { #category : #private }
-FOHTMLRenderVisitorTest >> textChildren: aString [
-	^ OrderedCollection with: (FOText new string: aString; yourself)
+FOHTMLRenderVisitorTest >> render: aString [
+	^ FOHTMLRenderVisitor render: (FOMarkdownParser parse: aString)
+]
+
+{ #category : #private }
+FOHTMLRenderVisitorTest >> lines: anArrayOfLines [
+	^ String streamContents: [ :out |
+		anArrayOfLines do: [ :each | out nextPutAll: each; nextPut: Character lf ] ]
 ]
 
 { #category : #tests }
 FOHTMLRenderVisitorTest >> testRenderHeader [
-	| html |
-	html := FOHTMLRenderVisitor render: (FOHeader new level: 2; children: (self textChildren: 'Hi'); yourself).
-	self assert: html equals: '<h2>Hi</h2>'
+	self assert: (self render: '## Hi') equals: '<h2>Hi</h2>' , self nl
 ]
 
 { #category : #tests }
 FOHTMLRenderVisitorTest >> testRenderParagraph [
-	| html |
-	html := FOHTMLRenderVisitor render: (FOParagraph new children: (self textChildren: 'plain text'); yourself).
-	self assert: html equals: '<p>plain text</p>'
+	self assert: (self render: 'plain text') equals: '<p>plain text</p>' , self nl
 ]
 
 { #category : #tests }
 FOHTMLRenderVisitorTest >> testRenderParagraphEscapesHtml [
-	| html |
-	html := FOHTMLRenderVisitor render: (FOParagraph new children: (self textChildren: 'Hello & <world>'); yourself).
-	self assert: html equals: '<p>Hello &amp; &lt;world&gt;</p>'
+	self assert: (self render: 'Hello & \<world\>')
+		equals: '<p>Hello &amp; &lt;world&gt;</p>' , self nl
 ]
 
 { #category : #tests }
-FOHTMLRenderVisitorTest >> testRenderDocumentJoinsChildrenWithNewline [
-	| doc html |
-	doc := FOMarkdownParser parse: '# Title', self nl, self nl, 'Body text.'.
-	html := FOHTMLRenderVisitor render: doc.
-	self assert: html equals: '<h1>Title</h1>', self nl, '<p>Body text.</p>'
+FOHTMLRenderVisitorTest >> testRenderParagraphEscapesQuotes [
+	self assert: (self render: 'He said \"no\"')
+		equals: '<p>He said &quot;no&quot;</p>' , self nl
 ]
 
 { #category : #tests }
-FOHTMLRenderVisitorTest >> testRenderCodeBlockWithLanguage [
-	| html block |
-	block := FOCodeBlock new kind: #fenced; language: 'smalltalk'; code: 'foo bar'; yourself.
-	html := FOHTMLRenderVisitor render: block.
-	self assert: html equals: '<pre><code class="language-smalltalk">foo bar</code></pre>'
+FOHTMLRenderVisitorTest >> testRenderDocumentPutsEachBlockOnItsOwnLine [
+	self assert: (self render: (self lines: #( '# Title' '' 'Body text.' )))
+		equals: (self lines: #( '<h1>Title</h1>' '<p>Body text.</p>' ))
 ]
 
 { #category : #tests }
-FOHTMLRenderVisitorTest >> testRenderCodeBlockWithoutLanguage [
-	| html block |
-	block := FOCodeBlock new kind: #indented; language: nil; code: 'foo bar'; yourself.
-	html := FOHTMLRenderVisitor render: block.
-	self assert: html equals: '<pre><code>foo bar</code></pre>'
+FOHTMLRenderVisitorTest >> testRenderFencedCodeWithLanguage [
+	self assert: (self render: (self lines: #( '```smalltalk' '1 + 1' '```' )))
+		equals: (self lines: #( '<pre><code class="language-smalltalk">1 + 1' '</code></pre>' ))
 ]
 
 { #category : #tests }
-FOHTMLRenderVisitorTest >> testRenderBlockquoteSingleLine [
-	| html quote |
-	quote := FOBlockquote new children: (self textChildren: 'This is a quote'); yourself.
-	html := FOHTMLRenderVisitor render: quote.
-	self assert: html equals: '<blockquote>This is a quote</blockquote>'
-]
-
-{ #category : #tests }
-FOHTMLRenderVisitorTest >> testRenderBlockquoteMultiLineUsesBr [
-	| html quote |
-	quote := FOBlockquote new children: (self textChildren: 'line one', self nl, 'line two'); yourself.
-	html := FOHTMLRenderVisitor render: quote.
-	self assert: html equals: '<blockquote>line one<br>', self nl, 'line two</blockquote>'
-]
-
-{ #category : #tests }
-FOHTMLRenderVisitorTest >> testRenderBlockquoteEscapesHtml [
-	| html quote |
-	quote := FOBlockquote new children: (self textChildren: '<div>&x</div>'); yourself.
-	html := FOHTMLRenderVisitor render: quote.
-	self assert: html equals: '<blockquote>&lt;div&gt;&amp;x&lt;/div&gt;</blockquote>'
-]
-
-{ #category : #tests }
-FOHTMLRenderVisitorTest >> testRenderUnorderedList [
-	| doc html |
-	doc := FOMarkdownParser parse: '- A', self nl, '- B'.
-	html := FOHTMLRenderVisitor render: doc.
-	self assert: html equals: '<ul><li>A</li><li>B</li></ul>'
-]
-
-{ #category : #tests }
-FOHTMLRenderVisitorTest >> testRenderOrderedList [
-	| doc html |
-	doc := FOMarkdownParser parse: '1. first', self nl, '2. second'.
-	html := FOHTMLRenderVisitor render: doc.
-	self assert: html equals: '<ol><li>first</li><li>second</li></ol>'
-]
-
-{ #category : #tests }
-FOHTMLRenderVisitorTest >> testRenderListItemEscapesHtml [
-	| html item |
-	item := FOListItem new children: (self textChildren: 'a & b'); yourself.
-	html := FOHTMLRenderVisitor render: item.
-	self assert: html equals: '<li>a &amp; b</li>'
+FOHTMLRenderVisitorTest >> testRenderFencedCodeWithFoliageLanguageAttribute [
+	"Foliage's older ```language=x spelling has to keep working: the existing blog
+	 sources are full of it."
+	self assert: (self render: (self lines: #( '```language=smalltalk' '1 + 1' '```' )))
+		equals: (self lines: #( '<pre><code class="language-smalltalk">1 + 1' '</code></pre>' ))
 ]
 
 { #category : #tests }
 FOHTMLRenderVisitorTest >> testRenderCodeBlockEscapesHtml [
-	| html block |
-	block := FOCodeBlock new kind: #fenced; language: 'html'; code: '<div>&x</div>'; yourself.
-	html := FOHTMLRenderVisitor render: block.
-	self assert: html equals: '<pre><code class="language-html">&lt;div&gt;&amp;x&lt;/div&gt;</code></pre>'
+	self assert: (self render: (self lines: #( '```' '<b> & </b>' '```' )))
+		equals: (self lines: #( '<pre><code>&lt;b&gt; &amp; &lt;/b&gt;' '</code></pre>' ))
 ]
 
 { #category : #tests }
-FOHTMLRenderVisitorTest >> testRenderBold [
-	| html |
-	html := FOHTMLRenderVisitor render: (FOBold new text: 'strong'; yourself).
-	self assert: html equals: '<strong>strong</strong>'
+FOHTMLRenderVisitorTest >> testRenderIndentedCodeHasNoLanguage [
+	self assert: (self render: '    fun no fun')
+		equals: (self lines: #( '<pre><code>fun no fun' '</code></pre>' ))
 ]
 
 { #category : #tests }
-FOHTMLRenderVisitorTest >> testRenderItalic [
-	| html |
-	html := FOHTMLRenderVisitor render: (FOItalic new text: 'em'; yourself).
-	self assert: html equals: '<em>em</em>'
+FOHTMLRenderVisitorTest >> testRenderBlockquoteWrapsBlocks [
+	self assert: (self render: '> This is a quote')
+		equals: (self lines: #( '<blockquote>' '<p>This is a quote</p>' '</blockquote>' ))
 ]
 
 { #category : #tests }
-FOHTMLRenderVisitorTest >> testRenderLink [
-	| html |
-	html := FOHTMLRenderVisitor render: (FOLink new text: 'A text'; url: 'http://a.link.to'; yourself).
-	self assert: html equals: '<a href="http://a.link.to">A text</a>'
+FOHTMLRenderVisitorTest >> testRenderBlockquoteKeepsSoftBreakBetweenLines [
+	self assert: (self render: (self lines: #( '> line one' '> line two' )))
+		equals: (self lines: #( '<blockquote>' '<p>line one' 'line two</p>' '</blockquote>' ))
 ]
 
 { #category : #tests }
-FOHTMLRenderVisitorTest >> testRenderImageWithAttributes [
-	| html image |
-	image := FOImage new alt: 'Foliage'; src: '/images/foliage-banner.jpg'; attributes: (Dictionary new at: #class put: 'u-full-width'; yourself); yourself.
-	html := FOHTMLRenderVisitor render: image.
-	self assert: html equals: '<img src="/images/foliage-banner.jpg" alt="Foliage" class="u-full-width">'
+FOHTMLRenderVisitorTest >> testRenderTightListHasNoParagraphs [
+	self assert: (self render: (self lines: #( '- A' '- B' )))
+		equals: (self lines: #( '<ul>' '<li>A</li>' '<li>B</li>' '</ul>' ))
 ]
 
 { #category : #tests }
-FOHTMLRenderVisitorTest >> testRenderImageWithoutAttributes [
-	| html image |
-	image := FOImage new alt: 'plain'; src: '/images/x.png'; yourself.
-	html := FOHTMLRenderVisitor render: image.
-	self assert: html equals: '<img src="/images/x.png" alt="plain">'
+FOHTMLRenderVisitorTest >> testRenderLooseListWrapsItemsInParagraphs [
+	self assert: (self render: (self lines: #( '- A' '' '- B' )))
+		equals: (self lines: #( '<ul>' '<li>' '<p>A</p>' '</li>' '<li>' '<p>B</p>' '</li>' '</ul>' ))
+]
+
+{ #category : #tests }
+FOHTMLRenderVisitorTest >> testRenderOrderedListKeepsItsStartNumber [
+	self assert: (self render: (self lines: #( '3. first' '4. second' )))
+		equals: (self lines: #( '<ol start="3">' '<li>first</li>' '<li>second</li>' '</ol>' ))
 ]
 
 { #category : #tests }
 FOHTMLRenderVisitorTest >> testRenderNestedList [
-	| doc html |
-	doc := FOMarkdownParser parse:
-		'- A', self nl,
-		'  1. first', self nl,
-		'  2. second', self nl,
-		'- B'.
-	html := FOHTMLRenderVisitor render: doc.
-	self assert: html equals: '<ul><li>A<ol><li>first</li><li>second</li></ol></li><li>B</li></ul>'
+	self assert: (self render: (self lines: #( '- A' '  1. first' '  2. second' '- B' )))
+		equals: (self lines: #( '<ul>' '<li>A' '<ol>' '<li>first</li>' '<li>second</li>' '</ol>' '</li>' '<li>B</li>' '</ul>' ))
 ]
 
 { #category : #tests }
-FOHTMLRenderVisitorTest >> testRenderParagraphWithMixedInlineContent [
-	| doc html |
-	doc := FOMarkdownParser parse: 'Text can also contain some **bold**.'.
-	html := FOHTMLRenderVisitor render: doc.
-	self assert: html equals: '<p>Text can also contain some <strong>bold</strong>.</p>'
+FOHTMLRenderVisitorTest >> testRenderThematicBreak [
+	self assert: (self render: '---') equals: '<hr />' , self nl
+]
+
+{ #category : #tests }
+FOHTMLRenderVisitorTest >> testRenderEmphasis [
+	self assert: (self render: 'Some **bold** and _italic_.')
+		equals: '<p>Some <strong>bold</strong> and <em>italic</em>.</p>' , self nl
+]
+
+{ #category : #tests }
+FOHTMLRenderVisitorTest >> testRenderCodeSpan [
+	self assert: (self render: 'a `b + c` d')
+		equals: '<p>a <code>b + c</code> d</p>' , self nl
+]
+
+{ #category : #tests }
+FOHTMLRenderVisitorTest >> testRenderLink [
+	self assert: (self render: '[A text](http://a.link.to)')
+		equals: '<p><a href="http://a.link.to">A text</a></p>' , self nl
+]
+
+{ #category : #tests }
+FOHTMLRenderVisitorTest >> testRenderLinkWithTitle [
+	self assert: (self render: '[A text](http://a.link.to "the title")')
+		equals: '<p><a href="http://a.link.to" title="the title">A text</a></p>' , self nl
+]
+
+{ #category : #tests }
+FOHTMLRenderVisitorTest >> testRenderSiteSchemeLinkIsLeftAlone [
+	"Foliage resolves site: destinations later on, so the renderer must pass them
+	 through unchanged."
+	self assert: (self render: '[Structure](site:foo:test)')
+		equals: '<p><a href="site:foo:test">Structure</a></p>' , self nl
+]
+
+{ #category : #tests }
+FOHTMLRenderVisitorTest >> testRenderImage [
+	self assert: (self render: '![alt text](/images/x.png)')
+		equals: '<p><img src="/images/x.png" alt="alt text" /></p>' , self nl
+]
+
+{ #category : #tests }
+FOHTMLRenderVisitorTest >> testRenderImageWithFoliageAttributes [
+	self assert: (self render: '![alt text](/images/x.png class=u-max-full-width)')
+		equals: '<p><img src="/images/x.png" alt="alt text" class="u-max-full-width" /></p>' , self nl
+]
+
+{ #category : #tests }
+FOHTMLRenderVisitorTest >> testRenderHardBreak [
+	self assert: (self render: (self lines: #( 'foo\' 'bar' )))
+		equals: (self lines: #( '<p>foo<br />' 'bar</p>' ))
 ]
 
 { #category : #tests }
 FOHTMLRenderVisitorTest >> testRenderRawHtmlBlockIsVerbatim [
-	| html source |
-	source := '<iframe src="/crowdsec.html" style="width:100%; height:800px; border:1px solid #ddd;"></iframe>'.
-	html := FOHTMLRenderVisitor render: (FORawHTMLBlock new html: source; yourself).
-	self assert: html equals: source
+	| iframe |
+	iframe := '<iframe src="/crowdsec.html" style="width:100%; height:800px;"></iframe>'.
+	self assert: (self render: iframe) equals: iframe , self nl
 ]
 
 { #category : #tests }
 FOHTMLRenderVisitorTest >> testRenderDocumentWithRawHtmlBlock [
-	| doc html iframe |
-	iframe := '<iframe src="/crowdsec.html" style="width:100%; height:800px; border:1px solid #ddd;"></iframe>'.
-	doc := FOMarkdownParser parse: 'Some text.', self nl, self nl, iframe.
-	html := FOHTMLRenderVisitor render: doc.
-	self assert: html equals: '<p>Some text.</p>', self nl, iframe
+	| iframe |
+	iframe := '<iframe src="/x.html"></iframe>'.
+	self assert: (self render: (self lines: { 'Some text.'. ''. iframe }))
+		equals: (self lines: { '<p>Some text.</p>'. iframe })
 ]
 
 { #category : #tests }
-FOHTMLRenderVisitorTest >> testRenderParagraphStillEscapesLessThan [
-	"Only a line that starts like a tag becomes raw HTML; a '<' inside prose is still escaped."
-	| doc html |
-	doc := FOMarkdownParser parse: '5 < 3 and <b>not a block</b>'.
-	html := FOHTMLRenderVisitor render: doc.
-	self assert: html equals: '<p>5 &lt; 3 and &lt;b&gt;not a block&lt;/b&gt;</p>'
+FOHTMLRenderVisitorTest >> testRenderInlineHtmlIsVerbatimButTextIsEscaped [
+	self assert: (self render: '5 < 3 and <b>bold</b>')
+		equals: '<p>5 &lt; 3 and <b>bold</b></p>' , self nl
+]
+
+{ #category : #tests }
+FOHTMLRenderVisitorTest >> testRenderPercentEncodesUnsafeCharactersInDestination [
+	self assert: (self render: '[a](/my uri)')
+		equals: '<p>[a](/my uri)</p>' , self nl.
+	self assert: (self render: '[a](</my uri>)')
+		equals: '<p><a href="/my%20uri">a</a></p>' , self nl
 ]

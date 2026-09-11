@@ -30,6 +30,7 @@ FOMarkdownParser >> consumeBlock: aReader classification: aClassification [
 	aClassification kind = #blockquote ifTrue: [ ^ self consumeBlockquote: aReader ].
 	(aClassification kind = #unorderedListItem or: [ aClassification kind = #orderedListItem ])
 		ifTrue: [ ^ FOListParser parseFrom: aReader ].
+	aClassification kind = #htmlBlock ifTrue: [ ^ self consumeHTMLBlock: aReader ].
 	^ self consumeParagraph: aReader
 ]
 
@@ -85,6 +86,17 @@ FOMarkdownParser >> consumeFencedCode: aReader classification: aClassification [
 		language: aClassification language;
 		code: (self joinWithNewline: lines);
 		yourself
+]
+
+{ #category : #private }
+FOMarkdownParser >> consumeHTMLBlock: aReader [
+	"Raw lines are kept verbatim (no trimming, no inline parsing) up to the next
+	 blank line or the end of input. No attempt is made to balance tags."
+	| lines |
+	lines := OrderedCollection new.
+	[ aReader atEnd not and: [ (FOLineClassifier classify: aReader peek) kind ~= #blank ] ]
+		whileTrue: [ lines add: aReader next ].
+	^ FORawHTMLBlock new html: (self joinWithNewline: lines); yourself
 ]
 
 { #category : #private }

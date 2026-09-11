@@ -331,3 +331,55 @@ FOMarkdownBlockParserTest >> testInlineImageWithoutAttributes [
 	self assert: image src equals: '/images/x.png'.
 	self assert: image attributes isEmpty
 ]
+
+{ #category : #tests }
+FOMarkdownBlockParserTest >> testHtmlBlockBetweenParagraphs [
+	| doc |
+	doc := FOMarkdownParser parse:
+		'Some text.', self nl, self nl,
+		'<iframe src="/crowdsec.html"></iframe>', self nl, self nl,
+		'More text.'.
+	self assert: (doc children collect: [ :c | c class ]) asArray equals: { FOParagraph. FORawHTMLBlock. FOParagraph }.
+	self assert: doc children second html equals: '<iframe src="/crowdsec.html"></iframe>'.
+	self assert: (self plainTextOf: doc children first) equals: 'Some text.'.
+	self assert: (self plainTextOf: doc children third) equals: 'More text.'
+]
+
+{ #category : #tests }
+FOMarkdownBlockParserTest >> testHtmlBlockKeepsLinesVerbatimWithoutInlineParsing [
+	| doc block |
+	doc := FOMarkdownParser parse:
+		'<div class="note">', self nl,
+		'  **not parsed** and [not a link](http://x)', self nl,
+		'</div>'.
+	self assert: doc children size equals: 1.
+	block := doc children first.
+	self assert: (block isKindOf: FORawHTMLBlock).
+	self assert: block html equals: '<div class="note">', self nl, '  **not parsed** and [not a link](http://x)', self nl, '</div>'
+]
+
+{ #category : #tests }
+FOMarkdownBlockParserTest >> testHtmlBlockEndsAtBlankLine [
+	| doc |
+	doc := FOMarkdownParser parse: '<hr>', self nl, self nl, '<hr>'.
+	self assert: doc children size equals: 2.
+	self assert: doc children first html equals: '<hr>'.
+	self assert: doc children second html equals: '<hr>'
+]
+
+{ #category : #tests }
+FOMarkdownBlockParserTest >> testHtmlBlockEndsAtEndOfInput [
+	| doc |
+	doc := FOMarkdownParser parse: 'Intro', self nl, self nl, '<p class="x">', self nl, 'inner', self nl, '</p>'.
+	self assert: doc children size equals: 2.
+	self assert: doc children last html equals: '<p class="x">', self nl, 'inner', self nl, '</p>'
+]
+
+{ #category : #tests }
+FOMarkdownBlockParserTest >> testLessThanInParagraphIsNotAnHtmlBlock [
+	| doc |
+	doc := FOMarkdownParser parse: '5 < 3 and more text'.
+	self assert: doc children size equals: 1.
+	self assert: (doc children first isKindOf: FOParagraph).
+	self assert: (self plainTextOf: doc children first) equals: '5 < 3 and more text'
+]

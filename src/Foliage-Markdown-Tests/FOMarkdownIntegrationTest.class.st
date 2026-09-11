@@ -168,3 +168,21 @@ FOMarkdownIntegrationTest >> testFullDocumentRendersWithoutError [
 	self assert: (html includesSubstring: '<h2>H2 header</h2>').
 	self assert: (html includesSubstring: 'u-max-full-width')
 ]
+
+{ #category : #tests }
+FOMarkdownIntegrationTest >> testRawHtmlBlockAppendedToRealisticDocument [
+	"The syntax.md fixture itself contains no raw HTML (see testTopLevelBlockCountOrderAndTypes);
+	 appending an iframe after a blank line must add exactly one FORawHTMLBlock and leave
+	 every other block untouched."
+	| iframe extended html |
+	iframe := '<iframe src="/crowdsec.html" style="width:100%; height:800px; border:1px solid #ddd;"></iframe>'.
+	extended := FOMarkdownParser parse:
+		(FOFrontmatterParser parse: self syntaxMdFixture) body, self nl, self nl, iframe.
+	self assert: extended children size equals: doc children size + 1.
+	self assert: (extended children allButLast collect: [ :c | c class ]) asArray
+		equals: (doc children collect: [ :c | c class ]) asArray.
+	self assert: (extended children last isKindOf: FORawHTMLBlock).
+	html := FOHTMLRenderVisitor render: extended.
+	self assert: (html endsWith: self nl, iframe).
+	self assert: (html includesSubstring: '&lt;iframe') not
+]

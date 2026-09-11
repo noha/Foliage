@@ -33,6 +33,12 @@ FOPlainTextVisitor >> visitCodeBlock: aCodeBlock [
 ]
 
 { #category : #visiting }
+FOPlainTextVisitor >> visitRawHTMLBlock: aRawHTMLBlock [
+	"Markup has no textual content worth including in a plain-text abstract."
+	^ ''
+]
+
+{ #category : #visiting }
 FOPlainTextVisitor >> visitBlockquote: aBlockquote [
 	^ self renderChildren: aBlockquote
 ]

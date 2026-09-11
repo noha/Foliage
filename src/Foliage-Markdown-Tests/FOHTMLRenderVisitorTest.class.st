@@ -171,3 +171,29 @@ FOHTMLRenderVisitorTest >> testRenderParagraphWithMixedInlineContent [
 	html := FOHTMLRenderVisitor render: doc.
 	self assert: html equals: '<p>Text can also contain some <strong>bold</strong>.</p>'
 ]
+
+{ #category : #tests }
+FOHTMLRenderVisitorTest >> testRenderRawHtmlBlockIsVerbatim [
+	| html source |
+	source := '<iframe src="/crowdsec.html" style="width:100%; height:800px; border:1px solid #ddd;"></iframe>'.
+	html := FOHTMLRenderVisitor render: (FORawHTMLBlock new html: source; yourself).
+	self assert: html equals: source
+]
+
+{ #category : #tests }
+FOHTMLRenderVisitorTest >> testRenderDocumentWithRawHtmlBlock [
+	| doc html iframe |
+	iframe := '<iframe src="/crowdsec.html" style="width:100%; height:800px; border:1px solid #ddd;"></iframe>'.
+	doc := FOMarkdownParser parse: 'Some text.', self nl, self nl, iframe.
+	html := FOHTMLRenderVisitor render: doc.
+	self assert: html equals: '<p>Some text.</p>', self nl, iframe
+]
+
+{ #category : #tests }
+FOHTMLRenderVisitorTest >> testRenderParagraphStillEscapesLessThan [
+	"Only a line that starts like a tag becomes raw HTML; a '<' inside prose is still escaped."
+	| doc html |
+	doc := FOMarkdownParser parse: '5 < 3 and <b>not a block</b>'.
+	html := FOHTMLRenderVisitor render: doc.
+	self assert: html equals: '<p>5 &lt; 3 and &lt;b&gt;not a block&lt;/b&gt;</p>'
+]

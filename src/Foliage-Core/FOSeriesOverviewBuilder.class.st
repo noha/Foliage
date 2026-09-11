@@ -35,7 +35,7 @@ FOSeriesOverviewBuilder >> buildPage [
 	| html |
 	html := String streamContents: [ :s |
 		series hasCustomAbstract ifTrue: [
-			s nextPutAll: series abstract ].
+			s nextPutAll: '<div class="series-box">', series abstract, '</div>' ].
 		series posts do: [ :post | s nextPutAll: post renderAbstract ] ].
 	^ FOFoliagePage new
 		parent: blog parent;

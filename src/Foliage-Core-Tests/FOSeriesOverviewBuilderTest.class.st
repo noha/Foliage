@@ -79,7 +79,7 @@ FOSeriesOverviewBuilderTest >> testBuildPageShowsHandWrittenAbstractAsIntroWhenP
 	stream := WriteStream on: String new.
 	page renderOn: stream.
 	self assert: stream contents equals:
-		'<p>A hand-written intro.</p><article>Part 1 text.</article>'
+		'<div class="series-box"><p>A hand-written intro.</p></div><article>Part 1 text.</article>'
 ]
 
 { #category : #tests }

@@ -68,3 +68,9 @@ FOPlainTextVisitorTest >> testComposedDocumentJoinsBlocksWithSpace [
 		'- B'.
 	self assert: text equals: 'Picking it up What happened so far? A B'
 ]
+
+{ #category : #tests }
+FOPlainTextVisitorTest >> testRawHtmlBlockContributesNothing [
+	self assert: (self plainTextOf: 'Before.', self nl, self nl, '<iframe src="/x.html"></iframe>', self nl, self nl, 'After.')
+		equals: 'Before.  After.'
+]

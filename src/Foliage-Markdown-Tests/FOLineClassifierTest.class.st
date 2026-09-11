@@ -127,3 +127,54 @@ FOLineClassifierTest >> testParagraphText [
 	c := FOLineClassifier classify: 'Lorem ipsum dolor sit amet.'.
 	self assert: c kind equals: #paragraphText
 ]
+
+{ #category : #tests }
+FOLineClassifierTest >> testHtmlBlockOpeningTag [
+	| c |
+	c := FOLineClassifier classify: '<iframe src="x"></iframe>'.
+	self assert: c kind equals: #htmlBlock
+]
+
+{ #category : #tests }
+FOLineClassifierTest >> testHtmlBlockClosingTag [
+	| c |
+	c := FOLineClassifier classify: '</div>'.
+	self assert: c kind equals: #htmlBlock
+]
+
+{ #category : #tests }
+FOLineClassifierTest >> testHtmlBlockComment [
+	| c |
+	c := FOLineClassifier classify: '<!-- a comment -->'.
+	self assert: c kind equals: #htmlBlock
+]
+
+{ #category : #tests }
+FOLineClassifierTest >> testLessThanFollowedBySpaceIsParagraphText [
+	| c |
+	c := FOLineClassifier classify: '5 < 3 and more text'.
+	self assert: c kind equals: #paragraphText.
+	c := FOLineClassifier classify: '< not a tag'.
+	self assert: c kind equals: #paragraphText
+]
+
+{ #category : #tests }
+FOLineClassifierTest >> testLessThanFollowedByDigitIsParagraphText [
+	| c |
+	c := FOLineClassifier classify: '<3 is a heart'.
+	self assert: c kind equals: #paragraphText
+]
+
+{ #category : #tests }
+FOLineClassifierTest >> testLoneLessThanIsParagraphText [
+	| c |
+	c := FOLineClassifier classify: '<'.
+	self assert: c kind equals: #paragraphText
+]
+
+{ #category : #tests }
+FOLineClassifierTest >> testIndentedHtmlStaysIndentedCode [
+	| c |
+	c := FOLineClassifier classify: '    <div>code sample</div>'.
+	self assert: c kind equals: #indentedCode
+]

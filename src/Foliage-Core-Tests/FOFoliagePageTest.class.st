@@ -12,7 +12,9 @@ FOFoliagePageTest >> testRenderOnUsesHTMLRenderVisitor [
 		yourself.
 	stream := WriteStream on: String new.
 	page renderOn: stream.
-	self assert: stream contents equals: '<h1>Title</h1>', (String with: Character lf), '<p>Body text.</p>'
+	"Every block ends with a newline, as the CommonMark reference output does."
+	self assert: stream contents
+		equals: '<h1>Title</h1>', (String with: Character lf), '<p>Body text.</p>', (String with: Character lf)
 ]
 
 { #category : #tests }
@@ -44,6 +46,7 @@ FOFoliagePageTest >> testRenderProducesFullTemplatedPageThroughMustache [
 		root at: #'my-post' put: page.
 
 		html := page render.
-		self assert: html equals: '<html><head><title>Hi</title></head><body><header>Site</header><div><p>Body text.</p></div></body></html>'
+		self assert: html
+		equals: '<html><head><title>Hi</title></head><body><header>Site</header><div><p>Body text.</p>', (String with: Character lf), '</div></body></html>'
 	] ensure: [ templateDir deleteAll ]
 ]

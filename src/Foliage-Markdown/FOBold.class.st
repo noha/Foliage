@@ -1,21 +1,12 @@
+"
+Strong emphasis, written with ** or __. Its children are inline nodes, so
+emphasis can be nested and can contain links.
+"
 Class {
 	#name : #FOBold,
 	#superclass : #FOInlineNode,
-	#instVars : [
-		'text'
-	],
 	#category : #'Foliage-Markdown'
 }
-
-{ #category : #accessing }
-FOBold >> text [
-	^ text
-]
-
-{ #category : #accessing }
-FOBold >> text: aString [
-	text := aString
-]
 
 { #category : #visiting }
 FOBold >> acceptVisitor: aVisitor [

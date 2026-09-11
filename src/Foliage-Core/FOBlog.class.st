@@ -121,6 +121,18 @@ FOBlog >> postsInSeries: aSlug [
 ]
 
 { #category : #series }
+FOBlog >> seriesNamed: aSlug [
+	"A single FOSeries for one slug, without building the whole #series
+	collection (which is for a blog-wide listing of every series) - used by
+	a post's own render context, which only ever needs its own series."
+	^ FOSeries new
+		slug: aSlug;
+		posts: (self postsInSeries: aSlug);
+		blog: self;
+		yourself
+]
+
+{ #category : #series }
 FOBlog >> seriesPostAfter: aFOBlogPost [
 	| list index |
 	list := self postsInSeries: aFOBlogPost series.

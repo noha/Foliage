@@ -92,6 +92,14 @@ FOBlogPostRenderContextTest >> testTagsHtmlListsAllTagsAsLinksToTheirOverviewPag
 ]
 
 { #category : #tests }
+FOBlogPostRenderContextTest >> testSeriesTeaserFallsBackToFirstPostAbstractWithNoDataFiles [
+	| part1 |
+	blog at: #part1 put: (self makePostTitled: 'Part 1' publishDate: '2026-07-20' series: 'soil').
+	part1 := blog / #part1.
+	self assert: (self contextFor: part1) seriesTeaser equals: part1 abstract
+]
+
+{ #category : #tests }
 FOBlogPostRenderContextTest >> testSeriesNavigationHasNoPreviousOnFirstPartOrNextOnLastPart [
 	| part1 part2 |
 	blog at: #part1 put: (self makePostTitled: 'Part 1' publishDate: '2026-07-20' series: 'soil').

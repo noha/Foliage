@@ -131,6 +131,14 @@ FOBlogTest >> testSeriesAreSortedByTheirMostRecentPostDescending [
 ]
 
 { #category : #tests }
+FOBlogTest >> testSeriesNamedBuildsASingleSeriesWithoutBuildingAllOfThem [
+	blog at: #part1 put: (self makePostTitled: 'Part 1' publishDate: '2026-07-20' series: 'soil').
+	blog at: #other put: (self makePostTitled: 'Other' publishDate: '2026-07-21' series: 'byob').
+	self assert: (blog seriesNamed: 'soil') slug equals: 'soil'.
+	self assert: ((blog seriesNamed: 'soil') posts collect: #title) asArray equals: #('Part 1')
+]
+
+{ #category : #tests }
 FOBlogTest >> testSeriesPostAfterAndBeforeIgnoreUnrelatedPosts [
 	| part1 part2 |
 	blog at: #part1 put: (self makePostTitled: 'Part 1' publishDate: '2026-07-20' series: 'soil').

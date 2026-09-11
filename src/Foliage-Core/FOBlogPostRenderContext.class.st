@@ -50,6 +50,11 @@ FOBlogPostRenderContext >> seriesOverviewPath [
 ]
 
 { #category : #series }
+FOBlogPostRenderContext >> seriesTeaser [
+	^ (page parent seriesNamed: self page series) teaser
+]
+
+{ #category : #series }
 FOBlogPostRenderContext >> seriesPreviousPost [
 	^ page parent seriesPostBefore: self page
 ]

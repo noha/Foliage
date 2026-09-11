@@ -34,7 +34,7 @@ FOSeries >> abstract [
 	| dataFile |
 	dataFile := self dataAbstractFile.
 	^ dataFile exists
-		ifTrue: [ self renderDataAbstract: dataFile ]
+		ifTrue: [ self renderSeriesDataFile: dataFile ]
 		ifFalse: [ self posts first abstract ]
 ]
 
@@ -49,10 +49,37 @@ FOSeries >> hasCustomAbstract [
 ]
 
 { #category : #accessing }
-FOSeries >> renderDataAbstract: aFileReference [
+FOSeries >> renderSeriesDataFile: aFileReference [
+	"Renders a hand-written data/series/<slug>[-teaser].md file to real HTML
+	(not just flattened plain text) - both the series abstract and the post
+	teaser are meant to be shown as formatted content, e.g. with inline
+	links to specific earlier posts. Used by both #abstract and #teaser."
 	| frontmatter |
 	frontmatter := FOFrontmatterParser parse: aFileReference contents.
-	^ FOPlainTextVisitor render: (FOMarkdownParser parse: frontmatter body)
+	^ FOHTMLRenderVisitor render: (FOMarkdownParser parse: frontmatter body)
+]
+
+{ #category : #accessing }
+FOSeries >> dataTeaserFile [
+	^ (self website dataPath / 'series' / (slug, '-teaser.md')) asFileReference
+]
+
+{ #category : #testing }
+FOSeries >> hasCustomTeaser [
+	^ self dataTeaserFile exists
+]
+
+{ #category : #accessing }
+FOSeries >> teaser [
+	"The short blurb shown in the highlighted box on every post belonging to
+	this series. Falls back to #abstract itself (not to the first post's
+	abstract) when no dedicated teaser file exists, so a series doesn't need
+	a second file unless the author actually wants a different short text."
+	| dataFile |
+	dataFile := self dataTeaserFile.
+	^ dataFile exists
+		ifTrue: [ self renderSeriesDataFile: dataFile ]
+		ifFalse: [ self abstract ]
 ]
 
 { #category : #accessing }

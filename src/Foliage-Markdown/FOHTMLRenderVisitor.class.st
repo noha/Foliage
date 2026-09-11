@@ -39,6 +39,12 @@ FOHTMLRenderVisitor >> visitCodeBlock: aCodeBlock [
 ]
 
 { #category : #visiting }
+FOHTMLRenderVisitor >> visitRawHTMLBlock: aRawHTMLBlock [
+	"Deliberately not escaped and not wrapped: the author wrote HTML on purpose."
+	^ aRawHTMLBlock html
+]
+
+{ #category : #visiting }
 FOHTMLRenderVisitor >> visitBlockquote: aBlockquote [
 	| rendered |
 	rendered := self renderChildren: aBlockquote.

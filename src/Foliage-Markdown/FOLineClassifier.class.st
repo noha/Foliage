@@ -25,6 +25,8 @@ FOLineClassifier class >> classify: aLine [
 		^ self classifyImage: trimmed indent: indent ].
 	indent >= 4 ifTrue: [
 		^ FOLineClassification new kind: #indentedCode; indent: indent; yourself ].
+	(self isHTMLBlockStart: trimmed) ifTrue: [
+		^ FOLineClassification new kind: #htmlBlock; indent: indent; yourself ].
 	^ FOLineClassification new kind: #paragraphText; indent: indent; yourself
 ]
 
@@ -117,6 +119,18 @@ FOLineClassifier class >> orderedMarkerLength: aLine [
 { #category : #testing }
 FOLineClassifier class >> isImageLine: aLine [
 	^ (aLine beginsWith: '![') and: [ aLine notEmpty and: [ (aLine indexOf: $)) = aLine size ] ]
+]
+
+{ #category : #testing }
+FOLineClassifier class >> isHTMLBlockStart: aLine [
+	"Simplified CommonMark detection: an opening tag, a closing tag or a
+	 comment/doctype. A lone '<' or one followed by a space or digit
+	 (as in '5 < 3') stays ordinary paragraph text."
+	| second |
+	aLine size < 2 ifTrue: [ ^ false ].
+	aLine first = $< ifFalse: [ ^ false ].
+	second := aLine at: 2.
+	^ second isLetter or: [ second = $/ or: [ second = $! ] ]
 ]
 
 { #category : #classifying }

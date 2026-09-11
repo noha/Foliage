@@ -25,6 +25,11 @@ FOVisitor >> visitCodeBlock: aCodeBlock [
 ]
 
 { #category : #visiting }
+FOVisitor >> visitRawHTMLBlock: aRawHTMLBlock [
+	^ self subclassResponsibility
+]
+
+{ #category : #visiting }
 FOVisitor >> visitBlockquote: aBlockquote [
 	^ self subclassResponsibility
 ]

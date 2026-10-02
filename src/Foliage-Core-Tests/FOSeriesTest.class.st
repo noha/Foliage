@@ -70,7 +70,7 @@ FOSeriesTest >> testAbstractRendersRealHtmlNotFlattenedPlainText [
 		s nextPutAll: 'The [overview](https://example.com) text.' ].
 	blog at: #part1 put: (self makePostTitled: 'Part 1' publishDate: '2026-07-20' series: 'soil').
 	self assert: (blog seriesNamed: 'soil') abstract equals:
-		'<p>The <a href="https://example.com">overview</a> text.</p>'
+		'<p>The <a href="https://example.com">overview</a> text.</p>', (String with: Character lf)
 ]
 
 { #category : #tests }
@@ -89,8 +89,9 @@ FOSeriesTest >> testTeaserUsesItsOwnFileWhenPresent [
 		s nextPutAll: 'A short [teaser](https://example.com).' ].
 	blog at: #part1 put: (self makePostTitled: 'Part 1' publishDate: '2026-07-20' series: 'soil').
 	self assert: (blog seriesNamed: 'soil') teaser equals:
-		'<p>A short <a href="https://example.com">teaser</a>.</p>'.
-	self assert: (blog seriesNamed: 'soil') abstract equals: '<p>The long overview text.</p>'
+		'<p>A short <a href="https://example.com">teaser</a>.</p>', (String with: Character lf).
+	self assert: (blog seriesNamed: 'soil') abstract
+		equals: '<p>The long overview text.</p>', (String with: Character lf)
 ]
 
 { #category : #tests }

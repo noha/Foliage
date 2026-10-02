@@ -1,12 +1,24 @@
+"
+An ATX heading (# ...) or a setext heading (text underlined with = or -).
+"
 Class {
 	#name : #FOHeader,
 	#superclass : #FOBlockNode,
 	#instVars : [
-		'level',
-		'children'
+		'level'
 	],
 	#category : #'Foliage-Markdown'
 }
+
+{ #category : #visiting }
+FOHeader >> acceptVisitor: aVisitor [
+	^ aVisitor visitHeader: self
+]
+
+{ #category : #testing }
+FOHeader >> holdsInlines [
+	^ true
+]
 
 { #category : #accessing }
 FOHeader >> level [
@@ -16,19 +28,4 @@ FOHeader >> level [
 { #category : #accessing }
 FOHeader >> level: anInteger [
 	level := anInteger
-]
-
-{ #category : #accessing }
-FOHeader >> children [
-	^ children
-]
-
-{ #category : #accessing }
-FOHeader >> children: aCollection [
-	children := aCollection
-]
-
-{ #category : #visiting }
-FOHeader >> acceptVisitor: aVisitor [
-	^ aVisitor visitHeader: self
 ]

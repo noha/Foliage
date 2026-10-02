@@ -49,7 +49,8 @@ FOPublishVisitorTest >> testFoliagePageIsPublishedWithRenderedContent [
 	FOPublishVisitor new start: site.
 	publishedFile := tempDir / 'docs' / 'my-post.html'.
 	self assert: publishedFile exists.
-	self assert: publishedFile contents equals: '<html><title>Hi</title><p>Body text.</p></html>'
+	self assert: publishedFile contents
+		equals: '<html><title>Hi</title><p>Body text.</p>', (String with: Character lf), '</html>'
 ]
 
 { #category : #tests }

@@ -103,15 +103,15 @@ FOBlogOverviewBuilderTest >> testPaginationSplitsPostsAcrossPagesNewestFirst [
 	self assert: pages size equals: 3.
 
 	self assert: (pages first htmlString includesSubstring: '<article>Mar text.</article><article>Feb text.</article>').
-	self assert: (pages first htmlString includesSubstring: 'href="/blog/page2.html">older</a>').
+	self assert: (pages first htmlString includesSubstring: 'href="/blog/page2.html">&larr; older</a>').
 	self assert: (pages first htmlString includesSubstring: 'newer') not.
 
 	self assert: (pages second htmlString includesSubstring: '<article>Jan text.</article><article>Dec text.</article>').
-	self assert: (pages second htmlString includesSubstring: 'href="/blog/index.html">newer</a>').
-	self assert: (pages second htmlString includesSubstring: 'href="/blog/page3.html">older</a>').
+	self assert: (pages second htmlString includesSubstring: 'href="/blog/index.html">newer &rarr;</a>').
+	self assert: (pages second htmlString includesSubstring: 'href="/blog/page3.html">&larr; older</a>').
 
 	self assert: (pages third htmlString includesSubstring: '<article>Nov text.</article>').
-	self assert: (pages third htmlString includesSubstring: 'href="/blog/page2.html">newer</a>').
+	self assert: (pages third htmlString includesSubstring: 'href="/blog/page2.html">newer &rarr;</a>').
 	self assert: (pages third htmlString includesSubstring: 'older') not
 ]
 

@@ -92,33 +92,27 @@ FOBlogOverviewBuilder >> buildPageIndex: aPageNumber ofTotal: aPageCount posts: 
 
 { #category : #building }
 FOBlogOverviewBuilder >> navigationHtmlForPageIndex: aPageNumber ofTotal: aPageCount [
-	"'newer' always sits bottom-left (with a left arrow), 'older' always
-	bottom-right. Uses an actual CSS grid (two fixed 1fr columns) instead of
-	Skeleton's float-based row/columns classes - those are meant for
-	top-level layout rows and visibly misaligned here because this row ends
-	up nested inside the blog template's own '.twelve.columns' body column
-	rather than being a sibling row at the '.container' level (unlike the
-	blog-post template's previousPost/nextPost row, which isn't nested).
-	A plain 2-column grid doesn't care about that nesting and keeps both
-	slots fixed in place even when only one link is present. Deliberately
-	the mirror image of blog-post's own left/right assignment (there,
-	older/previousPost is on the left) - this is what was explicitly asked
-	for here, not an inconsistency. Absolute (blog-rooted) paths for the
-	same reason as pageFilenameFor: callers elsewhere: this same rendered
-	body is reused verbatim as the site's root index.html too, where a
-	relative filename would resolve wrong."
-	| newerLink olderLink |
-	newerLink := aPageNumber > 1
-		ifTrue: [ '&lt;-- <a href="', blog pathString, '/', (self class pageFilenameFor: aPageNumber - 1), '">newer</a>' ]
-		ifFalse: [ '' ].
+	"older always sits on the left, newer always on the right - matching
+	blog-post's own left/right convention for previousPost/nextPost (older
+	sits on the left there too), rather than mirroring it as the previous
+	version deliberately did. Reuses the article-navigation CSS class from
+	the blog-post template, so a reader sees the identical look in both
+	places instead of two slightly different hand-rolled navigation styles.
+	Flexbox (via that shared class) keeps a lone link pinned to its own side
+	even when the other one is absent, same as it does on a post page.
+	Absolute (blog-rooted) paths for the same reason as pageFilenameFor:
+	callers elsewhere: this same rendered body is reused verbatim as the
+	site's root index.html too, where a relative filename would resolve
+	wrong."
+	| olderLink newerLink |
 	olderLink := aPageNumber < aPageCount
-		ifTrue: [ '<a href="', blog pathString, '/', (self class pageFilenameFor: aPageNumber + 1), '">older</a> --&gt;' ]
+		ifTrue: [ '<a href="', blog pathString, '/', (self class pageFilenameFor: aPageNumber + 1), '">&larr; older</a>' ]
 		ifFalse: [ '' ].
-	(newerLink isEmpty and: [ olderLink isEmpty ]) ifTrue: [ ^ '' ].
-	^ '<div style="display: grid; grid-template-columns: 1fr 1fr; margin-top: 2em;">
-	<div style="text-align: left;">', newerLink, '</div>
-	<div style="text-align: right;">', olderLink, '</div>
-</div>'
+	newerLink := aPageNumber > 1
+		ifTrue: [ '<a class="article-navigation-next" href="', blog pathString, '/', (self class pageFilenameFor: aPageNumber - 1), '">newer &rarr;</a>' ]
+		ifFalse: [ '' ].
+	(olderLink isEmpty and: [ newerLink isEmpty ]) ifTrue: [ ^ '' ].
+	^ '<nav class="article-navigation">', olderLink, newerLink, '</nav>'
 ]
 
 { #category : #accessing }

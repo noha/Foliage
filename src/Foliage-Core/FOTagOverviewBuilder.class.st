@@ -77,22 +77,20 @@ FOTagOverviewBuilder >> buildPageIndex: aPageNumber ofTotal: aPageCount posts: a
 { #category : #building }
 FOTagOverviewBuilder >> navigationHtmlForPageIndex: aPageNumber ofTotal: aPageCount [
 	"Same layout/wording as FOBlogOverviewBuilder>>navigationHtmlForPageIndex:
-	ofTotal:, but rooted under this tag's own folder
+	ofTotal: (older on the left, newer on the right, sharing its
+	article-navigation styling), but rooted under this tag's own folder
 	(blog/tags/<slug>/...) rather than the blog root - so it can't reuse that
 	method directly. Filename computation itself (index.html/pageN.html) is
 	reused via FOBlogOverviewBuilder class>>pageFilenameFor:, which is
 	stateless and tag-agnostic."
-	| base newerLink olderLink |
+	| base olderLink newerLink |
 	base := blog pathString, '/tags/', tag slug.
-	newerLink := aPageNumber > 1
-		ifTrue: [ '&lt;-- <a href="', base, '/', (FOBlogOverviewBuilder pageFilenameFor: aPageNumber - 1), '">newer</a>' ]
-		ifFalse: [ '' ].
 	olderLink := aPageNumber < aPageCount
-		ifTrue: [ '<a href="', base, '/', (FOBlogOverviewBuilder pageFilenameFor: aPageNumber + 1), '">older</a> --&gt;' ]
+		ifTrue: [ '<a href="', base, '/', (FOBlogOverviewBuilder pageFilenameFor: aPageNumber + 1), '">&larr; older</a>' ]
 		ifFalse: [ '' ].
-	(newerLink isEmpty and: [ olderLink isEmpty ]) ifTrue: [ ^ '' ].
-	^ '<div style="display: grid; grid-template-columns: 1fr 1fr; margin-top: 2em;">
-	<div style="text-align: left;">', newerLink, '</div>
-	<div style="text-align: right;">', olderLink, '</div>
-</div>'
+	newerLink := aPageNumber > 1
+		ifTrue: [ '<a class="article-navigation-next" href="', base, '/', (FOBlogOverviewBuilder pageFilenameFor: aPageNumber - 1), '">newer &rarr;</a>' ]
+		ifFalse: [ '' ].
+	(olderLink isEmpty and: [ newerLink isEmpty ]) ifTrue: [ ^ '' ].
+	^ '<nav class="article-navigation">', olderLink, newerLink, '</nav>'
 ]

@@ -73,7 +73,8 @@ FOBlockParser >> addRemainderOfLineTo: aContainer [
 { #category : #'private - parsing' }
 FOBlockParser >> blockStartSelectors [
 	^ #( tryBlockquoteStart: tryAtxHeadingStart: tryFencedCodeStart: tryHtmlBlockStart:
-	trySetextHeadingStart: tryThematicBreakStart: tryListItemStart: tryIndentedCodeStart: )
+	tryTableStart: trySetextHeadingStart: tryThematicBreakStart: tryListItemStart:
+	tryIndentedCodeStart: )
 ]
 
 { #category : #'private - parsing' }
@@ -105,7 +106,7 @@ FOBlockParser >> consumeLinkReferenceFrom: aString [
 FOBlockParser >> couldStartBlock: aCharacterOrNil [
 	"A cheap pre-test: no block start begins with any other character."
 	aCharacterOrNil ifNil: [ ^ false ].
-	^ ('#`~*+_=<>-' includes: aCharacterOrNil) or: [ aCharacterOrNil isDigit ]
+	^ ('#`~*+_=<>-|:' includes: aCharacterOrNil) or: [ aCharacterOrNil isDigit ]
 ]
 
 { #category : #accessing }
@@ -415,6 +416,37 @@ FOBlockParser >> trySetextHeadingStart: aContainer [
 	heading startLine: aContainer startLine.
 	self replace: aContainer with: heading.
 	tip := heading.
+	scanner advanceOffset: scanner line size - scanner offset columns: false.
+	^ #leaf
+]
+
+{ #category : #'block starts' }
+FOBlockParser >> tryTableStart: aContainer [
+	"A delimiter row under a paragraph turns the last line of that paragraph into
+	 the header of a table, provided both have the same number of columns. Lines
+	 of the paragraph before the header stay a paragraph."
+	| alignments paragraphLines table |
+	scanner isIndented ifTrue: [ ^ nil ].
+	aContainer isParagraph ifFalse: [ ^ nil ].
+	alignments := FOSyntax tableAlignmentsIn: scanner restFromNextNonspace.
+	alignments ifNil: [ ^ nil ].
+	paragraphLines := aContainer content lines.
+	paragraphLines ifEmpty: [ ^ nil ].
+	table := FOTable new
+		alignments: alignments;
+		headerCells: (FOSyntax tableCellsIn: paragraphLines last);
+		yourself.
+	table headerCells size = alignments size ifFalse: [ ^ nil ].
+	self closeUnmatchedBlocks.
+	table startLine: aContainer startLine + paragraphLines size - 1.
+	paragraphLines size = 1
+		ifTrue: [
+			self replace: aContainer with: table.
+			tip := table ]
+		ifFalse: [
+			aContainer content: (String streamContents: [ :out |
+				paragraphLines allButLast do: [ :each | out nextPutAll: each; nextPut: Character lf ] ]).
+			self addChild: table ].
 	scanner advanceOffset: scanner line size - scanner offset columns: false.
 	^ #leaf
 ]

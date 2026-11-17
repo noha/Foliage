@@ -255,6 +255,52 @@ FOHTMLRenderVisitor >> visitText: aText [
 ]
 
 { #category : #'visiting - blocks' }
+FOHTMLRenderVisitor >> visitTable: aTable [
+	"The header row goes into thead, the body rows into tbody, which is left out
+	 when there are none."
+	| bodyRows |
+	bodyRows := aTable children allButFirst.
+	self freshLine.
+	self write: '<table>'.
+	self newLine.
+	self write: '<thead>'.
+	self newLine.
+	aTable firstChild acceptVisitor: self.
+	self write: '</thead>'.
+	self newLine.
+	bodyRows ifNotEmpty: [
+		self write: '<tbody>'.
+		self newLine.
+		bodyRows do: [ :each | each acceptVisitor: self ].
+		self write: '</tbody>'.
+		self newLine ].
+	self write: '</table>'.
+	self newLine
+]
+
+{ #category : #'visiting - blocks' }
+FOHTMLRenderVisitor >> visitTableCell: aTableCell [
+	| tag |
+	tag := aTableCell parent isHeader ifTrue: [ 'th' ] ifFalse: [ 'td' ].
+	self write: '<' , tag.
+	aTableCell alignment ifNotNil: [ :each |
+		self write: ' align="' , each , '"' ].
+	self write: '>'.
+	self renderChildren: aTableCell.
+	self write: '</' , tag , '>'.
+	self newLine
+]
+
+{ #category : #'visiting - blocks' }
+FOHTMLRenderVisitor >> visitTableRow: aTableRow [
+	self write: '<tr>'.
+	self newLine.
+	self renderChildren: aTableRow.
+	self write: '</tr>'.
+	self newLine
+]
+
+{ #category : #'visiting - blocks' }
 FOHTMLRenderVisitor >> visitThematicBreak: aThematicBreak [
 	self freshLine.
 	self write: '<hr />'.

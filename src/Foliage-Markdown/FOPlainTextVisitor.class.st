@@ -116,6 +116,21 @@ FOPlainTextVisitor >> visitText: aText [
 ]
 
 { #category : #'visiting - blocks' }
+FOPlainTextVisitor >> visitTable: aTable [
+	^ self renderChildren: aTable separatedBySpace: true
+]
+
+{ #category : #'visiting - blocks' }
+FOPlainTextVisitor >> visitTableCell: aTableCell [
+	^ self renderChildren: aTableCell
+]
+
+{ #category : #'visiting - blocks' }
+FOPlainTextVisitor >> visitTableRow: aTableRow [
+	^ self renderChildren: aTableRow separatedBySpace: true
+]
+
+{ #category : #'visiting - blocks' }
 FOPlainTextVisitor >> visitThematicBreak: aThematicBreak [
 	^ ''
 ]

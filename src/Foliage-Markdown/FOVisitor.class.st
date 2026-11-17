@@ -99,6 +99,21 @@ FOVisitor >> visitText: aText [
 ]
 
 { #category : #'visiting - blocks' }
+FOVisitor >> visitTable: aTable [
+	^ self subclassResponsibility
+]
+
+{ #category : #'visiting - blocks' }
+FOVisitor >> visitTableCell: aTableCell [
+	^ self subclassResponsibility
+]
+
+{ #category : #'visiting - blocks' }
+FOVisitor >> visitTableRow: aTableRow [
+	^ self subclassResponsibility
+]
+
+{ #category : #'visiting - blocks' }
 FOVisitor >> visitThematicBreak: aThematicBreak [
 	^ self subclassResponsibility
 ]

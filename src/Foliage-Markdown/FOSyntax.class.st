@@ -202,6 +202,58 @@ FOSyntax class >> orderedMarkerIn: aString [
 		with: digits + 1
 ]
 
+{ #category : #'testing - lines' }
+FOSyntax class >> tableAlignmentsIn: aString [
+	"Answer the column alignments (#left, #center, #right or nil per column) when
+	 aString is the delimiter row of a pipe table, otherwise nil. A delimiter row
+	 has to contain a pipe, so that a bare line of dashes stays a setext underline."
+	| alignments |
+	(aString includes: $|) ifFalse: [ ^ nil ].
+	alignments := OrderedCollection new.
+	(self tableCellsIn: aString) do: [ :cell |
+		| body left right |
+		body := cell.
+		left := body notEmpty and: [ body first = $: ].
+		left ifTrue: [ body := body allButFirst ].
+		right := body notEmpty and: [ body last = $: ].
+		right ifTrue: [ body := body allButLast ].
+		(body notEmpty and: [ body allSatisfy: [ :each | each = $- ] ]) ifFalse: [ ^ nil ].
+		alignments add: (left
+			ifTrue: [ right ifTrue: [ #center ] ifFalse: [ #left ] ]
+			ifFalse: [ right ifTrue: [ #right ] ifFalse: [ nil ] ]) ].
+	^ alignments isEmpty ifTrue: [ nil ] ifFalse: [ alignments asArray ]
+]
+
+{ #category : #'string operations' }
+FOSyntax class >> tableCellsIn: aString [
+	"Split a table row into its cells. A pipe at the start and one at the end are
+	 only borders. A backslash before a pipe keeps it in the cell; the backslash is
+	 dropped."
+	| line cells current i char |
+	line := aString trimBoth.
+	(line notEmpty and: [ line first = $| ]) ifTrue: [ line := line allButFirst ].
+	cells := OrderedCollection new.
+	current := WriteStream on: String new.
+	i := 1.
+	[ i <= line size ] whileTrue: [
+		char := line at: i.
+		(char = $\ and: [ i < line size and: [ (line at: i + 1) = $| ] ])
+			ifTrue: [
+				current nextPut: $|.
+				i := i + 1 ]
+			ifFalse: [
+				char = $|
+					ifTrue: [
+						cells add: current contents trimBoth.
+						current := WriteStream on: String new ]
+					ifFalse: [ current nextPut: char ] ].
+		i := i + 1 ].
+	"the text after the last pipe is a cell, unless that pipe was the closing border"
+	(current contents trimBoth isEmpty and: [ line notEmpty and: [ line last = $| ] ])
+		ifFalse: [ cells add: current contents trimBoth ].
+	^ cells asArray
+]
+
 { #category : #'string operations' }
 FOSyntax class >> stripTrailingBlankLines: aString [
 	"Remove the trailing run of line endings and the spaces between them."
